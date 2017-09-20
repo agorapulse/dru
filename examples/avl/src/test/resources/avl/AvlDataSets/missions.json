@@ -1,0 +1,45 @@
+{
+  "missions": [
+    {
+      "id": 13,
+      "title": "Prevent Balthazar Bratt to steal Dupont Diamond",
+      "description": "Balthazar Bratt wants to steal Dupond Diamond to build his evil giant robot. We need to stop him!",
+      "villain": {
+        "id": 666,
+        "name": "Balthazar Bratt",
+        "bio": "A former child star in the 80's who, succeeding his show's cancellation after hitting puberty, plans on world domination."
+      },
+      "assignments": [
+        {
+          "mission": {
+            "id": 13,
+            "title": "Prevent Balthazar Bratt to steal Dupont Diamond"
+          },
+          "agent": {
+            "id": 12345,
+            "name": "Felonius Gru"
+          }
+        },
+        {
+          "mission": {
+            "id": 13,
+            "title": "Prevent Balthazar Bratt to steal Dupont Diamond"
+          },
+          "agent": {
+            "id": 3456,
+            "name": "Lucy"
+          }
+        }
+      ],
+      "items": [
+        {
+          "name": "Dupont Diamond",
+          "description": "The Dupont Diamond is a giant gem",
+          "tags": [
+            "gem"
+          ]
+        }
+      ]
+    }
+  ]
+}

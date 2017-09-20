@@ -16,7 +16,7 @@ import static com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfi
 @PackageScope class SimplePaginatedScanList<T> extends PaginatedScanList<T> {
 
     SimplePaginatedScanList(DruDynamoDBMapper mapper, Class<T> clazz, List<T> items, DynamoDBMapperConfig config) {
-        super(mapper, clazz, null, new ScanRequest(getTableNameUsingConfig(clazz, config)), new ScanResult().withItems([:]), LAZY_LOADING, config)
+        super(mapper, clazz, null, new ScanRequest(getTableNameUsingConfig(clazz, config)), new ScanResult(), LAZY_LOADING, config)
         allResults.addAll(items)
         allResultsLoaded = true
     }

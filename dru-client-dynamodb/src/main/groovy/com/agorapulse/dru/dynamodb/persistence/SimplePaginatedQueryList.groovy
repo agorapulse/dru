@@ -16,7 +16,7 @@ import static com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfi
 @PackageScope class SimplePaginatedQueryList<T> extends PaginatedQueryList<T> {
 
     SimplePaginatedQueryList(DruDynamoDBMapper mapper, Class<T> clazz, List<T> items, DynamoDBMapperConfig config) {
-        super(mapper, clazz, null, new QueryRequest(getTableNameUsingConfig(clazz, config)), new QueryResult().withItems([:]), LAZY_LOADING, config)
+        super(mapper, clazz, null, new QueryRequest(getTableNameUsingConfig(clazz, config)), new QueryResult(), LAZY_LOADING, config)
         allResults.addAll(items)
         allResultsLoaded = true
     }

@@ -100,7 +100,7 @@ class PropertyMapping implements PropertyMappingDefinition {
     // TODO: refactor this beast
     Object processPropertyValue(DataSet dataSet, DataSetMapping dataSetMapping, Parser parser, TypeMapping typeMappingToUse, Object property) {
         if (!(property instanceof Map)) {
-            processPropertyValueNoMap(dataSet, dataSetMapping, typeMappingToUse, property)
+            return processPropertyValueNoMap(dataSet, dataSetMapping, typeMappingToUse, property)
         }
 
         if (typeMappingToUse && (Map.isAssignableFrom(typeMappingToUse.type) || typeMappingToUse.type == Object)) {
@@ -208,6 +208,11 @@ class PropertyMapping implements PropertyMappingDefinition {
                     })
                     return
                 }
+
+                if (persistentProperty.referencedPropertyName == null) {
+                    throw new IllegalStateException("Cannot determine referenced property name: $fullPath => $propertyName with value $it.value")
+                }
+
                 it.value.each { item ->
                     delayedResolutions << new DelayedAssignment(
                             persistentProperty.referencedPropertyName,
@@ -216,6 +221,10 @@ class PropertyMapping implements PropertyMappingDefinition {
                     )
                 }
                 return
+            }
+
+            if (persistentProperty.referencedPropertyName == null) {
+                throw new IllegalStateException("Cannot determine referenced property name: $fullPath => $propertyName with value $it.value")
             }
 
             delayedResolutions << new DelayedAssignment(
@@ -245,6 +254,14 @@ class PropertyMapping implements PropertyMappingDefinition {
         typeMappingToUse.defaults.apply(newStuff, fixture.asImmutable())
 
         client.save(newStuff)
+
+        if (!id) {
+            // some client such as GORM can obtain id after save
+            id = classMetadata.getId(newStuff.properties)
+            if (id) {
+                dataSet.add(type, id, newStuff)
+            }
+        }
 
         pendingToMany.each {
             client.addTo(newStuff, it.key, it.value)
