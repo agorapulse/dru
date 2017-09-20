@@ -105,6 +105,7 @@ subprojects {
 
     codenarc {
         configFile = rootProject.file('config/codenarc.xml')
+        toolVersion = codenarcVersion
     }
 
     // publishing

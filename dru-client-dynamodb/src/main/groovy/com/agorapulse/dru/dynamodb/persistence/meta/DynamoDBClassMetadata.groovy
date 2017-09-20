@@ -2,12 +2,15 @@ package com.agorapulse.dru.dynamodb.persistence.meta
 
 import com.agorapulse.dru.dynamodb.persistence.DynamoDB
 import com.agorapulse.dru.persistence.meta.PropertyMetadata
-import com.agorapulse.dru.pogo.meta.PogoClassMetadata
+import com.agorapulse.dru.pojo.meta.PojoClassMetadata
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIgnore
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey
 
-class DynamoDBClassMetadata extends PogoClassMetadata {
+/**
+ * Describes DynamoDB object class.
+ */
+class DynamoDBClassMetadata extends PojoClassMetadata {
 
     private PropertyMetadata hash, range
 

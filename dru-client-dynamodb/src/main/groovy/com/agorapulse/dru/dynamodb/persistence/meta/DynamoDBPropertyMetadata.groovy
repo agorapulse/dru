@@ -1,10 +1,13 @@
 package com.agorapulse.dru.dynamodb.persistence.meta
 
-import com.agorapulse.dru.pogo.meta.PogoClassMetadata
-import com.agorapulse.dru.pogo.meta.PogoPropertyMetadata
+import com.agorapulse.dru.pojo.meta.PojoClassMetadata
+import com.agorapulse.dru.pojo.meta.PojoPropertyMetadata
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMarshalling
 
-class DynamoDBPropertyMetadata extends PogoPropertyMetadata {
+/**
+ * Describes DynamoDB object property.
+ */
+class DynamoDBPropertyMetadata extends PojoPropertyMetadata {
 
     DynamoDBPropertyMetadata(Class type, String name, boolean persistent) {
         super(type, name, persistent)
@@ -12,7 +15,7 @@ class DynamoDBPropertyMetadata extends PogoPropertyMetadata {
 
     @Override
     boolean isEmbedded() {
-        return PogoClassMetadata.getAnnotation(clazz, name, DynamoDBMarshalling)
+        return PojoClassMetadata.getAnnotation(clazz, name, DynamoDBMarshalling)
     }
 
 }

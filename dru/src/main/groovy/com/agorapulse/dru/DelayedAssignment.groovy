@@ -2,6 +2,9 @@ package com.agorapulse.dru
 
 import groovy.transform.PackageScope
 
+/**
+ * Collects information needed for executing property assignment later.
+ */
 @PackageScope class DelayedAssignment {
 
     final String propertyName

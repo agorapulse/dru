@@ -27,7 +27,7 @@ final class TypeMappings implements Iterable<TypeMapping> {
 
         for (TypeMapping typeMapping : mappings.values()) {
             if (!typeMapping.getConditions().isEmpty()) {
-                for (Closure<Boolean> condition : ((Iterable<Closure<Boolean>>)typeMapping.getConditions())) {
+                for (Closure<Boolean> condition : (Iterable<Closure<Boolean>>) typeMapping.getConditions()) {
                     if (condition.call(fixture)) {
                         return typeMapping;
                     }

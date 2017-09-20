@@ -2,7 +2,17 @@ package com.agorapulse.dru.dynamodb.persistence
 
 import com.agorapulse.dru.DataSet
 import com.agorapulse.dru.persistence.meta.PropertyMetadata
-import com.amazonaws.services.dynamodbv2.datamodeling.*
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDeleteExpression
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBSaveExpression
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression
+import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedParallelScanList
+import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList
+import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedScanList
+import com.amazonaws.services.dynamodbv2.datamodeling.QueryResultPage
+import com.amazonaws.services.dynamodbv2.datamodeling.ScanResultPage
 import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import com.amazonaws.services.dynamodbv2.model.Capacity
 import com.amazonaws.services.dynamodbv2.model.Condition
@@ -11,6 +21,7 @@ import groovy.transform.stc.ClosureParams
 import groovy.transform.stc.FromString
 
 import static com.agorapulse.dru.dynamodb.persistence.DynamoDB.getId
+
 /**
  * DynamoDBMapper mock implemented on the best afford.
  *
@@ -23,34 +34,36 @@ import static com.agorapulse.dru.dynamodb.persistence.DynamoDB.getId
 class DruDynamoDBMapper extends DynamoDBMapper {
 
     static String getTableNameUsingConfig(Class<?> clazz, DynamoDBMapperConfig config) {
-        if (config.getTableNameResolver() == null) {
+        if (config.tableNameResolver == null) {
             return DynamoDBMapperConfig.DefaultTableNameResolver.INSTANCE.getTableName(clazz, config)
         }
-        return config.getTableNameResolver().getTableName(clazz, config)
+        return config.tableNameResolver.getTableName(clazz, config)
     }
 
     private final DataSet dataSet
-    private Map<Class, List<Closure<Boolean>>> processQuery = [:].withDefault {[]}
-    private Map<Class, List<Closure<Boolean>>> processScan = [:].withDefault {[]}
+    private final Map<Class, List<Closure<Boolean>>> processQuery = [:].withDefault { [] }
+    private final Map<Class, List<Closure<Boolean>>> processScan = [:].withDefault { [] }
 
     DruDynamoDBMapper(DataSet dataSet) {
         super(null)
         this.dataSet = dataSet
     }
 
-    public <T> DruDynamoDBMapper onScan(Class<T> type, @ClosureParams(value = FromString, options = [
+    @SuppressWarnings('DuplicateStringLiteral')
+    <T> DruDynamoDBMapper onScan(Class<T> type, @ClosureParams(value = FromString, options = [
             'T,com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression,com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig',
             'T,com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression',
-            'T'
+            'T',
     ]) Closure<Boolean> filter) {
         processScan[type] << filter
         return this
     }
 
-    public <T> DruDynamoDBMapper onQuery(Class<T> type, @ClosureParams(value = FromString, options = [
+    @SuppressWarnings('DuplicateStringLiteral')
+    <T> DruDynamoDBMapper onQuery(Class<T> type, @ClosureParams(value = FromString, options = [
             'T,com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression<T>,com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig',
             'T,com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression<T>',
-            'T'
+            'T',
     ]) Closure<Boolean> filter) {
         processQuery[type] << filter
         return this
@@ -110,8 +123,8 @@ class DruDynamoDBMapper extends DynamoDBMapper {
     @Override
     <T> PaginatedScanList<T> scan(Class<T> clazz,
                                   DynamoDBScanExpression scanExpression,
-                                  DynamoDBMapperConfig config) {
-        config = mergeConfig(config)
+                                  DynamoDBMapperConfig mapperConfig) {
+        DynamoDBMapperConfig config = mergeConfig(mapperConfig)
 
         List<T> items = findAllMatching(clazz, scanExpression, config)
 
@@ -122,8 +135,8 @@ class DruDynamoDBMapper extends DynamoDBMapper {
     <T> PaginatedParallelScanList<T> parallelScan(Class<T> clazz,
                                                   DynamoDBScanExpression scanExpression,
                                                   int totalSegments,
-                                                  DynamoDBMapperConfig config) {
-        config = mergeConfig(config)
+                                                  DynamoDBMapperConfig mapperConfig) {
+        DynamoDBMapperConfig config = mergeConfig(mapperConfig)
 
         List<T> items = findAllMatching(clazz, scanExpression, config)
 
@@ -133,8 +146,8 @@ class DruDynamoDBMapper extends DynamoDBMapper {
     @Override
     <T> ScanResultPage<T> scanPage(Class<T> clazz,
                                    DynamoDBScanExpression scanExpression,
-                                   DynamoDBMapperConfig config) {
-        config = mergeConfig(config)
+                                   DynamoDBMapperConfig mapperConfig) {
+        DynamoDBMapperConfig config = mergeConfig(mapperConfig)
 
         List<T> items = findAllMatching(clazz, scanExpression, config)
 
@@ -149,21 +162,19 @@ class DruDynamoDBMapper extends DynamoDBMapper {
             items = items.take(scanExpression.limit)
 
             if (items.size() == scanExpression.limit) {
-                result.setLastEvaluatedKey(getLastKey(items, clazz))
+                result.lastEvaluatedKey = getLastKey(items, clazz)
             }
         }
 
-        result.setResults(items)
-        result.setCount(items.size())
-        result.setScannedCount(items.size())
-        result.setConsumedCapacity(
-                new ConsumedCapacity()
-                        .withCapacityUnits(1)
-                        .withGlobalSecondaryIndexes([:])
-                        .withLocalSecondaryIndexes([:])
-                        .withTableName(getTableName(clazz, config))
-                        .withTable(new Capacity().withCapacityUnits(1))
-        )
+        result.results = items
+        result.count = items.size()
+        result.scannedCount = items.size()
+        result.consumedCapacity = new ConsumedCapacity()
+            .withCapacityUnits(1)
+            .withGlobalSecondaryIndexes([:])
+            .withLocalSecondaryIndexes([:])
+            .withTableName(getTableName(clazz, config))
+            .withTable(new Capacity().withCapacityUnits(1))
 
         return result
     }
@@ -176,8 +187,8 @@ class DruDynamoDBMapper extends DynamoDBMapper {
     @Override
     <T> PaginatedQueryList<T> query(Class<T> clazz,
                                     DynamoDBQueryExpression<T> queryExpression,
-                                    DynamoDBMapperConfig config) {
-        config = mergeConfig(config)
+                                    DynamoDBMapperConfig mapperConfig) {
+        DynamoDBMapperConfig config = mergeConfig(mapperConfig)
 
         List<T> items = findAllMatching(clazz, queryExpression, config)
 
@@ -185,10 +196,11 @@ class DruDynamoDBMapper extends DynamoDBMapper {
     }
 
     @Override
+    @SuppressWarnings('CatchException')
     <T> QueryResultPage<T> queryPage(Class<T> clazz,
                                      DynamoDBQueryExpression<T> queryExpression,
-                                     DynamoDBMapperConfig config) {
-        config = mergeConfig(config)
+                                     DynamoDBMapperConfig mapperConfig) {
+        DynamoDBMapperConfig config = mergeConfig(mapperConfig)
 
         List<T> items = findAllMatching(clazz, queryExpression, config)
 
@@ -211,21 +223,19 @@ class DruDynamoDBMapper extends DynamoDBMapper {
             items = items.take(queryExpression.limit)
 
             if (items.size() == queryExpression.limit) {
-                result.setLastEvaluatedKey(getLastKey(items, clazz))
+                result.lastEvaluatedKey = getLastKey(items, clazz)
             }
         }
 
-        result.setResults(items)
-        result.setCount(items.size())
-        result.setScannedCount(items.size())
-        result.setConsumedCapacity(
-                new ConsumedCapacity()
-                        .withCapacityUnits(1)
-                        .withGlobalSecondaryIndexes([:])
-                        .withLocalSecondaryIndexes([:])
-                        .withTableName(getTableName(clazz, config))
-                        .withTable(new Capacity().withCapacityUnits(1))
-        )
+        result.results = items
+        result.count = items.size()
+        result.scannedCount = items.size()
+        result.consumedCapacity = new ConsumedCapacity()
+            .withCapacityUnits(1)
+            .withGlobalSecondaryIndexes([:])
+            .withLocalSecondaryIndexes([:])
+            .withTableName(getTableName(clazz, config))
+            .withTable(new Capacity().withCapacityUnits(1))
 
         return result
     }
@@ -245,13 +255,16 @@ class DruDynamoDBMapper extends DynamoDBMapper {
         query(clazz, queryExpression, config).size()
     }
 
-
+    @SuppressWarnings([
+        'UnnecessaryGetter',
+        'Instanceof',
+    ])
     private <T> List<T> findAllMatching(Class<T> type, DynamoDBQueryExpression<T> expression, DynamoDBMapperConfig config) {
         List<T> ret = new ArrayList<>(dataSet.findAllByType(type))
 
         if (expression.hashKeyValues) {
-            PropertyMetadata property = DynamoDB.INSTANCE.getDynamoDBClassMetadata(type).getHash()
-            ret = ret.findAll{
+            PropertyMetadata property = DynamoDB.INSTANCE.getDynamoDBClassMetadata(type).hash
+            ret = ret.findAll {
                 it."$property.name" == expression.hashKeyValues."$property.name"
             }
         }

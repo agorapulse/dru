@@ -5,6 +5,7 @@ import com.agorapulse.dru.persistence.Clients
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
+
 /**
  * Data Reconstruction Utility
  */
@@ -18,7 +19,10 @@ class Dru implements TestRule, DataSet {
         return new Dru(unitTest, null)
     }
 
-    static PreparedDataSet prepare(@DelegatesTo(value = DataSetMappingDefinition, strategy = Closure.DELEGATE_FIRST) Closure<DataSetMappingDefinition> configuration) {
+    static PreparedDataSet prepare(
+        @DelegatesTo(value = DataSetMappingDefinition, strategy = Closure.DELEGATE_FIRST)
+        Closure<DataSetMappingDefinition> configuration
+    ) {
         return new PreparedDataSet(configuration)
     }
 
@@ -69,7 +73,7 @@ class Dru implements TestRule, DataSet {
 
     @Override
     DataSet load(
-            @DelegatesTo(value = DataSetMappingDefinition.class, strategy = Closure.DELEGATE_FIRST)
+            @DelegatesTo(value = DataSetMappingDefinition, strategy = Closure.DELEGATE_FIRST)
             Closure<DataSetMappingDefinition> configuration) {
         ensureDataSetInitialized().load(configuration)
     }

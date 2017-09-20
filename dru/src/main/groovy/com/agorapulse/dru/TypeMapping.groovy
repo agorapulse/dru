@@ -4,8 +4,11 @@ import groovy.transform.PackageScope
 import groovy.transform.stc.ClosureParams
 import groovy.transform.stc.FromString
 
+/**
+ * Mapping from source to specified object of given type.
+ * @param <T> type of the destination object
+ */
 class TypeMapping<T> implements TypeMappingDefinition<T> {
-
 
     private final String path
     private final Class<T> type
@@ -13,11 +16,10 @@ class TypeMapping<T> implements TypeMappingDefinition<T> {
     private final Set<String> ignored = new LinkedHashSet<String>()
 
     // sets the value directly to the newly created instance if the value is falsy
-    private final Customisations defaults = new Customisations()
+    private final Customisations defaultsCustomisation = new Customisations()
 
     // overrides the value in the incoming map, e.g. type tweaks
-    private final Customisations overrides = new Customisations()
-
+    private final Customisations overridesCustomisation = new Customisations()
 
     private final PropertyMappings propertyMappings
 
@@ -31,27 +33,47 @@ class TypeMapping<T> implements TypeMappingDefinition<T> {
         this.propertyMappings = new PropertyMappings(path)
     }
 
-    TypeMapping<T> when(@DelegatesTo(type = 'java.util.Map<String,Object>', strategy = Closure.DELEGATE_FIRST) @ClosureParams(value = FromString, options = 'java.util.Map<String, Object>') Closure<Boolean> condition) {
+    TypeMapping<T> when(
+        @DelegatesTo(type = 'java.util.Map<String,Object>', strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = FromString, options = 'java.util.Map<String, Object>')
+        Closure<Boolean> condition
+    ) {
         conditions << condition
         return this
     }
 
-    TypeMapping<T> and(@DelegatesTo(type = 'java.util.Map<String,Object>', strategy = Closure.DELEGATE_FIRST) @ClosureParams(value = FromString, options = 'java.util.Map<String, Object>')  Closure<Boolean> condition) {
+    TypeMapping<T> and(
+        @DelegatesTo(type = 'java.util.Map<String,Object>', strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = FromString, options = 'java.util.Map<String, Object>')
+        Closure<Boolean> condition
+    ) {
         when(condition)
     }
 
-    TypeMapping<T> defaults(@DelegatesTo(type = 'T', strategy = Closure.DELEGATE_ONLY) @ClosureParams(value = FromString, options = 'java.util.Map<String, Object>') Closure defaultsSetter) {
-        defaults.add defaultsSetter
+    TypeMapping<T> defaults(
+        @DelegatesTo(type = 'T', strategy = Closure.DELEGATE_ONLY)
+        @ClosureParams(value = FromString, options = 'java.util.Map<String, Object>')
+        Closure defaultsSetter
+    ) {
+        defaultsCustomisation.add defaultsSetter
         return this
     }
 
-    TypeMapping<T> overrides(@DelegatesTo(type = 'T', strategy = Closure.DELEGATE_ONLY) @ClosureParams(value = FromString, options = 'java.util.Map<String, Object>') Closure defaultsSetter) {
-        overrides.add defaultsSetter
+    TypeMapping<T> overrides(
+        @DelegatesTo(type = 'T', strategy = Closure.DELEGATE_ONLY)
+        @ClosureParams(value = FromString, options = 'java.util.Map<String, Object>')
+        Closure defaultsSetter
+    ) {
+        overridesCustomisation.add defaultsSetter
         return this
     }
 
     @Override
-    TypeMappingDefinition<T> just(@DelegatesTo(type = "T", strategy = Closure.DELEGATE_ONLY) @ClosureParams(value = FromString.class, options = "T") Closure query) {
+    TypeMappingDefinition<T> just(
+        @DelegatesTo(type = 'T', strategy = Closure.DELEGATE_ONLY)
+        @ClosureParams(value = FromString, options = 'T')
+        Closure query
+    ) {
         this.query = query
         return this
     }
@@ -70,7 +92,8 @@ class TypeMapping<T> implements TypeMappingDefinition<T> {
     }
 
     @Override
-    TypeMappingDefinition<T> ignore(@DelegatesTo(type = "T", strategy = Closure.DELEGATE_ONLY) Closure ignoreConfigurer) {
+    @SuppressWarnings('UnnecessaryGetter')
+    TypeMappingDefinition<T> ignore(@DelegatesTo(type = 'T', strategy = Closure.DELEGATE_ONLY) Closure ignoreConfigurer) {
         MockObject map = new MockObject()
         Customisations.prepare(ignoreConfigurer, map)()
         this.@ignored.addAll(map.getAccessedKeys())
@@ -87,6 +110,7 @@ class TypeMapping<T> implements TypeMappingDefinition<T> {
         return this
     }
 
+    @SuppressWarnings('UnnecessaryDotClass') // for some reason when I remove the .class it no longer compiles
     TypeMapping<T> map(Iterable<String> paths,
          @DelegatesTo(value = PropertyMappingDefinition.class, strategy = Closure.DELEGATE_FIRST)
          Closure<PropertyMappingDefinition> configuration
@@ -94,9 +118,8 @@ class TypeMapping<T> implements TypeMappingDefinition<T> {
         for (String path in paths) {
             map(path, configuration)
         }
-        return this;
+        return this
     }
-
 
     Class<T> getType() {
         return type
@@ -111,11 +134,11 @@ class TypeMapping<T> implements TypeMappingDefinition<T> {
     }
 
     Customisations getDefaults() {
-        return defaults
+        return defaultsCustomisation
     }
 
     Customisations getOverrides() {
-        return overrides
+        return overridesCustomisation
     }
 
     Set<String> getIgnored() {

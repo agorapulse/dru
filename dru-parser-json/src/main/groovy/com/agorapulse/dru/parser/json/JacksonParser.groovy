@@ -4,11 +4,14 @@ import com.agorapulse.dru.Source
 import com.agorapulse.dru.parser.AbstractParser
 import com.fasterxml.jackson.databind.ObjectMapper
 
+/**
+ * Json parser based on Jackson.
+ */
 class JacksonParser extends AbstractParser {
 
-    final int index = 10000;
+    final int index = 10000
 
-    private ObjectMapper mapper
+    private final ObjectMapper mapper
 
     JacksonParser() {
         mapper = initMapper()
@@ -21,7 +24,7 @@ class JacksonParser extends AbstractParser {
 
     @Override
     Object getContent(Source source) {
-        mapper.readValue(source.sourceStream, Object.class)
+        mapper.readValue(source.sourceStream, Object)
     }
 
     protected <T> T doConvertValue(Object value, Class<T> desiredType) {

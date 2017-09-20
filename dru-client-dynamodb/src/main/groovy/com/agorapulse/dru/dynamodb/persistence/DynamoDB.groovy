@@ -5,11 +5,14 @@ import com.agorapulse.dru.dynamodb.persistence.meta.DynamoDBClassMetadata
 import com.agorapulse.dru.persistence.Client
 import com.agorapulse.dru.persistence.ClientFactory
 import com.agorapulse.dru.persistence.meta.ClassMetadata
-import com.agorapulse.dru.pogo.Pogo
+import com.agorapulse.dru.pojo.Pojo
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable
 
-class DynamoDB extends Pogo {
+/**
+ * Client to handle DynamoDB objects.
+ */
+class DynamoDB extends Pojo {
 
     static final DynamoDB INSTANCE = new DynamoDB()
 
@@ -47,15 +50,9 @@ class DynamoDB extends Pogo {
 
     static Serializable getId(Object hash, Object range) {
         if (hash) {
-            if (range) {
-                return "${hash}:${range}"
-            }
-            return "${hash}:"
+            return range ? "${hash}:${range}" : "${hash}:"
         }
-        if (range) {
-            return ":${range}"
-        }
-        return null
+        return range ? ":${range}" : null
     }
 
     static Object getId(Object entity) {

@@ -5,6 +5,9 @@ import com.agorapulse.dru.persistence.meta.PropertyMetadata
 import grails.core.GrailsDomainClass
 import grails.core.GrailsDomainClassProperty
 
+/**
+ * Describes GORM domain class.
+ */
 class GormClassMetadata implements ClassMetadata {
 
     private final GrailsDomainClass grailsDomainClass
@@ -34,7 +37,7 @@ class GormClassMetadata implements ClassMetadata {
 
     @Override
     Serializable getId(Map<String, Object> fixture) {
-        GrailsDomainClassProperty identifier = grailsDomainClass.getIdentifier()
+        GrailsDomainClassProperty identifier = grailsDomainClass.identifier
         if (!identifier) {
             return null
         }

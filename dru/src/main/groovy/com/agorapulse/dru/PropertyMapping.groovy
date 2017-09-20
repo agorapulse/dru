@@ -5,10 +5,12 @@ import com.agorapulse.dru.persistence.Client
 import com.agorapulse.dru.persistence.meta.ClassMetadata
 import com.agorapulse.dru.persistence.meta.PropertyMetadata
 import groovy.transform.CompileStatic
-import groovy.transform.ThreadInterrupt
 import groovy.transform.stc.ClosureParams
 import groovy.transform.stc.FromString
 
+/**
+ * Mapping of the source property to one or more type mappings.
+ */
 class PropertyMapping implements PropertyMappingDefinition {
 
     private final String parentPath
@@ -21,14 +23,26 @@ class PropertyMapping implements PropertyMappingDefinition {
         this.path = path
     }
 
-    public <T> PropertyMappingDefinition to(Class<T> type, @DelegatesTo(type = 'com.agorapulse.dru.TypeMappingDefinition<T>', strategy = Closure.DELEGATE_FIRST) @ClosureParams(value = FromString, options = 'com.agorapulse.dru.TypeMappingDefinition<T>') Closure<TypeMappingDefinition<T>> configuration = Closure.IDENTITY) {
+    @SuppressWarnings('UnnecessaryPublicModifier')
+    public <T> PropertyMappingDefinition to(
+        Class<T> type,
+        @DelegatesTo(type = 'com.agorapulse.dru.TypeMappingDefinition<T>', strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = FromString, options = 'com.agorapulse.dru.TypeMappingDefinition<T>')
+        Closure<TypeMappingDefinition<T>> configuration = Closure.IDENTITY
+    ) {
         TypeMapping<T> mapping = typeMappings.findOrCreate(type, path)
         mapping.with(configuration)
         mapping.ignore(ignored)
         return this
     }
 
-    public <T> PropertyMappingDefinition to(Map<String, Class<T>> propertyAndType, @DelegatesTo(type = 'com.agorapulse.dru.TypeMappingDefinition<T>', strategy = Closure.DELEGATE_FIRST) @ClosureParams(value = FromString, options = 'com.agorapulse.dru.TypeMappingDefinition<T>') Closure<TypeMappingDefinition<T>> configuration = Closure.IDENTITY) {
+    @SuppressWarnings('UnnecessaryPublicModifier')
+    public <T> PropertyMappingDefinition to(
+        Map<String, Class<T>> propertyAndType,
+        @DelegatesTo(type = 'com.agorapulse.dru.TypeMappingDefinition<T>', strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = FromString, options = 'com.agorapulse.dru.TypeMappingDefinition<T>')
+        Closure<TypeMappingDefinition<T>> configuration = Closure.IDENTITY
+    ) {
         if (!propertyAndType || propertyAndType.size() != 1) {
             throw new IllegalArgumentException("Excatly one 'propertyName: Type' pair expected. Got: $propertyAndType")
         }
@@ -39,7 +53,7 @@ class PropertyMapping implements PropertyMappingDefinition {
         return this
     }
 
-    public PropertyMapping ignore(Iterable<String> ignored) {
+    PropertyMapping ignore(Iterable<String> ignored) {
         this.@ignored.addAll(ignored)
         typeMappings.each {
             it.ignore(ignored)
@@ -47,7 +61,7 @@ class PropertyMapping implements PropertyMappingDefinition {
         return this
     }
 
-    public PropertyMapping ignore(String first, String... rest) {
+    PropertyMapping ignore(String first, String... rest) {
         ignored << first
         if (rest) {
             this.@ignored.addAll(rest)
@@ -63,10 +77,7 @@ class PropertyMapping implements PropertyMappingDefinition {
     }
 
     String getFullPath() {
-        if (parentPath?.contains('/')) {
-            return "${parentPath}.$path"
-        }
-        return "$parentPath/$path"
+        return parentPath?.contains('/') ? "${parentPath}.$path" : "$parentPath/$path"
     }
 
     TypeMappings getTypeMappings() {
@@ -78,42 +89,18 @@ class PropertyMapping implements PropertyMappingDefinition {
         return "PropertyMapping $fullPath"
     }
 
-
-
     @CompileStatic
-    @ThreadInterrupt
-    Object processPropertyValue(DataSet dataSet, DataSetMapping dataSetMapping, Parser parser, TypeMapping typeMappingToUse, property) {
+    @SuppressWarnings([
+        'Instanceof',
+        'CyclomaticComplexity',
+        'ParameterReassignment',
+        'AbcMetric',
+        'MethodSize',
+    ])
+    // TODO: refactor this beast
+    Object processPropertyValue(DataSet dataSet, DataSetMapping dataSetMapping, Parser parser, TypeMapping typeMappingToUse, Object property) {
         if (!(property instanceof Map)) {
-            if (property instanceof String && typeMappingToUse && Enum.isAssignableFrom(typeMappingToUse.type)) {
-                return typeMappingToUse.type.getMethod('valueOf', String).invoke(null, property)
-            }
-            if (dataSet.findAllByType(property.getClass()).contains(property)) {
-                return property
-            }
-
-            if (typeMappingToUse && (property instanceof Number || property instanceof CharSequence)) {
-                Object byId = dataSet.findByTypeAndOriginalId(typeMappingToUse.type, property)
-
-                if (byId) {
-                    // this is ID of something we've already created
-                    Class type = typeMappingToUse.type
-
-                    Client client = dataSetMapping.clients.find { it.isSupported(type) }
-
-                    if (!client) {
-                        throw new IllegalArgumentException(("No client supports $type! $this, $typeMappingToUse: $property"))
-                    }
-
-                    ClassMetadata classMetadata = client.getClassMetadata(type)
-                    return classMetadata.getId(byId.properties)
-                }
-
-                // this is ID of something we don't care about so keep it as it is
-                return property
-            }
-
-
-            throw new IllegalArgumentException("Property is not a Map either already processed entity at $fullPath: $property")
+            processPropertyValueNoMap(dataSet, dataSetMapping, typeMappingToUse, property)
         }
 
         if (typeMappingToUse && (Map.isAssignableFrom(typeMappingToUse.type) || typeMappingToUse.type == Object)) {
@@ -123,9 +110,7 @@ class PropertyMapping implements PropertyMappingDefinition {
 
         MockObject fixture = new MockObject(new LinkedHashMap<>(property as Map<String, Object>))
 
-        if (!typeMappingToUse) {
-            typeMappingToUse = typeMappings.find(fixture)
-        }
+        typeMappingToUse = typeMappingToUse ?: typeMappings.find(fixture)
 
         if (!typeMappingToUse) {
             throw new IllegalStateException("No type definition for $this and $fixture")
@@ -133,11 +118,7 @@ class PropertyMapping implements PropertyMappingDefinition {
 
         Class type = typeMappingToUse.type
 
-        Client client = dataSetMapping.clients.find { it.isSupported(type) }
-
-        if (!client) {
-            throw new IllegalArgumentException(("No client supports $type! $this, $typeMappingToUse: $fixture"))
-        }
+        Client client = findClient(dataSetMapping, type, typeMappingToUse, property)
 
         ClassMetadata classMetadata = client.getClassMetadata(type)
 
@@ -164,18 +145,7 @@ class PropertyMapping implements PropertyMappingDefinition {
                 return
             }
 
-            PropertyMapping nestedMapping = typeMappingToUse.propertyMappings.find(propertyName)
-
-            if (!nestedMapping) {
-                TypeMapping shared = dataSetMapping.typeMappings.findByType(typeMappingToUse.type)
-                if (shared) {
-                    nestedMapping = shared.propertyMappings.find(propertyName)
-                }
-            }
-
-            if (!nestedMapping) {
-                nestedMapping = typeMappingToUse.propertyMappings.findOrCreate(propertyName)
-            }
+            PropertyMapping nestedMapping = getNestedMapping(propertyName, typeMappingToUse, dataSetMapping)
 
             TypeMapping nestedTypeMapping = nestedMapping.typeMappings.find(it.value)
 
@@ -210,7 +180,6 @@ class PropertyMapping implements PropertyMappingDefinition {
                     return
                 }
 
-
                 payload.put(propertyName, parser.convertValue("$fullPath.$it.key", it.value, persistentProperty.type))
                 return
             }
@@ -224,7 +193,9 @@ class PropertyMapping implements PropertyMappingDefinition {
                 nestedTypeMapping = typeMappingToUse.propertyMappings.findOrCreate(propertyName).typeMappings.find(it.value)
             }
 
-            if (((persistentProperty.embedded || shouldProceedWithNestedMapping) && !persistentProperty.collectionType) || persistentProperty.isOneToOne() || persistentProperty.isManyToOne()) {
+            if (((persistentProperty.embedded || shouldProceedWithNestedMapping) && !persistentProperty.collectionType)
+                || persistentProperty.isOneToOne() || persistentProperty.isManyToOne()
+            ) {
                 payload.put(propertyName, nestedMapping.processPropertyValue(dataSet, dataSetMapping, parser, nestedTypeMapping, it.value))
                 return
             }
@@ -283,23 +254,101 @@ class PropertyMapping implements PropertyMappingDefinition {
             client.save(newStuff)
         }
 
-        for (DelayedAssignment delayedResolution in delayedResolutions) {
-            delayedResolution.payload[delayedResolution.propertyName] = newStuff
-            delayedResolution.mapping.processPropertyValue(dataSet, dataSetMapping, parser, delayedResolution.typeMapping, delayedResolution.payload)
-        }
+        processDelayedResolutions(delayedResolutions, newStuff, dataSet, dataSetMapping, parser)
 
+        removeAccessedKeysFromMissing(missing, fixture, dataSet)
+
+        return typeMappingToUse.process(newStuff)
+    }
+
+    @CompileStatic
+    @SuppressWarnings('UnnecessaryGetter')
+    private static void removeAccessedKeysFromMissing(Set<MissingProperty> missing, MockObject fixture, DataSet dataSet) {
         for (MissingProperty ignoredValue in missing) {
             if (ignoredValue.propertyName in fixture.getAccessedKeys()) {
                 continue
             }
             dataSet.report.add(ignoredValue)
         }
-
-
-        return typeMappingToUse.process(newStuff)
     }
 
-    private static void assignProperties(newStuff, Map<String, Object> payload) {
+    @CompileStatic
+    private static void processDelayedResolutions(
+        List<DelayedAssignment> delayedResolutions,
+        Object newStuff,
+        DataSet dataSet,
+        DataSetMapping dataSetMapping,
+        Parser parser
+    ) {
+        for (DelayedAssignment delayedResolution in delayedResolutions) {
+            delayedResolution.payload[delayedResolution.propertyName] = newStuff
+            delayedResolution.mapping.processPropertyValue(dataSet, dataSetMapping, parser, delayedResolution.typeMapping, delayedResolution.payload)
+        }
+    }
+
+    @CompileStatic
+    @SuppressWarnings('Instanceof')
+    Object processPropertyValueNoMap(DataSet dataSet, DataSetMapping dataSetMapping, TypeMapping typeMappingToUse, Object property) {
+        if (property instanceof String && typeMappingToUse && Enum.isAssignableFrom(typeMappingToUse.type)) {
+            return typeMappingToUse.type.getMethod('valueOf', String).invoke(null, property)
+        }
+        if (dataSet.findAllByType(property.getClass()).contains(property)) {
+            return property
+        }
+
+        if (typeMappingToUse && (property instanceof Number || property instanceof CharSequence)) {
+            Object byId = dataSet.findByTypeAndOriginalId(typeMappingToUse.type, property)
+
+            if (byId) {
+                // this is ID of something we've already created
+                Class type = typeMappingToUse.type
+
+                Client client = findClient(dataSetMapping, type, typeMappingToUse, property)
+
+                ClassMetadata classMetadata = client.getClassMetadata(type)
+
+                return classMetadata.getId(byId.properties)
+            }
+
+            // this is ID of something we don't care about so keep it as it is
+            return property
+        }
+
+        throw new IllegalArgumentException("Property is not a Map either already processed entity at $fullPath: $property")
+    }
+
+    @CompileStatic
+    private static Client findClient(DataSetMapping dataSetMapping, Class type, TypeMapping typeMappingToUse, Object property) {
+        Client client = dataSetMapping.clients.find { it.isSupported(type) }
+
+        if (client) {
+            return client
+        }
+
+        throw new IllegalArgumentException(("No client supports $type! $this, $typeMappingToUse: $property"))
+    }
+
+    @CompileStatic
+    private static PropertyMapping getNestedMapping(String propertyName, TypeMapping typeMappingToUse, DataSetMapping dataSetMapping) {
+        PropertyMapping nestedMapping = typeMappingToUse.propertyMappings.find(propertyName)
+
+        if (nestedMapping) {
+            return nestedMapping
+        }
+
+        TypeMapping shared = dataSetMapping.typeMappings.findByType(typeMappingToUse.type)
+        if (shared) {
+            nestedMapping = shared.propertyMappings.find(propertyName)
+        }
+
+        if (nestedMapping) {
+            return nestedMapping
+        }
+
+        return typeMappingToUse.propertyMappings.findOrCreate(propertyName)
+    }
+
+    private static void assignProperties(Object newStuff, Map<String, Object> payload) {
         payload.each {
             newStuff."$it.key" = it.value
         }

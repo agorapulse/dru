@@ -1,4 +1,4 @@
-package com.agorapulse.dru.pogo
+package com.agorapulse.dru.pojo
 
 import com.agorapulse.dru.parser.Parser
 import com.agorapulse.dru.persistence.AbstractCacheableClient
@@ -6,12 +6,17 @@ import com.agorapulse.dru.persistence.Client
 import com.agorapulse.dru.persistence.ClientFactory
 import com.agorapulse.dru.persistence.meta.ClassMetadata
 import com.agorapulse.dru.persistence.meta.PropertyMetadata
-import com.agorapulse.dru.pogo.meta.PogoClassMetadata
-import com.google.gson.internal.Primitives
+import com.agorapulse.dru.pojo.meta.PojoClassMetadata
+import com.google.common.primitives.Primitives
 
-class Pogo extends AbstractCacheableClient {
+/**
+ * Pojo client handles Plain Old Java Objects.
+ *
+ * This is the default client if there is no other client is available.
+ */
+class Pojo extends AbstractCacheableClient {
 
-    public static Pogo INSTANCE = new Pogo()
+    public static final Pojo INSTANCE = new Pojo()
 
     static class Factory implements ClientFactory {
         final int index = Integer.MAX_VALUE
@@ -32,13 +37,13 @@ class Pogo extends AbstractCacheableClient {
         return type.declaredConstructors.find { it.parameters.size() == 0 } || type == Map
     }
 
-
     @Override
     <T> T save(T object) {
         return object
     }
 
     @Override
+    @SuppressWarnings('CatchException')
     <T> T newInstance(Parser parser, Class<T> type, Map<String, Object> payload) {
         if (type == Map) {
             return new LinkedHashMap<>(payload) as T
@@ -86,18 +91,18 @@ class Pogo extends AbstractCacheableClient {
     }
 
     protected ClassMetadata createClassMetadata(Class type) {
-        new PogoClassMetadata(type)
+        new PojoClassMetadata(type)
     }
 
     private static Collection createCollection(Class type) {
         if (type.interface) {
             switch (type) {
-                case Collection: return new ArrayList()
-                case List: return new ArrayList()
+                case Collection: return []
+                case List: return []
                 case Set: return new LinkedHashSet()
-                case Queue: return new LinkedList()
-                case SortedSet: return new TreeSet()
-                case NavigableSet: return new TreeSet()
+                case Queue: return [] as Queue
+                case SortedSet: return [] as SortedSet
+                case NavigableSet: return [] as SortedSet
             }
         }
         return type.newInstance() as Collection

@@ -10,12 +10,20 @@ import grails.core.GrailsDomainClass
 import grails.testing.gorm.DataTest
 import org.grails.datastore.gorm.GormEntity
 
+/**
+ * Client for GORM.
+ */
 class Gorm extends AbstractCacheableClient {
 
     static class Factory implements ClientFactory {
         final int index = 10000
 
         @Override
+        @SuppressWarnings([
+            'Instanceof',
+            'LineLength',
+            'SystemErrPrint',
+        ])
         boolean isSupported(Object unitTest) {
             boolean supported = unitTest instanceof DataTest
             if (!supported) {

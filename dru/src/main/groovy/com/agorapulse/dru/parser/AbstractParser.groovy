@@ -1,7 +1,12 @@
 package com.agorapulse.dru.parser
 
+/**
+ * Base class for parsers with convenient methods to convert values and to find all matching elements.
+ */
+@SuppressWarnings('AbstractClassWithoutAbstractMethod')
 abstract class AbstractParser implements Parser {
 
+    @SuppressWarnings('CatchException')
     final <T> T convertValue(String path, Object value, Class<T> desiredType) {
         try {
             if (value == null) {
@@ -19,6 +24,7 @@ abstract class AbstractParser implements Parser {
         }
     }
 
+    @SuppressWarnings('Instanceof')
     Iterable<Map<String, Object>> findAllMatching(Object content, String path) {
         if (path == '') {
             if (content instanceof Map) {
@@ -54,8 +60,8 @@ abstract class AbstractParser implements Parser {
             return Collections.emptyList()
         }
 
-        String prefix = path.substring(0, indexOfComma)
-        String rest = path.substring(indexOfComma + 1)
+        String prefix = path[0..indexOfComma]
+        String rest = path[(indexOfComma + 1)..-1]
         Iterable<Object> sources = findAllMatching(content, prefix)
 
         List<Map<String, Object>> ret = []

@@ -3,6 +3,9 @@ package com.agorapulse.dru.gorm.persistence.meta
 import com.agorapulse.dru.persistence.meta.PropertyMetadata
 import grails.core.GrailsDomainClassProperty
 
+/**
+ * Describes GORM domain class's persistent property.
+ */
 class GormPropertyMetadata implements PropertyMetadata {
 
     private final GrailsDomainClassProperty grailsDomainClassProperty
@@ -78,6 +81,6 @@ class GormPropertyMetadata implements PropertyMetadata {
 
     @Override
     boolean isCollectionType() {
-        return isBasicCollectionType() || isManyToMany() || isOneToMany();
+        return isBasicCollectionType() || isManyToMany() || isOneToMany()
     }
 }

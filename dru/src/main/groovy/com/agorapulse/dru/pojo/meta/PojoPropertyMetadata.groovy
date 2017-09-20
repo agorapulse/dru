@@ -1,17 +1,22 @@
-package com.agorapulse.dru.pogo.meta
+package com.agorapulse.dru.pojo.meta
 
 import com.agorapulse.dru.persistence.meta.PropertyMetadata
 
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
-class PogoPropertyMetadata implements PropertyMetadata {
+/**
+ * Describes property of POJO.
+ */
+class PojoPropertyMetadata implements PropertyMetadata {
 
     protected final Class clazz
     protected final String name
     protected final boolean persistent
 
-    PogoPropertyMetadata(Class type, String name, boolean persistent) {
+    String referencedPropertyName = null
+
+    PojoPropertyMetadata(Class type, String name, boolean persistent) {
         this.name = name
         this.clazz = type
         this.persistent = persistent
@@ -24,13 +29,13 @@ class PogoPropertyMetadata implements PropertyMetadata {
 
     @Override
     Class getType() {
-        return PogoClassMetadata.getPropertyType(clazz, name)
+        return PojoClassMetadata.getPropertyType(clazz, name)
     }
 
     @Override
     Class getReferencedPropertyType() {
         if (Collection.isAssignableFrom(type)) {
-            Type ret = findItemType(PogoClassMetadata.getGenericPropertyType(clazz, name))
+            Type ret = findItemType(PojoClassMetadata.getGenericPropertyType(clazz, name))
             if (ret) {
                 return ret as Class
             }
@@ -74,11 +79,6 @@ class PogoPropertyMetadata implements PropertyMetadata {
     }
 
     @Override
-    String getReferencedPropertyName() {
-        return null
-    }
-
-    @Override
     boolean isEmbedded() {
         return false
     }
@@ -93,6 +93,7 @@ class PogoPropertyMetadata implements PropertyMetadata {
         return isBasicCollectionType() || isManyToMany() || isOneToMany()
     }
 
+    @SuppressWarnings('Instanceof')
     private static Class findItemType(Type type) {
         if (!type || type == Object) {
             return null
@@ -109,7 +110,7 @@ class PogoPropertyMetadata implements PropertyMetadata {
             }
         }
 
-        if ((!type instanceof Class)) {
+        if (!(type instanceof Class)) {
             return null
         }
 

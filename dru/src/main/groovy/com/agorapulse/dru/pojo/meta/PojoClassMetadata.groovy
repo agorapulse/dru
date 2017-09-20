@@ -1,4 +1,4 @@
-package com.agorapulse.dru.pogo.meta
+package com.agorapulse.dru.pojo.meta
 
 import com.agorapulse.dru.persistence.meta.ClassMetadata
 import com.agorapulse.dru.persistence.meta.PropertyMetadata
@@ -11,15 +11,19 @@ import java.lang.reflect.Modifier
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
-class PogoClassMetadata implements ClassMetadata {
+/**
+ * Describes POJO class.
+ */
+class PojoClassMetadata implements ClassMetadata {
 
     final Class type
     private Map<String, PropertyMetadata> persistentProperties
 
-    PogoClassMetadata(Class type) {
+    PojoClassMetadata(Class type) {
         this.type = type
     }
 
+    @SuppressWarnings('Instanceof')
     static Class getPropertyType(Class type, String propertyName) {
         Type genericType = getGenericPropertyType(type, propertyName)
         if (genericType instanceof ParameterizedType) {
@@ -32,13 +36,13 @@ class PogoClassMetadata implements ClassMetadata {
         String normalGetter = MetaProperty.getGetterName(propertyName, Object)
         String booleanGetter = MetaProperty.getGetterName(propertyName, Boolean)
 
-        Method method = type.getDeclaredMethods().find {it.name == normalGetter || it.name == booleanGetter }
+        Method method = type.declaredMethods.find { it.name == normalGetter || it.name == booleanGetter }
 
         if (method) {
             return method.genericReturnType
         }
 
-        Field field = type.getDeclaredFields().find { it.name == propertyName }
+        Field field = type.declaredFields.find { it.name == propertyName }
 
         if (field) {
             return field.genericType
@@ -61,13 +65,13 @@ class PogoClassMetadata implements ClassMetadata {
         String normalGetter = MetaProperty.getGetterName(propertyName, Object)
         String booleanGetter = MetaProperty.getGetterName(propertyName, Boolean)
 
-        Method method = type.getDeclaredMethods().find {it.name == normalGetter || it.name == booleanGetter }
+        Method method = type.declaredMethods.find { it.name == normalGetter || it.name == booleanGetter }
 
         if (method) {
             return method
         }
 
-        Field field = type.getDeclaredFields().find { it.name == propertyName }
+        Field field = type.declaredFields.find { it.name == propertyName }
 
         if (field) {
             return field
@@ -84,13 +88,13 @@ class PogoClassMetadata implements ClassMetadata {
         String normalGetter = MetaProperty.getGetterName(propertyName, Object)
         String booleanGetter = MetaProperty.getGetterName(propertyName, Boolean)
 
-        Method method = type.getDeclaredMethods().find {it.name == normalGetter || it.name == booleanGetter }
+        Method method = type.declaredMethods.find { it.name == normalGetter || it.name == booleanGetter }
 
         if (method && method.getAnnotation(anno)) {
             return method.getAnnotation(anno)
         }
 
-        Field field = type.getDeclaredFields().find { it.name == propertyName }
+        Field field = type.declaredFields.find { it.name == propertyName }
 
         if (field && field.getAnnotation(anno)) {
             return field.getAnnotation(anno)
@@ -134,9 +138,10 @@ class PogoClassMetadata implements ClassMetadata {
     }
 
     protected PropertyMetadata createPropertyMetadata(MetaProperty it) {
-        new PogoPropertyMetadata(type, it.name, isPersistent(type, it.name))
+        new PojoPropertyMetadata(type, it.name, isPersistent(type, it.name))
     }
 
+    @SuppressWarnings('Instanceof')
     protected boolean isPersistent(Class type, String name) {
         AnnotatedElement element = getAnnotatedElement(type, name)
         if (!element) {
@@ -147,6 +152,6 @@ class PogoClassMetadata implements ClassMetadata {
             return !Modifier.isFinal(element.modifiers)
         }
 
-        return type.getDeclaredMethods().any { it.name == MetaProperty.getSetterName(name) }
+        return type.declaredMethods.any { it.name == MetaProperty.getSetterName(name) }
     }
 }
