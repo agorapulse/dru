@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':dru')
+    compile "com.amazonaws:aws-java-sdk-dynamodb:$awsJavaSdkVersion"
+}

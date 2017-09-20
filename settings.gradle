@@ -1,0 +1,3 @@
+rootProject.name = 'dru'
+
+include 'dru', 'dru-client-gorm', 'dru-client-dynamodb', 'dru-parser-json'

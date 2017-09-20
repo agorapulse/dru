@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':dru')
+    compile "org.grails:grails-gorm-testing-support:${grailsTestingSupportVersion}"
+}

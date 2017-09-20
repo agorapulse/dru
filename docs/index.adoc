@@ -1,0 +1,32 @@
+= Dru - Data Reconstruction Utility
+
+[.ribbon]
+image::ribbon.png[link={projectUrl}]
+
+Dru is Data Reconstruction Utility which helps to create and maintain test data based on real-life production data.
+
+== Installation
+
+Dru is available in JCenter. At the moment, you can use any of POJO, GORM or DynamoDB modules your project.
+
+.Gradle Installation
+[source,groovy,subs='verbatim,attributes']
+----
+repositories {
+    jcenter()
+}
+
+dependencies {
+    // pick any of these clients you need
+    // the base module contains just POJO module for binding Plain Old Java Objects
+    testCompile "com.agorapulse:dru:{version}"
+    testCompile "com.agorapulse:dru-client-gorm:{version}"
+    testCompile "com.agorapulse:dru-client-dynamodb:{version}"
+
+    // and pick the parser
+    // there is only one parser at the moment
+    testCompile "com.agorapulse:dru-parser-json:{version}"
+}
+
+
+
