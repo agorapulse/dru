@@ -39,12 +39,39 @@ class AvlDataSets {
         }
     }
 
+    static final PreparedDataSet agentMapping = Dru.prepare {
+        any (Agent) {
+            overrides {
+                if (it.rank) {
+                    securityLevel = it.rank
+                }
+            }
+            defaults {
+                securityLevel = 1
+            }
+            ignore {
+                novice
+            }
+        }
+    }
+
     static final PreparedDataSet missions = Dru.prepare {
         include missionMapping
+        include agentMapping
 
         from ('missions.json') {
             map ('missions') {
                 to Mission
+            }
+        }
+    }
+
+    static final PreparedDataSet agents = Dru.prepare {
+        include agentMapping
+
+        from ('agents.json') {
+            map ('agents') {
+                to Agent
             }
         }
     }

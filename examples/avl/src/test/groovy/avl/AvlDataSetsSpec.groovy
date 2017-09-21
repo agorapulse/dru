@@ -20,20 +20,16 @@ import spock.lang.Specification
 class AvlDataSetsSpec extends Specification implements DataTest {
 
     @Rule Dru dru = Dru.plan {
-        include AvlDataSets.missions
-
         whenLoaded {
             println it.report
         }
     }
 
-    void setup() {
-        dru.load()
-    }
-
     void ' warmup'() { expect: true }
 
     void 'entities can be access from the data set'() {
+        given:
+            dru.load(AvlDataSets.missions)
         expect:
             dru.findAllByType(Mission).size() == 2
             dru.findByTypeAndOriginalId(Mission, 7)
@@ -44,6 +40,8 @@ class AvlDataSetsSpec extends Specification implements DataTest {
     }
 
     void 'GORM entities are persisted'() {
+        given:
+            dru.load(AvlDataSets.missions)
         expect:
             Mission.list().size() == 2
             Agent.list().size() == 3
@@ -52,6 +50,8 @@ class AvlDataSetsSpec extends Specification implements DataTest {
     }
 
     void 'DynamoDB mapper can access loaded entities'() {
+        given:
+            dru.load(AvlDataSets.missions)
         when:
             DruDynamoDBMapper mapper = DynamoDB.createMapper(dru)
         then:
@@ -69,6 +69,8 @@ class AvlDataSetsSpec extends Specification implements DataTest {
     }
 
     void 'DynamoDB mapper can query the loaded entities'() {
+        given:
+            dru.load(AvlDataSets.missions)
         when:
             DruDynamoDBMapper mapper = DynamoDB.createMapper(dru)
             MissionLogEntry hashKey = new MissionLogEntry(missionId: dru.findByTypeAndOriginalId(Mission, 7).id)
@@ -101,6 +103,8 @@ class AvlDataSetsSpec extends Specification implements DataTest {
     }
 
     void 'DynamoDB mapper can scan the loaded entities'() {
+        given:
+            dru.load(AvlDataSets.missions)
         when:
             DruDynamoDBMapper mapper = DynamoDB.createMapper(dru)
             Condition scanFilterCondition = new Condition()
@@ -134,6 +138,8 @@ class AvlDataSetsSpec extends Specification implements DataTest {
     }
 
     void 'DynamoDB mapper updates data set'() {
+        given:
+            dru.load(AvlDataSets.missions)
         when:
             DruDynamoDBMapper mapper = DynamoDB.createMapper(dru)
             Item moon = new Item(name: 'Moon')
@@ -148,6 +154,8 @@ class AvlDataSetsSpec extends Specification implements DataTest {
     }
 
     void 'Complex DynamoDB scan can be done using onScan'() {
+        given:
+            dru.load(AvlDataSets.missions)
         when:
             DruDynamoDBMapper mapper = DynamoDB.createMapper(dru)
             Long gruId = Agent.findByName('Felonius Gru').id
@@ -160,6 +168,8 @@ class AvlDataSetsSpec extends Specification implements DataTest {
     }
 
     void 'Complex DynamoDB query can be done using onScan'() {
+        given:
+            dru.load(AvlDataSets.missions)
         when:
             DruDynamoDBMapper mapper = DynamoDB.createMapper(dru)
             Long gruId = Agent.findByName('Felonius Gru').id
@@ -169,6 +179,19 @@ class AvlDataSetsSpec extends Specification implements DataTest {
             PaginatedQueryList<MissionLogEntry> query = mapper.query(MissionLogEntry, new DynamoDBQueryExpression<MissionLogEntry>().withIndexName('agentId'))
         then:
             query.size() == 3
+    }
+
+    void 'load agents'() {
+        when:
+            dru.load(AvlDataSets.agents)
+        then:
+            noExceptionThrown()
+            Agent.list().size() == 2
+            Mission.list().size() == 2
+            Assignment.list().size() == 4
+        and:
+            Agent.findByNameAndSecurityLevel('Felonius Gru', 2)
+            Agent.findByNameAndSecurityLevel('Lucy Wilde', 5)
     }
 
 }

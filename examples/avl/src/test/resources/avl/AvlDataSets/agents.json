@@ -1,0 +1,62 @@
+{
+  "agents": [
+    {
+      "id": 12345,
+      "name": "Felonius Gru",
+      "bio": "Born from the family with long line of villainy and formerly the world's greatest villain.",
+      "rank": 2,
+      "novice": true,
+      "assignments": [
+        {
+          "mission": {
+            "id": 7,
+            "title": "Save the World from PX-41"
+          },
+          "agent": {
+            "id": 12345,
+            "name": "Felonius Gru"
+          }
+        },
+        {
+          "mission": {
+            "id": 13,
+            "title": "Prevent Balthazar Bratt to steal Dupont Diamond"
+          },
+          "agent": {
+            "id": 12345,
+            "name": "Felonius Gru"
+          }
+        }
+      ]
+    },
+    {
+      "id": 3456,
+      "name": "Lucy Wilde",
+      "bio": "Lucy's parents were killed by a villain when she was younger, this event making her join the Anti-Villain League",
+      "rank": 5,
+      "novice": false,
+      "assignments": [
+        {
+          "mission": {
+            "id": 7,
+            "title": "Save the World from PX-41"
+          },
+          "agent": {
+            "id": 3456,
+            "name": "Lucy Wilde"
+          }
+        },
+        {
+          "mission": {
+            "id": 13,
+            "title": "Prevent Balthazar Bratt to steal Dupont Diamond"
+          },
+          "agent": {
+            "id": 3456,
+            "name": "Lucy Wilde"
+          }
+        }
+      ]
+    }
+  ]
+}

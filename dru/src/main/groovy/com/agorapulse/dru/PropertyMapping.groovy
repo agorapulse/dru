@@ -250,8 +250,7 @@ class PropertyMapping implements PropertyMappingDefinition {
             assignProperties(newStuff, payload)
         }
 
-        dataSetMapping.applyDefaults(type, newStuff, fixture.asImmutable())
-        typeMappingToUse.defaults.apply(newStuff, fixture.asImmutable())
+        handleDefaults(dataSetMapping, typeMappingToUse, type, fixture, newStuff)
 
         client.save(newStuff)
 
@@ -276,6 +275,18 @@ class PropertyMapping implements PropertyMappingDefinition {
         removeAccessedKeysFromMissing(missing, fixture, dataSet)
 
         return typeMappingToUse.process(newStuff)
+    }
+
+    private static void handleDefaults(DataSetMapping dataSetMapping, TypeMapping typeMappingToUse, Class type, MockObject fixture, Object newStuff) {
+        MockObject defaults = new MockObject()
+        dataSetMapping.applyDefaults(type, defaults, fixture.asImmutable())
+        typeMappingToUse.defaults.apply(defaults, fixture.asImmutable())
+
+        for (Map.Entry<String, Object> defaultValue in defaults.entrySet()) {
+            if (newStuff."$defaultValue.key" == null) {
+                newStuff."$defaultValue.key" = defaultValue.value
+            }
+        }
     }
 
     @CompileStatic
