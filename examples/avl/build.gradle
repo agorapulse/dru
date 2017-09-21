@@ -69,12 +69,12 @@ assets {
     minifyCss = false
 }
 
-integrationTest {
-    jacoco {
-        append = true
-        destinationFile = file("$buildDir/jacoco/test.exec")
-    }
-}
+//integrationTest {
+//    jacoco {
+//        append = true
+//        destinationFile = file("$buildDir/jacoco/test.exec")
+//    }
+//}
 
 test {
     jacoco {
