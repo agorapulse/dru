@@ -1,6 +1,162 @@
 {
   "missions": [
     {
+      "id": 7,
+      "title": "Save the World from PX-41",
+      "description": "A secret laboratory in the Arctic Circle has just been stolen with a mysterious giant magnet. The lab contains the mutagen, PX-41, that can transform living things into evil, indestructible killing machines. We need to find and destroy it",
+      "villain": {
+        "id": 247,
+        "name": "El Macho",
+        "bio": "A former renowned, nearly superhuman-level strong bank robber who now wants to dominate the world"
+      },
+      "assignments": [
+        {
+          "mission": {
+            "id": 13,
+            "title": "Save the World from PX-41"
+          },
+          "agent": {
+            "id": 12345,
+            "name": "Felonius Gru"
+          }
+        },
+        {
+          "mission": {
+            "id": 13,
+            "title": "Save the World from PX-41"
+          },
+          "agent": {
+            "id": 3456,
+            "name": "Lucy Wilde"
+          }
+        }
+      ],
+      "log": [
+        {
+          "mission": {
+            "id": 13,
+            "title": "Save the World from PX-41"
+          },
+          "date": "2013-07-04T12:34:56Z",
+          "type": "itemStolen",
+          "description": "Research station was stolen",
+          "agent": null,
+          "villain": null,
+          "item": {
+            "name": "PX-41",
+            "description": "The PX-41 is a very dangerous mutator engineered in the top secret PX-Labs, located in the Arctic Circle. It is capable of turning any living things in the world into a purple, furry, indestructible, mindless, killing machine that is so dangerous that it can destroy anything in its path.",
+            "tags": [
+              "mutator", "monsters", "superpowers"
+            ]
+          }
+        },
+        {
+          "mission": {
+            "id": 13,
+            "title": "Save the World from PX-41"
+          },
+          "date": "2013-07-05T01:23:22Z",
+          "type": "started",
+          "description": "Mission started by Silas Ramsbottom",
+          "agent": {
+            "id": 101,
+            "name": "Silas Ramsbottom"
+          },
+          "villain": null,
+          "item": null
+        },
+        {
+          "mission": {
+            "id": 13,
+            "title": "Save the World from PX-41"
+          },
+          "date": "2013-07-05T01:34:11Z",
+          "type": "agentAssigned",
+          "description": "Assigned to Lucy Wilde",
+          "agent": {
+            "id": 3456,
+            "name": "Lucy Wilde"
+          },
+          "villain": null,
+          "item": null
+        },
+        {
+          "mission": {
+            "id": 13,
+            "title": "Save the World from PX-41"
+          },
+          "date": "2013-07-08T20:12:22Z",
+          "type": "agentAssigned",
+          "description": "Assigned to Felonius Gru",
+          "agent": {
+            "id": 12345,
+            "name": "Felonius Gru"
+          },
+          "villain": null,
+          "item": null
+        },
+        {
+          "mission": {
+            "id": 13,
+            "title": "Save the World from PX-41"
+          },
+          "date": "2013-07-12T14:32:43Z",
+          "type": "progress",
+          "description": "Agents assigned to cover mission",
+          "agent": null,
+          "villain": null,
+          "item": null
+        },
+        {
+          "mission": {
+            "id": 13,
+            "title": "Save the World from PX-41"
+          },
+          "date": "2013-07-14T09:22:33Z",
+          "type": "villainIdentified",
+          "description": "Identified El Macho",
+          "agent": {
+            "id": 12345,
+            "name": "Felonius Gru"
+          },
+          "villain": {
+            "id": 247,
+            "name": "El Macho",
+            "bio": "A former renowned, nearly superhuman-level strong bank robber who now wants to dominate the world"
+          },
+          "item": null
+        },
+        {
+          "mission": {
+            "id": 13,
+            "title": "Save the World from PX-41"
+          },
+          "date": "2013-07-23T19:13:20Z",
+          "type": "succeeded",
+          "description": "Felonius Gru defeated El Macho with the help of minions",
+          "agent": {
+            "id": 12345,
+            "name": "Felonius Gru"
+          },
+          "villain": {
+            "id": 247,
+            "name": "El Macho",
+            "bio": "A former renowned, nearly superhuman-level strong bank robber who now wants to dominate the world"
+          },
+          "item": null
+        }
+      ],
+      "items": [
+        {
+          "name": "PX-41",
+          "description": "The PX-41 is a very dangerous mutator engineered in the top secret PX-Labs, located in the Arctic Circle. It is capable of turning any living things in the world into a purple, furry, indestructible, mindless, killing machine that is so dangerous that it can destroy anything in its path.",
+          "tags": [
+            "mutator", "monsters", "superpowers"
+          ]
+        }
+      ]
+    },
+    {
       "id": 13,
       "title": "Prevent Balthazar Bratt to steal Dupont Diamond",
       "description": "Balthazar Bratt wants to steal Dupond Diamond to build his evil giant robot. We need to stop him!",
@@ -27,7 +183,7 @@
           },
           "agent": {
             "id": 3456,
-            "name": "Lucy"
+            "name": "Lucy Wilde"
           }
         }
       ],

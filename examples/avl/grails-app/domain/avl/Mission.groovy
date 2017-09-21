@@ -7,10 +7,11 @@ class Mission {
 
     String description
 
-    Set<String> itemIds = []
-
     static hasMany = [assignments: Assignment]
 
-    static constraints = { }
+    static constraints = {
+        villain nullable: true
+        description nullable: true
+    }
 
 }
