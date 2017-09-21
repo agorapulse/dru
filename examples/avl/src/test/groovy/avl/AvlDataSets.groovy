@@ -66,6 +66,17 @@ class AvlDataSets {
         }
     }
 
+    static final PreparedDataSet missionsYaml = Dru.prepare {
+        include missionMapping
+        include agentMapping
+
+        from ('missions.yml') {
+            map ('missions') {
+                to Mission
+            }
+        }
+    }
+
     static final PreparedDataSet agents = Dru.prepare {
         include agentMapping
 

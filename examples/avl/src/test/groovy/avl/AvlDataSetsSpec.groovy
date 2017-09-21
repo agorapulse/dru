@@ -40,6 +40,18 @@ class AvlDataSetsSpec extends Specification implements DataTest {
             dru.findAllByType(Item).size() == 2
     }
 
+    void 'entities can be access from the data set - yaml'() {
+        given:
+            dru.load(AvlDataSets.missionsYaml)
+        expect:
+            dru.findAllByType(Mission).size() == 2
+            dru.findByTypeAndOriginalId(Mission, 7)
+            dru.findAllByType(Agent).size() == 3
+            dru.findAllByType(Assignment).size() == 4
+            dru.findAllByType(Villain).size() == 2
+            dru.findAllByType(Item).size() == 2
+    }
+
     void 'GORM entities are persisted'() {
         given:
             dru.load(AvlDataSets.missions)

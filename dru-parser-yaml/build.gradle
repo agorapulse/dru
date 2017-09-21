@@ -1,0 +1,5 @@
+dependencies {
+    compile project(':dru')
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion"
+}
