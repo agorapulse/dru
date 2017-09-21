@@ -48,13 +48,13 @@ import groovy.transform.PackageScope
                 it != null && it.toString().startsWith(getValue(condition.attributeValueList.first()).toString())
             }
             case 'IN': return {
-                condition.attributeValueList.collect { getValue(it) }.contains(it)
+                condition.attributeValueList.collectMany { getValue(it) }.contains(it)
             }
             case 'BETWEEN': return {
                 it >= getValue(condition.attributeValueList[0]) && it <= getValue(condition.attributeValueList[1])
             }
         }
-        return { false }
+        throw new IllegalArgumentException("Unknown operator $condition.comparisonOperator")
     }
 
     @SuppressWarnings('UnnecessaryGetter')
