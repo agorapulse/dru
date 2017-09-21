@@ -151,10 +151,7 @@ class DruDynamoDBMapper extends DynamoDBMapper {
 
         List<T> items = findAllMatching(clazz, scanExpression, config)
 
-        if (scanExpression.exclusiveStartKey) {
-            T key = getTableModel(clazz).unconvert(scanExpression.exclusiveStartKey)
-            items = items.dropWhile { getId(it) != getId(key) }
-        }
+        items = handleStartKey(clazz, items, scanExpression.exclusiveStartKey)
 
         ScanResultPage<T> result = new ScanResultPage<T>()
 
@@ -204,18 +201,7 @@ class DruDynamoDBMapper extends DynamoDBMapper {
 
         List<T> items = findAllMatching(clazz, queryExpression, config)
 
-        if (queryExpression.exclusiveStartKey) {
-            T startKeyInstance = clazz.newInstance()
-
-            for (Map.Entry<String, AttributeValue> e in queryExpression.exclusiveStartKey) {
-                try {
-                    startKeyInstance."$e.key" = getTableModel(clazz).field(e.key).unconvert(e.value)
-                } catch (Exception ex) {
-                    throw new IllegalStateException("Cannot set property $e.key of $clazz to $e.value", ex)
-                }
-            }
-            items = items.dropWhile { getId(it) != getId(startKeyInstance) }
-        }
+        items = handleStartKey(clazz, items, queryExpression.exclusiveStartKey)
 
         QueryResultPage<T> result = new QueryResultPage<T>()
 
@@ -238,6 +224,29 @@ class DruDynamoDBMapper extends DynamoDBMapper {
             .withTable(new Capacity().withCapacityUnits(1))
 
         return result
+    }
+
+    private <T> List<T> handleStartKey(Class<T> clazz, List<T> items, Map<String, AttributeValue> exclusiveStartKey) {
+        if (!exclusiveStartKey) {
+            return items
+        }
+
+        T startKeyInstance = clazz.newInstance()
+
+        for (Map.Entry<String, AttributeValue> e in exclusiveStartKey) {
+            try {
+                startKeyInstance."$e.key" = getTableModel(clazz).field(e.key).unconvert(e.value)
+            } catch (Exception ex) {
+                throw new IllegalStateException("Cannot set property $e.key of $clazz to $e.value", ex)
+            }
+        }
+
+        List<T> result = items.dropWhile { getId(it) != getId(startKeyInstance) }
+        if (result.size() > 1) {
+            return result.tail()
+        }
+
+        return  Collections.emptyList()
     }
 
     private <T> Map<String, AttributeValue> getLastKey(List<T> items, Class<T> clazz) {
