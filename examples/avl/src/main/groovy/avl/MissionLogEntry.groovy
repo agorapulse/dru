@@ -1,8 +1,10 @@
 package avl
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMarshalling
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable
+import com.amazonaws.services.dynamodbv2.datamodeling.JsonMarshaller
 
 @DynamoDBTable(tableName = "MissionLogEntry")
 class MissionLogEntry {
@@ -20,5 +22,8 @@ class MissionLogEntry {
     Long agentId
     Long villainId
     String itemName
+
+    @DynamoDBMarshalling(marshallerClass = ExtMarshaller)
+    Map<String, Object> ext
 
 }

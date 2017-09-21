@@ -9,6 +9,8 @@
         "name": "El Macho",
         "bio": "A former renowned, nearly superhuman-level strong bank robber who now wants to dominate the world"
       },
+      "started": "2013-07-05T01:23:22Z",
+      "finished": "2013-07-23T19:13:20Z",
       "assignments": [
         {
           "mission": {
@@ -105,7 +107,10 @@
           "description": "Agents assigned to cover mission",
           "agent": null,
           "villain": null,
-          "item": null
+          "item": null,
+          "ext": {
+            "location": "The Paradise"
+          }
         },
         {
           "mission": {

@@ -11,29 +11,31 @@ class AvlDataSets {
                 to (new: Item)
             }
             map ('log') {
-                to (new: MissionLogEntry) {
-                    map ('item') {
-                        to (itemName: Item) {
+                to(new: MissionLogEntry) {
+                    map('item') {
+                        to(itemName: Item) {
                             just { name }
                         }
                     }
-                    map ('agent') {
-                        to (agentId: Agent) {
+                    map('agent') {
+                        to(agentId: Agent) {
                             just { id }
                         }
                     }
-                    map ('villain') {
-                        to (villainId: Villain) {
+                    map('villain') {
+                        to(villainId: Villain) {
                             just { id }
                         }
                     }
-                    map ('mission') {
-                        to (missionId: Mission) {
+                    map('mission') {
+                        to(missionId: Mission) {
                             just { id }
                         }
                     }
                 }
             }
+
+            ignore 'started', 'finished'
         }
     }
 
