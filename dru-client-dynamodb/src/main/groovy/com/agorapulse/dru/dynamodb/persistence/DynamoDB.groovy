@@ -6,7 +6,6 @@ import com.agorapulse.dru.persistence.Client
 import com.agorapulse.dru.persistence.ClientFactory
 import com.agorapulse.dru.persistence.meta.ClassMetadata
 import com.agorapulse.dru.pojo.Pojo
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable
 
 /**
@@ -44,7 +43,7 @@ class DynamoDB extends Pojo {
         new DynamoDBClassMetadata(type)
     }
 
-    static DynamoDBMapper createMapper(DataSet dataSet) {
+    static DruDynamoDBMapper createMapper(DataSet dataSet) {
         return new DruDynamoDBMapper(dataSet)
     }
 
