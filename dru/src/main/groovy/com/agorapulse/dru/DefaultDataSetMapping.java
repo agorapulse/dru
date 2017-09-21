@@ -36,12 +36,6 @@ final class DefaultDataSetMapping implements DataSetMappingDefinition, DataSetMa
         return this;
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T> DataSetMappingDefinition any(Class<T> type) {
-        return any(type, Closure.IDENTITY);
-    }
-
     @Override
     public DataSetMappingDefinition include(PreparedDataSet plan) {
         int hashCode = System.identityHashCode(plan);

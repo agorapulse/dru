@@ -45,6 +45,7 @@
           "agent": null,
           "villain": null,
           "item": {
+            "id": "050e4fcf-158d-4f44-9b8b-a6ba6809982e",
             "name": "PX-41",
             "description": "The PX-41 is a very dangerous mutator engineered in the top secret PX-Labs, located in the Arctic Circle. It is capable of turning any living things in the world into a purple, furry, indestructible, mindless, killing machine that is so dangerous that it can destroy anything in its path.",
             "tags": [
@@ -153,6 +154,7 @@
       ],
       "items": [
         {
+          "id": "050e4fcf-158d-4f44-9b8b-a6ba6809982e",
           "name": "PX-41",
           "description": "The PX-41 is a very dangerous mutator engineered in the top secret PX-Labs, located in the Arctic Circle. It is capable of turning any living things in the world into a purple, furry, indestructible, mindless, killing machine that is so dangerous that it can destroy anything in its path.",
           "tags": [
@@ -194,6 +196,7 @@
       ],
       "items": [
         {
+          "id": "e30d0de3-2415-42b2-aa31-dceba3dcc3fa",
           "name": "Dupont Diamond",
           "description": "The Dupont Diamond is a giant gem",
           "tags": [

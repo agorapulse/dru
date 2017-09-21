@@ -3,6 +3,7 @@ package avl
 import com.agorapulse.dru.Dru
 import com.agorapulse.dru.dynamodb.persistence.DruDynamoDBMapper
 import com.agorapulse.dru.dynamodb.persistence.DynamoDB
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression
 import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedParallelScanList
@@ -57,10 +58,10 @@ class AvlDataSetsSpec extends Specification implements DataTest {
         then:
             mapper.count(Item.class, new DynamoDBQueryExpression<Item>()) == 2
             mapper.count(MissionLogEntry.class, new DynamoDBScanExpression()) == 7
-            mapper.load(new Item(name: "Dupont Diamond"))
-            mapper.load(Item.class, "Dupont Diamond")
+            mapper.load(new Item(id: "e30d0de3-2415-42b2-aa31-dceba3dcc3fa", name: "Dupont Diamond"))
+            mapper.load(Item.class, "e30d0de3-2415-42b2-aa31-dceba3dcc3fa", "Dupont Diamond")
         when:
-            Map<String, List<Object>> batchFetch = mapper.batchLoad([new Item(name: "Dupont Diamond")])
+            Map<String, List<Object>> batchFetch = mapper.batchLoad([new Item(id: "e30d0de3-2415-42b2-aa31-dceba3dcc3fa", name: "Dupont Diamond")])
         then:
             batchFetch.size() == 1
             batchFetch['Item']
@@ -100,6 +101,8 @@ class AvlDataSetsSpec extends Specification implements DataTest {
             PaginatedQueryList<MissionLogEntry> paginatedRangeQuery = mapper.query(MissionLogEntry, rangeQuery)
         then:
             paginatedRangeQuery.size() == 3
+            paginatedRangeQuery.atEndOfResults()
+            !paginatedRangeQuery.fetchNextPage()
     }
 
     void 'DynamoDB mapper can scan the loaded entities'() {
@@ -131,10 +134,14 @@ class AvlDataSetsSpec extends Specification implements DataTest {
             PaginatedScanList<MissionLogEntry> scan = mapper.scan(MissionLogEntry, hashScanExpression)
         then:
             scan.size() == 3
+            scan.atEndOfResults()
+            !scan.fetchNextPage()
         when:
             PaginatedParallelScanList<MissionLogEntry> scanParallelPage = mapper.parallelScan(MissionLogEntry, hashScanExpression, 5)
         then:
             scanParallelPage.size() == 3
+            scanParallelPage.atEndOfResults()
+            !scanParallelPage.fetchNextPage()
     }
 
     void 'DynamoDB mapper updates data set'() {
@@ -176,14 +183,34 @@ class AvlDataSetsSpec extends Specification implements DataTest {
             mapper.onQuery(MissionLogEntry) { MissionLogEntry it, DynamoDBQueryExpression expression ->
                 it[expression.indexName] == gruId
             }
+            mapper.onQuery(MissionLogEntry) { MissionLogEntry it, DynamoDBQueryExpression expression, DynamoDBMapperConfig config ->
+                // testing closure with full parameters
+                true
+            }
             PaginatedQueryList<MissionLogEntry> query = mapper.query(MissionLogEntry, new DynamoDBQueryExpression<MissionLogEntry>().withIndexName('agentId'))
         then:
             query.size() == 3
     }
 
+    void 'usage with grails dynamodb plugin'() {
+        given:
+            String id = "f9e716df-2d73-42cb-9cf5-9334617f73c1"
+            String name = 'Something'
+            dru.load(AvlDataSets.missions)
+        when:
+            ItemService itemService = new ItemService(mapper: DynamoDB.createMapper(dru))
+            itemService.save(new Item(id: id, name: name))
+        then:
+            dru.findByTypeAndOriginalId(Item, DynamoDB.getId(id, name))
+    }
+
     void 'load agents'() {
         when:
-            dru.load(AvlDataSets.agents)
+            dru.load {
+                include AvlDataSets.agents
+                // also test duplicate load
+                include AvlDataSets.agents
+            }
         then:
             noExceptionThrown()
             Agent.list().size() == 2

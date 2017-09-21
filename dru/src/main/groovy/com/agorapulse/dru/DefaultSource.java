@@ -35,11 +35,6 @@ class DefaultSource implements SourceDefinition, Source {
     }
 
     @Override
-    public Object getReferenceObject() {
-        return referenceObject;
-    }
-
-    @Override
     public InputStream getSourceStream() {
         Class reference = referenceObject instanceof Class ? (Class) referenceObject : referenceObject.getClass();
         return reference.getResourceAsStream(reference.getSimpleName() + "/" + path);

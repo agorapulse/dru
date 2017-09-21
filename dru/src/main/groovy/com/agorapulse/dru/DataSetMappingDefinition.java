@@ -9,8 +9,6 @@ public interface DataSetMappingDefinition {
 
     DataSetMappingDefinition from(String relativePath, @DelegatesTo(value = SourceDefinition.class, strategy = Closure.DELEGATE_FIRST) Closure<SourceDefinition> configuration);
 
-    <T> DataSetMappingDefinition any(Class<T> type);
-
     <T> DataSetMappingDefinition any(Class<T> type,
                                      @DelegatesTo(type = "com.agorapulse.dru.TypeMappingDefinition<T>", strategy = Closure.DELEGATE_FIRST)
                                      @ClosureParams(value = FromString.class, options = "com.agorapulse.dru.TypeMappingDefinition<T>")

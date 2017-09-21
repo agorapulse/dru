@@ -70,7 +70,7 @@ class AvlDataSets {
         include agentMapping
 
         from ('agents.json') {
-            map ('agents') {
+            map {
                 to Agent
             }
         }

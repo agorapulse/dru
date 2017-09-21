@@ -23,9 +23,4 @@ class MissingProperty {
         this.value = value
         this.type = type
     }
-
-    @Override
-    String toString() {
-        "PropertyMissing: path=$path, type=$type, value=$value"
-    }
 }
