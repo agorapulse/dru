@@ -13,7 +13,7 @@ public class CachedClassMetadata implements ClassMetadata {
         this.type = original.getType();
         this.persistentProperties = new LinkedHashMap<>();
         for (PropertyMetadata metadata : original.getPersistentProperties()) {
-            this.persistentProperties.put(metadata.getName(), metadata);
+            this.persistentProperties.put(metadata.getName(), new CachedPropertyMetadata(metadata));
         }
         this.original = original;
     }

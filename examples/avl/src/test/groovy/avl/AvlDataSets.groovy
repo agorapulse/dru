@@ -5,38 +5,44 @@ import com.agorapulse.dru.PreparedDataSet
 
 class AvlDataSets {
 
-    static final PreparedDataSet missions = Dru.prepare {
-        from ('missions.json') {
-            map ('missions') {
-                to (Mission) {
-                    map ('items') {
-                        to (new: Item)
+    static final PreparedDataSet missionMapping = Dru.prepare {
+        any (Mission) {
+            map ('items') {
+                to (new: Item)
+            }
+            map ('log') {
+                to (new: MissionLogEntry) {
+                    map ('item') {
+                        to (itemName: Item) {
+                            just { name }
+                        }
                     }
-                    map ('log') {
-                        to (new: MissionLogEntry) {
-                            map ('item') {
-                                to (itemName: Item) {
-                                    just { name }
-                                }
-                            }
-                            map ('agent') {
-                                to (agentId: Agent) {
-                                    just { id }
-                                }
-                            }
-                            map ('villain') {
-                                to (villainId: Villain) {
-                                    just { id }
-                                }
-                            }
-                            map ('mission') {
-                                to (missionId: Mission) {
-                                    just { id }
-                                }
-                            }
+                    map ('agent') {
+                        to (agentId: Agent) {
+                            just { id }
+                        }
+                    }
+                    map ('villain') {
+                        to (villainId: Villain) {
+                            just { id }
+                        }
+                    }
+                    map ('mission') {
+                        to (missionId: Mission) {
+                            just { id }
                         }
                     }
                 }
+            }
+        }
+    }
+
+    static final PreparedDataSet missions = Dru.prepare {
+        include missionMapping
+
+        from ('missions.json') {
+            map ('missions') {
+                to Mission
             }
         }
     }
