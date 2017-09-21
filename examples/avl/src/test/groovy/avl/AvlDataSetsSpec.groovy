@@ -117,6 +117,13 @@ class AvlDataSetsSpec extends Specification implements DataTest {
         then:
             nextScanPage.count == 1
         when:
+            ScanResultPage<MissionLogEntry> emptyScanPage = mapper.scanPage(MissionLogEntry, hashScanExpression.withExclusiveStartKey(
+                missionId: new AttributeValue().withN(Mission.findByTitle('Save the World from PX-41').id.toString()),
+                date: new AttributeValue().withS('2013-07-23T19:13:20.000Z')
+            ))
+        then:
+            emptyScanPage.count == 0
+        when:
             PaginatedScanList<MissionLogEntry> scan = mapper.scan(MissionLogEntry, hashScanExpression)
         then:
             scan.size() == 3

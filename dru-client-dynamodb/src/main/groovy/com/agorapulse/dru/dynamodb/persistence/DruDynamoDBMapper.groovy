@@ -193,7 +193,6 @@ class DruDynamoDBMapper extends DynamoDBMapper {
     }
 
     @Override
-    @SuppressWarnings('CatchException')
     <T> QueryResultPage<T> queryPage(Class<T> clazz,
                                      DynamoDBQueryExpression<T> queryExpression,
                                      DynamoDBMapperConfig mapperConfig) {
@@ -226,6 +225,13 @@ class DruDynamoDBMapper extends DynamoDBMapper {
         return result
     }
 
+    @Override
+    <T> int count(Class<T> clazz, DynamoDBQueryExpression<T> queryExpression, DynamoDBMapperConfig config) {
+        queryExpression.limit = Integer.MAX_VALUE
+        query(clazz, queryExpression, config).size()
+    }
+
+    @SuppressWarnings('CatchException')
     private <T> List<T> handleStartKey(Class<T> clazz, List<T> items, Map<String, AttributeValue> exclusiveStartKey) {
         if (!exclusiveStartKey) {
             return items
@@ -256,12 +262,6 @@ class DruDynamoDBMapper extends DynamoDBMapper {
 
         Map<String, AttributeValue> lastId = getTableModel(clazz).convertKey(hash, range)
         lastId
-    }
-
-    @Override
-    <T> int count(Class<T> clazz, DynamoDBQueryExpression<T> queryExpression, DynamoDBMapperConfig config) {
-        queryExpression.limit = Integer.MAX_VALUE
-        query(clazz, queryExpression, config).size()
     }
 
     @SuppressWarnings([
