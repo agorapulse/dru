@@ -33,14 +33,6 @@ class MissingPropertiesReport {
         missingProperties.put(missingProperty, missingProperty)
     }
 
-    /**
-     * This reports is truthy if there were no properties missing model.
-     * @return true if there were no properties missing in the domain model
-     */
-    boolean asBoolean() {
-        missingProperties.isEmpty()
-    }
-
     @Override
     String toString() {
         final int MINIMAL_WIDTH = 8

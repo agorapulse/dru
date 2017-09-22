@@ -16,6 +16,8 @@ class MissingPropertiesReportSpec extends Specification {
         when:
             MissingPropertiesReport report = new MissingPropertiesReport()
             report.add(MissingProperty.create('foo', 'bar', [foo: 'bar'], Map))
+            report.add(MissingProperty.create('foo', 'baz', [foo: 'bar'], Map))
+            report.add(MissingProperty.create('zoo', 'lane', [foo: 'bar'], List))
         then:
             report.toString().contains('‖ Map      | bar      | foo      | [foo:bar] ‖')
     }
