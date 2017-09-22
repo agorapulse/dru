@@ -38,9 +38,7 @@ class GormClassMetadata implements ClassMetadata {
     @Override
     Serializable getId(Map<String, Object> fixture) {
         GrailsDomainClassProperty identifier = grailsDomainClass.identifier
-        if (!identifier) {
-            return null
-        }
+        assert identifier
         return fixture[identifier.name] as Serializable
     }
 }

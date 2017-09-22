@@ -8,8 +8,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable
 @DynamoDBTable(tableName = "MissionLogEntry")
 class MissionLogEntry {
 
-    @DynamoDBHashKey
-    Long missionId
+    private Long missionId
 
     @DynamoDBRangeKey
     Date date
@@ -25,4 +24,12 @@ class MissionLogEntry {
     @DynamoDBMarshalling(marshallerClass = ExtMarshaller)
     Map<String, Object> ext
 
+    @DynamoDBHashKey
+    Long getMissionId() {
+        return missionId
+    }
+
+    void setMissionId(Long missionId) {
+        this.missionId = missionId
+    }
 }

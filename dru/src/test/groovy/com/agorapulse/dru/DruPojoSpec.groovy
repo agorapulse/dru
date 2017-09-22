@@ -1,7 +1,12 @@
 package com.agorapulse.dru
 
 import com.agorapulse.dru.parser.Parser
+import com.agorapulse.dru.persistence.meta.CachedClassMetadata
+import com.agorapulse.dru.persistence.meta.CachedPropertyMetadata
+import com.agorapulse.dru.persistence.meta.ClassMetadata
+import com.agorapulse.dru.persistence.meta.PropertyMetadata
 import com.agorapulse.dru.pojo.Pojo
+import com.agorapulse.dru.pojo.meta.PojoClassMetadata
 import org.junit.Rule
 import spock.lang.Specification
 
@@ -106,6 +111,38 @@ class DruPojoSpec extends Specification {
         then:
             tester2.collectionSubClassValue
             tester2.collectionSubClassValue.contains('bar')
+    }
+
+    void 'cached metadata'() {
+        when:
+            ClassMetadata classMetadata = new PojoClassMetadata(PojoTester)
+            CachedClassMetadata cachedClassMetadata = new CachedClassMetadata(classMetadata)
+            Map<String, Object> fixture = [id: 1]
+        then:
+            classMetadata.getId(fixture) == cachedClassMetadata.getId(fixture)
+            classMetadata.type == cachedClassMetadata.type
+            classMetadata.persistentProperties*.name == cachedClassMetadata.persistentProperties*.name
+            classMetadata == cachedClassMetadata.original
+        when:
+            PropertyMetadata propertyMetadata = classMetadata.getPersistentProperty('numericalValue')
+            CachedPropertyMetadata cachedPropertyMetadata = cachedClassMetadata.getPersistentProperty('numericalValue')
+        then:
+            propertyMetadata.name == cachedPropertyMetadata.name
+            propertyMetadata.type == cachedPropertyMetadata.type
+            propertyMetadata.referencedPropertyType == cachedPropertyMetadata.referencedPropertyType
+            propertyMetadata.persistent == cachedPropertyMetadata.persistent
+            propertyMetadata.oneToMany == cachedPropertyMetadata.oneToMany
+            propertyMetadata.manyToOne == cachedPropertyMetadata.manyToOne
+            propertyMetadata.manyToMany == cachedPropertyMetadata.manyToMany
+            propertyMetadata.oneToOne == cachedPropertyMetadata.oneToOne
+            propertyMetadata.association == cachedPropertyMetadata.association
+            propertyMetadata.owningSide == cachedPropertyMetadata.owningSide
+            propertyMetadata.referencedPropertyName == cachedPropertyMetadata.referencedPropertyName
+            propertyMetadata.embedded == cachedPropertyMetadata.embedded
+            propertyMetadata.basicCollectionType == cachedPropertyMetadata.basicCollectionType
+            propertyMetadata == cachedPropertyMetadata.original
+
+
     }
 
     public static final Map<String, Object> LIBRARY = [
