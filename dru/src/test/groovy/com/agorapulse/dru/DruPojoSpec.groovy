@@ -113,6 +113,7 @@ class DruPojoSpec extends Specification {
             tester2.collectionSubClassValue.contains('bar')
     }
 
+    @SuppressWarnings('UnnecessaryObjectReferences')
     void 'cached metadata'() {
         when:
             ClassMetadata classMetadata = new PojoClassMetadata(PojoTester)
@@ -141,8 +142,6 @@ class DruPojoSpec extends Specification {
             propertyMetadata.embedded == cachedPropertyMetadata.embedded
             propertyMetadata.basicCollectionType == cachedPropertyMetadata.basicCollectionType
             propertyMetadata == cachedPropertyMetadata.original
-
-
     }
 
     public static final Map<String, Object> LIBRARY = [

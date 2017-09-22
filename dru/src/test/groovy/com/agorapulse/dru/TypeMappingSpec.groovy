@@ -2,6 +2,9 @@ package com.agorapulse.dru
 
 import spock.lang.Specification
 
+/**
+ * Type mapping tests.
+ */
 class TypeMappingSpec extends Specification {
 
     void 'test to string'() {
@@ -9,6 +12,10 @@ class TypeMappingSpec extends Specification {
             new TypeMapping<Map>('', Map).toString() == 'TypeMapping[Map]'
     }
 
+    @SuppressWarnings([
+        'ExplicitCallToAndMethod',
+        'UnnecessaryObjectReferences',
+    ])
     void 'test mapping'() {
         when:
             TypeMapping<PojoTester> mapping = new TypeMapping<PojoTester>('', PojoTester)
