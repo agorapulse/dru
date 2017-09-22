@@ -142,6 +142,12 @@ class DruPojoSpec extends Specification {
             propertyMetadata.embedded == cachedPropertyMetadata.embedded
             propertyMetadata.basicCollectionType == cachedPropertyMetadata.basicCollectionType
             propertyMetadata == cachedPropertyMetadata.original
+        and:
+            classMetadata.getPersistentProperty('collectionValue').referencedPropertyType == String
+            classMetadata.getPersistentProperty('collectionSubClassValue').referencedPropertyType == Integer
+            classMetadata.getPersistentProperty('rawCollectionValue').referencedPropertyType == Object
+            classMetadata.getPersistentProperty('objectCollectionValue').referencedPropertyType == Object
+            classMetadata.getPersistentProperty('abstractCollectionWithInterfaceValue').referencedPropertyType == Boolean
     }
 
     public static final Map<String, Object> LIBRARY = [

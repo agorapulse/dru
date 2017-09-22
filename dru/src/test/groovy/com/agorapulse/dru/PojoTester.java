@@ -2,6 +2,7 @@ package com.agorapulse.dru;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class PojoTester {
 
@@ -11,11 +12,19 @@ public class PojoTester {
         }
     }
 
-    public static class CollectionSubClass extends ArrayList { }
+    public static class CollectionSubClass extends ArrayList<Integer> { }
+
+    public static abstract class AbstractCollectionWithInterface implements List<Boolean> { }
 
     private Collection<String> collectionValue;
 
     private CollectionSubClass collectionSubClassValue;
+
+    private Collection rawCollectionValue;
+
+    private Collection<Object> objectCollectionValue;
+
+    private AbstractCollectionWithInterface abstractCollectionWithInterfaceValue;
 
     private boolean booleanValue;
 

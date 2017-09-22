@@ -1,5 +1,6 @@
 package com.agorapulse.dru.parser
 
+import com.agorapulse.dru.PojoTester
 import com.agorapulse.dru.reflect.ReflectionParser
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -48,10 +49,10 @@ class AbstractParserSpec extends Specification {
         when:
             String path = 'path'
             Parser parser = new ReflectionParser()
-            parser.convertValue(path, 'xyz', Integer)
+            parser.convertValue(path, 'xyz', PojoTester)
         then:
             IllegalArgumentException e = thrown(IllegalArgumentException)
-            e.message == 'Failed to convert \'xyz\' to \'class java.lang.Integer\' at \'path\''
+            e.message == 'Failed to convert \'xyz\' to \'class com.agorapulse.dru.PojoTester\' at \'path\''
 
     }
 

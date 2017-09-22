@@ -39,6 +39,7 @@ class PojoPropertyMetadata implements PropertyMetadata {
             if (ret) {
                 return ret as Class
             }
+            return Object
         }
         return type
     }
