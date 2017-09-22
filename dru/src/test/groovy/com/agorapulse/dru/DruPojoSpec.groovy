@@ -1,5 +1,7 @@
 package com.agorapulse.dru
 
+import com.agorapulse.dru.parser.Parser
+import com.agorapulse.dru.pojo.Pojo
 import org.junit.Rule
 import spock.lang.Specification
 
@@ -48,7 +50,62 @@ class DruPojoSpec extends Specification {
             }
         then:
             dru.findByType(Library)
+            !dru.findByType(String)
 
+    }
+
+    void 'Pojo new instance'() {
+        given:
+            Parser parser = Mock(Parser)
+        expect:
+            Pojo.INSTANCE.newInstance(parser, Map, [foo: 'bar']) == [foo: 'bar']
+        when:
+            PojoTester tester = Pojo.INSTANCE.newInstance(parser, PojoTester, [booleanValue: true])
+        then:
+            tester.booleanValue
+        when:
+            Pojo.INSTANCE.newInstance(parser, PojoTester, [numericalValue: '123fooBAR'])
+        then:
+            IllegalArgumentException iae = thrown(IllegalArgumentException)
+            iae.message == 'Wrong type for property numericalValue: expected int, got class java.lang.String.'
+        when:
+            Pojo.INSTANCE.newInstance(parser, PojoTester, [numericalValue: null])
+        then:
+            IllegalArgumentException iae2 = thrown(IllegalArgumentException)
+            iae2.message == 'Failed to create new instance of class com.agorapulse.dru.PojoTester with payload: [numericalValue:null]'
+        when:
+            Pojo.INSTANCE.newInstance(parser, PojoTester.ThrowsExceptionInConstructor, [:])
+        then:
+            IllegalArgumentException iae3 = thrown(IllegalArgumentException)
+            iae3.message == 'Failed to create new instance of class com.agorapulse.dru.PojoTester$ThrowsExceptionInConstructor with payload: [:]'
+        when:
+            Pojo.INSTANCE.newInstance(parser, PojoTester, [willThrowClassCastException: 'foo'])
+        then:
+            IllegalArgumentException iae4 = thrown(IllegalArgumentException)
+            iae4.message == 'Failed to create new instance of class com.agorapulse.dru.PojoTester with payload: [willThrowClassCastException:foo]'
+    }
+
+    void 'Pojo add to'() {
+        expect:
+            Pojo.INSTANCE.addTo(null, 'foo', 'bar') == null
+        when:
+            Pojo.INSTANCE.addTo(new PojoTester(), 'foo', 'bar')
+        then:
+            thrown(IllegalArgumentException)
+        when:
+            Pojo.INSTANCE.addTo(new PojoTester(), 'numericalValue', 'bar')
+        then:
+            thrown(UnsupportedOperationException)
+        when:
+            PojoTester tester = Pojo.INSTANCE.addTo(new PojoTester(), 'collectionValue', 'bar')
+        then:
+            tester.collectionValue
+            tester.collectionValue.contains('bar')
+        when:
+            PojoTester tester2 = Pojo.INSTANCE.addTo(new PojoTester(), 'collectionSubClassValue', 'bar')
+        then:
+            tester2.collectionSubClassValue
+            tester2.collectionSubClassValue.contains('bar')
     }
 
     public static final Map<String, Object> LIBRARY = [
@@ -74,6 +131,9 @@ class DruPojoSpec extends Specification {
                 authors: [
                     [fullName: 'James S.A. Corey']
                 ],
+                ext: [
+                    'adapted_as': 'The Expanse'
+                ]
             ],
             [
                 title: 'It',
@@ -82,7 +142,8 @@ class DruPojoSpec extends Specification {
                 ],
                 authors: [
                     [fullName: 'Stephen King']
-                ]
+                ],
+                tags: ['scary', 'adapted']
             ],
             [
                 title: 'The Mist',
@@ -91,7 +152,8 @@ class DruPojoSpec extends Specification {
                 ],
                 authors: [
                     [fullName: 'Stephen King']
-                ]
+                ],
+                tags: ['scary', 'adapted']
             ],
             [
                 title: 'The Cider House Rules',
@@ -100,7 +162,8 @@ class DruPojoSpec extends Specification {
                 ],
                 authors: [
                     [fullName: 'John Irving']
-                ]
+                ],
+                tags: ['adapted']
             ],
         ]
     ]

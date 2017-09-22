@@ -31,7 +31,7 @@ class GormPropertyMetadata implements PropertyMetadata {
 
     @Override
     boolean isPersistent() {
-        return grailsDomainClassProperty.persistent
+        return grailsDomainClassProperty.persistent && !grailsDomainClassProperty.identity
     }
 
     @Override

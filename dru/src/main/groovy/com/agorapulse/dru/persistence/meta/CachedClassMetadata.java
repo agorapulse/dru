@@ -30,7 +30,18 @@ public class CachedClassMetadata implements ClassMetadata {
 
     @Override
     public PropertyMetadata getPersistentProperty(String name) {
-        return persistentProperties.get(name);
+        PropertyMetadata metadata = persistentProperties.get(name);
+        if (metadata != null) {
+            return metadata;
+        }
+
+        metadata = getOriginal().getPersistentProperty(name);
+
+        if (metadata != null) {
+            persistentProperties.put(name, metadata);
+        }
+
+        return metadata;
     }
 
     @Override

@@ -17,7 +17,7 @@ public class CachedPropertyMetadata implements PropertyMetadata {
     private final boolean basicCollectionType;
     private final PropertyMetadata original;
 
-    public CachedPropertyMetadata(PropertyMetadata original) {
+    CachedPropertyMetadata(PropertyMetadata original) {
         this.name = original.getName();
         this.type = original.getType();
         this.referencedPropertyType = original.getReferencedPropertyType();

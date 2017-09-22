@@ -8,6 +8,8 @@ class Book implements Comparable<Book> {
     String title
     List<Author> authors
     Set<Genre> genres
+    Collection<String> tags
+    Map<String, String> ext
 
     @SuppressWarnings([
         'IfStatementCouldBeTernary',

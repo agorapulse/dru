@@ -81,11 +81,11 @@ class Pojo extends AbstractCacheableClient {
             throw new UnsupportedOperationException("Cannot add to $metadata.type")
         }
 
-        if (object[association] == null) {
-            object[association] = createCollection(metadata.type)
+        if (object."$association" == null) {
+            object."$association" = createCollection(metadata.type)
         }
 
-        object[association].add(other)
+        object."$association".add(other)
 
         return object
     }
