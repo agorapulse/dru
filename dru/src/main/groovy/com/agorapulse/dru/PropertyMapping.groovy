@@ -8,6 +8,8 @@ import groovy.transform.CompileStatic
 import groovy.transform.stc.ClosureParams
 import groovy.transform.stc.FromString
 
+import static com.google.common.base.Preconditions.checkNotNull
+
 /**
  * Mapping of the source property to one or more type mappings.
  */
@@ -86,7 +88,7 @@ class PropertyMapping implements PropertyMappingDefinition {
 
     @Override
     String toString() {
-        return "PropertyMapping $fullPath"
+        return "PropertyMapping[$fullPath]"
     }
 
     @CompileStatic
@@ -112,19 +114,13 @@ class PropertyMapping implements PropertyMappingDefinition {
 
         typeMappingToUse = typeMappingToUse ?: typeMappings.find(fixture)
 
-        if (!typeMappingToUse) {
-            throw new IllegalStateException("No type definition for $this and $fixture")
-        }
+        checkNotNull(typeMappingToUse, "No type definition for $this and $fixture")
 
         Class type = typeMappingToUse.type
 
         Client client = findClient(dataSetMapping, type, typeMappingToUse, property)
 
-        ClassMetadata classMetadata = client.getClassMetadata(type)
-
-        if (!classMetadata) {
-            throw new IllegalStateException("No class metadata found for ${type}! $this, $typeMappingToUse: $fixture")
-        }
+        ClassMetadata classMetadata = checkNotNull(client.getClassMetadata(type), "No class metadata found for ${type}! $this, $typeMappingToUse: $fixture")
 
         dataSetMapping.applyOverrides(type, fixture, fixture.asImmutable())
         typeMappingToUse.overrides.apply(fixture, fixture.asImmutable())
@@ -209,9 +205,9 @@ class PropertyMapping implements PropertyMappingDefinition {
                     return
                 }
 
-                if (persistentProperty.referencedPropertyName == null) {
-                    throw new IllegalStateException("Cannot determine referenced property name: $fullPath => $propertyName with value $it.value")
-                }
+                checkNotNull(persistentProperty.referencedPropertyName,
+                    "Cannot determine referenced property name: $fullPath => $propertyName with value $it.value"
+                )
 
                 it.value.each { item ->
                     delayedResolutions << new DelayedAssignment(
@@ -223,9 +219,9 @@ class PropertyMapping implements PropertyMappingDefinition {
                 return
             }
 
-            if (persistentProperty.referencedPropertyName == null) {
-                throw new IllegalStateException("Cannot determine referenced property name: $fullPath => $propertyName with value $it.value")
-            }
+            checkNotNull(persistentProperty.referencedPropertyName,
+                "Cannot determine referenced property name: $fullPath => $propertyName with value $it.value"
+            )
 
             delayedResolutions << new DelayedAssignment(
                     persistentProperty.referencedPropertyName,
@@ -349,13 +345,7 @@ class PropertyMapping implements PropertyMappingDefinition {
 
     @CompileStatic
     private static Client findClient(DataSetMapping dataSetMapping, Class type, TypeMapping typeMappingToUse, Object property) {
-        Client client = dataSetMapping.clients.find { it.isSupported(type) }
-
-        if (client) {
-            return client
-        }
-
-        throw new IllegalArgumentException(("No client supports $type! $this, $typeMappingToUse: $property"))
+        checkNotNull(dataSetMapping.clients.find { it.isSupported(type) }, "No client supports $type! $this, $typeMappingToUse: $property")
     }
 
     @CompileStatic
