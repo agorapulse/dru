@@ -8,5 +8,7 @@ public interface Source {
 
     InputStream getSourceStream();
 
+    Object getReferenceObject();
+
     Iterable<PropertyMapping> getRootPropertyMappings();
 }

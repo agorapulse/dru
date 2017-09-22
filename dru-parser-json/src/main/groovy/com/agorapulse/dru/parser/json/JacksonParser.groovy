@@ -18,8 +18,8 @@ class JacksonParser extends AbstractParser {
     }
 
     @Override
-    boolean isSupported(String relativePath) {
-        return relativePath.endsWith('.json')
+    boolean isSupported(Source source) {
+        return source.path.endsWith('.json')
     }
 
     @Override

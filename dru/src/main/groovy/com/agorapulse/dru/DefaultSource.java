@@ -34,6 +34,10 @@ class DefaultSource implements SourceDefinition, Source {
         return path;
     }
 
+    public Object getReferenceObject() {
+        return referenceObject;
+    }
+
     @Override
     public InputStream getSourceStream() {
         Class reference = referenceObject instanceof Class ? (Class) referenceObject : referenceObject.getClass();
@@ -43,6 +47,11 @@ class DefaultSource implements SourceDefinition, Source {
     @Override
     public PropertyMappings getRootPropertyMappings() {
         return propertyMappings;
+    }
+
+    @Override
+    public String toString() {
+        return "Source[" + path + "] relative to " + referenceObject;
     }
 
     private final Object referenceObject;

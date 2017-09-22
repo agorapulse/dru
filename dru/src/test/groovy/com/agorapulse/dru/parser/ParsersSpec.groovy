@@ -1,6 +1,7 @@
 package com.agorapulse.dru.parser
 
 import spock.lang.Specification
+import com.agorapulse.dru.DefaultSource
 
 /**
  * Sanity spec for parsers utility.
@@ -14,7 +15,7 @@ class ParsersSpec extends Specification {
 
     void 'if there is no parser, exception is thrown'() {
         when:
-            Parsers.findParser('foo.bar')
+            Parsers.findParser(new DefaultSource(this, 'xyz'))
         then:
             thrown(IllegalArgumentException)
     }

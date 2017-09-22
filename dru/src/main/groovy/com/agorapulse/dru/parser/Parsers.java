@@ -1,5 +1,7 @@
 package com.agorapulse.dru.parser;
 
+import com.agorapulse.dru.Source;
+
 import java.util.*;
 
 public class Parsers {
@@ -17,13 +19,13 @@ public class Parsers {
         availableParsers = Collections.unmodifiableSet(new LinkedHashSet<>(parsersMap.values()));
     }
 
-    public static Parser findParser(String relativePath) {
+    public static Parser findParser(Source source) {
         for (Parser parser : availableParsers) {
-            if (parser.isSupported(relativePath)) {
+            if (parser.isSupported(source)) {
                 return parser;
             }
         }
-        throw new IllegalArgumentException("No parser supports " + relativePath);
+        throw new IllegalArgumentException("No parser supports " + source);
     }
 
 }

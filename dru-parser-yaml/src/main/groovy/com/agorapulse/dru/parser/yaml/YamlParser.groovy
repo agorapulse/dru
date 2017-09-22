@@ -19,8 +19,8 @@ class YamlParser extends AbstractParser {
     }
 
     @Override
-    boolean isSupported(String relativePath) {
-        return relativePath.endsWith('.yml') || relativePath.endsWith('.yaml')
+    boolean isSupported(Source source) {
+        return source.path.endsWith('.yml') || source.path.endsWith('.yaml')
     }
 
     @Override

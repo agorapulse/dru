@@ -8,7 +8,7 @@ public interface Parser {
 
     int getIndex();
 
-    boolean isSupported(String relativePath);
+    boolean isSupported(Source relativePath);
 
     Object getContent(Source source);
 

@@ -97,12 +97,12 @@ class Pojo extends AbstractCacheableClient {
     private static Collection createCollection(Class type) {
         if (type.interface) {
             switch (type) {
-                case Collection: return []
-                case List: return []
+                case NavigableSet: return [] as SortedSet
+                case SortedSet: return [] as SortedSet
                 case Set: return new LinkedHashSet()
                 case Queue: return [] as Queue
-                case SortedSet: return [] as SortedSet
-                case NavigableSet: return [] as SortedSet
+                case List: return []
+                case Collection: return []
             }
         }
         return type.newInstance() as Collection

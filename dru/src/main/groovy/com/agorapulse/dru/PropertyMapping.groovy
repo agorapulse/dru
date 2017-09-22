@@ -262,8 +262,10 @@ class PropertyMapping implements PropertyMappingDefinition {
             }
         }
 
-        pendingToMany.each {
-            client.addTo(newStuff, it.key, it.value)
+        pendingToMany.each { String associationName, Iterable values ->
+            values.each { value ->
+                client.addTo(newStuff, associationName, value)
+            }
         }
 
         if (pendingToMany) {

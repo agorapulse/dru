@@ -115,7 +115,7 @@ class PojoClassMetadata implements ClassMetadata {
 
     @Override
     Object getId(Map<String, Object> fixture) {
-        return null
+        return fixture.id ?: fixture.name
     }
 
     private Map<String, PropertyMetadata> collectPersistentProperties() {

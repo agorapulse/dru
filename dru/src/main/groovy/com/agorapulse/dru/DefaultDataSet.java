@@ -112,7 +112,7 @@ final class DefaultDataSet implements DataSet {
 
     private void loadInternal(DataSetMapping mapping) {
         for (Source source : mapping.getSources().values()) {
-            Parser parser = Parsers.findParser(source.getPath());
+            Parser parser = Parsers.findParser(source);
             Object content = parser.getContent(source);
             for (PropertyMapping propertyMapping : source.getRootPropertyMappings()) {
                 String path = propertyMapping.getPath();
