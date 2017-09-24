@@ -29,7 +29,8 @@
           "uri": "agents/felonius_gru"
         }
       }
-    ]
+    ],
+    "type": "agent"
   },
   {
     "id": 3456,
@@ -61,7 +62,14 @@
           "uri": "agents/lucy_wilde"
         }
       }
-    ]
+    ],
+    "type": "agent"
+  },
+  {
+    "id": 247,
+    "name": "El Macho",
+    "bio": "A former renowned, nearly superhuman-level strong bank robber who now wants to dominate the world",
+    "type": "villain"
   }
 ]
 

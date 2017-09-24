@@ -40,7 +40,7 @@ class AvlDataSets {
     }
 
     static final PreparedDataSet agentMapping = Dru.prepare {
-        any (Agent) {
+        any (WithSecurityLevel) {
             overrides {
                 if (it.rank) {
                     securityLevel = it.rank
@@ -52,6 +52,10 @@ class AvlDataSets {
             ignore {
                 novice
             }
+        }
+
+        any (Person) {
+            ignore 'uri'
         }
     }
 
@@ -83,6 +87,22 @@ class AvlDataSets {
         from ('agents.json') {
             map {
                 to Agent
+            }
+        }
+    }
+
+    static final PreparedDataSet persons = Dru.prepare {
+        include agentMapping
+
+        from ('persons.json') {
+            map {
+                to (Agent) {
+                    when { it.type == 'agent' }
+                }
+                to (Villain) {
+                    when { it.type == 'villain' }
+                    and { !it.sercurityRank }
+                }
             }
         }
     }

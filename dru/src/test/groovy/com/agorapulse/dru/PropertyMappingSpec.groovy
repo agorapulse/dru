@@ -35,10 +35,11 @@ class PropertyMappingSpec extends Specification {
         then:
             mapTypeMapping.ignored.size() == 4
         when:
-            propertyMapping.ignore('five')
+            propertyMapping.ignore('five', 'six')
+            propertyMapping.ignore(['seven', 'eight'])
         then:
-            typeMapping.ignored.size() == 5
-            mapTypeMapping.ignored.size() == 5
+            typeMapping.ignored.size() == 8
+            mapTypeMapping.ignored.size() == 8
 
     }
 

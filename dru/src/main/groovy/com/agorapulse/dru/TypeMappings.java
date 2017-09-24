@@ -43,11 +43,10 @@ final class TypeMappings implements Iterable<TypeMapping> {
     public void applyOverrides(Class type, Object destination, Object source) {
         TypeMapping mapping = mappings.get(type);
 
-        if (mapping == null) {
-            return;
+        if (mapping != null) {
+            mapping.getOverrides().apply(destination, source);
         }
 
-        mapping.getOverrides().apply(destination, source);
 
         if (type.getSuperclass() != null) {
             applyOverrides(type.getSuperclass(), destination, source);
@@ -74,11 +73,10 @@ final class TypeMappings implements Iterable<TypeMapping> {
     public void applyDefaults(Class<?> type, Object destination, Object source) {
         TypeMapping mapping = mappings.get(type);
 
-        if (mapping == null) {
-            return;
+        if (mapping != null) {
+            mapping.getDefaults().apply(destination, source);
         }
 
-        mapping.getDefaults().apply(destination, source);
 
         if (type.getSuperclass() != null) {
             applyDefaults(type.getSuperclass(), destination, source);
@@ -94,12 +92,10 @@ final class TypeMappings implements Iterable<TypeMapping> {
     public boolean isIgnored(Class<?> type, String propertyName) {
         TypeMapping mapping = mappings.get(type);
 
-        if (mapping == null) {
-            return false;
-        }
-
-        if (mapping.getIgnored().contains(propertyName)) {
-            return true;
+        if (mapping != null) {
+            if (mapping.getIgnored().contains(propertyName)) {
+                return true;
+            }
         }
 
         if (type.getSuperclass() != null && isIgnored(type.getSuperclass(), propertyName)) {

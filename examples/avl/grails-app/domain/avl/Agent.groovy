@@ -1,9 +1,6 @@
 package avl
 
-class Agent {
-
-    String name
-    String bio
+class Agent extends Person implements WithSecurityLevel {
 
     Long securityLevel
 

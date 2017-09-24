@@ -56,6 +56,10 @@ class DruPojoSpec extends Specification {
         then:
             dru.findByType(Library)
             !dru.findByType(String)
+        when:
+            dru.remove(String, 'foo')
+        then:
+            noExceptionThrown()
 
     }
 
@@ -148,6 +152,31 @@ class DruPojoSpec extends Specification {
             classMetadata.getPersistentProperty('rawCollectionValue').referencedPropertyType == Object
             classMetadata.getPersistentProperty('objectCollectionValue').referencedPropertyType == Object
             classMetadata.getPersistentProperty('abstractCollectionWithInterfaceValue').referencedPropertyType == Boolean
+    }
+
+    void 'triggers loaded'() {
+        when:
+            int count = 0
+            Dru dru = Dru.steal(this)
+            PreparedDataSet whenLoadedDataSet = Dru.prepare {
+                whenLoaded {
+                    count = count + 1
+                }
+            }
+        then:
+            count == 0
+        when:
+            dru.load(whenLoadedDataSet)
+        then:
+            count == 1
+        when:
+            dru.load()
+        then:
+            count == 1
+        when:
+            dru.loaded()
+        then:
+            count == 2
     }
 
     public static final Map<String, Object> LIBRARY = [

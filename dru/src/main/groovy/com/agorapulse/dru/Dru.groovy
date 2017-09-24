@@ -109,11 +109,6 @@ class Dru implements TestRule, DataSet {
     }
 
     @Override
-    DataSet load(DataSetMapping first, DataSetMapping... rest) {
-        return ensureDataSetInitialized().load(first, rest)
-    }
-
-    @Override
     MissingPropertiesReport getReport() {
         return ensureDataSetInitialized().report
     }
