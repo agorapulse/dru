@@ -27,9 +27,7 @@ missions:
       id: 3456
       name: Lucy Wilde
   log:
-  - mission:
-      id: 7
-      title: Save the World from PX-41
+  - mission: 7
     date: '2013-07-04T12:34:56Z'
     type: itemStolen
     description: Research station was stolen
@@ -46,9 +44,7 @@ missions:
       - mutator
       - monsters
       - superpowers
-  - mission:
-      id: 7
-      title: Save the World from PX-41
+  - mission: 7
     date: '2013-07-05T01:23:22Z'
     type: started
     description: Mission started by Silas Ramsbottom
@@ -57,9 +53,7 @@ missions:
       name: Silas Ramsbottom
     villain:
     item:
-  - mission:
-      id: 7
-      title: Save the World from PX-41
+  - mission: 7
     date: '2013-07-05T01:34:11Z'
     type: agentAssigned
     description: Assigned to Lucy Wilde
@@ -68,9 +62,7 @@ missions:
       name: Lucy Wilde
     villain:
     item:
-  - mission:
-      id: 7
-      title: Save the World from PX-41
+  - mission: 7
     date: '2013-07-08T20:12:22Z'
     type: agentAssigned
     description: Assigned to Felonius Gru
@@ -79,9 +71,7 @@ missions:
       name: Felonius Gru
     villain:
     item:
-  - mission:
-      id: 7
-      title: Save the World from PX-41
+  - mission: 7
     date: '2013-07-12T14:32:43Z'
     type: progress
     description: Agents assigned to cover mission
@@ -90,9 +80,7 @@ missions:
     item:
     ext:
       location: The Paradise
-  - mission:
-      id: 7
-      title: Save the World from PX-41
+  - mission: 7
     date: '2013-07-14T09:22:33Z'
     type: villainIdentified
     description: Identified El Macho
@@ -105,9 +93,7 @@ missions:
       bio: A former renowned, nearly superhuman-level strong bank robber who now wants
         to dominate the world
     item:
-  - mission:
-      id: 7
-      title: Save the World from PX-41
+  - mission: 7
     date: '2013-07-23T19:13:20Z'
     type: succeeded
     description: Felonius Gru defeated El Macho with the help of minions

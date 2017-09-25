@@ -154,12 +154,22 @@ class PropertyMapping implements PropertyMappingDefinition {
             if (!persistentProperty || !persistentProperty.persistent) {
                 if (nestedTypeMapping && (propertyName == 'new' || propertyName == '_')) {
                     if (it.value instanceof Map) {
-                        nestedMapping.processPropertyValue(dataSet, dataSetMapping, parser, nestedTypeMapping, it.value)
+                        delayedResolutions << new DelayedAssignment(
+                            null,
+                            nestedMapping,
+                            nestedTypeMapping,
+                            it.value
+                        )
                         return
                     }
                     if (it.value instanceof Iterable) {
                         for (item in it.value) {
-                            nestedMapping.processPropertyValue(dataSet, dataSetMapping, parser, nestedTypeMapping, item)
+                            delayedResolutions << new DelayedAssignment(
+                                null,
+                                nestedMapping,
+                                nestedTypeMapping,
+                                item
+                            )
                         }
                         return
                     }
@@ -307,7 +317,9 @@ class PropertyMapping implements PropertyMappingDefinition {
         Parser parser
     ) {
         for (DelayedAssignment delayedResolution in delayedResolutions) {
-            delayedResolution.payload[delayedResolution.propertyName] = newStuff
+            if (delayedResolution.propertyName) {
+                delayedResolution.payload[delayedResolution.propertyName] = newStuff
+            }
             delayedResolution.mapping.processPropertyValue(dataSet, dataSetMapping, parser, delayedResolution.typeMapping, delayedResolution.payload)
         }
     }

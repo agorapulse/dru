@@ -35,10 +35,7 @@
       ],
       "log": [
         {
-          "mission": {
-            "id": 7,
-            "title": "Save the World from PX-41"
-          },
+          "mission": 7,
           "date": "2013-07-04T12:34:56Z",
           "type": "itemStolen",
           "description": "Research station was stolen",
@@ -56,10 +53,7 @@
           }
         },
         {
-          "mission": {
-            "id": 7,
-            "title": "Save the World from PX-41"
-          },
+          "mission": 7,
           "date": "2013-07-05T01:23:22Z",
           "type": "started",
           "description": "Mission started by Silas Ramsbottom",
@@ -71,10 +65,7 @@
           "item": null
         },
         {
-          "mission": {
-            "id": 7,
-            "title": "Save the World from PX-41"
-          },
+          "mission": 7,
           "date": "2013-07-05T01:34:11Z",
           "type": "agentAssigned",
           "description": "Assigned to Lucy Wilde",
@@ -86,10 +77,7 @@
           "item": null
         },
         {
-          "mission": {
-            "id": 7,
-            "title": "Save the World from PX-41"
-          },
+          "mission": 7,
           "date": "2013-07-08T20:12:22Z",
           "type": "agentAssigned",
           "description": "Assigned to Felonius Gru",
@@ -101,10 +89,7 @@
           "item": null
         },
         {
-          "mission": {
-            "id": 7,
-            "title": "Save the World from PX-41"
-          },
+          "mission": 7,
           "date": "2013-07-12T14:32:43Z",
           "type": "progress",
           "description": "Agents assigned to cover mission",
@@ -116,10 +101,7 @@
           }
         },
         {
-          "mission": {
-            "id": 7,
-            "title": "Save the World from PX-41"
-          },
+          "mission": 7,
           "date": "2013-07-14T09:22:33Z",
           "type": "villainIdentified",
           "description": "Identified El Macho",
@@ -135,10 +117,7 @@
           "item": null
         },
         {
-          "mission": {
-            "id": 7,
-            "title": "Save the World from PX-41"
-          },
+          "mission": 7,
           "date": "2013-07-23T19:13:20Z",
           "type": "succeeded",
           "description": "Felonius Gru defeated El Macho with the help of minions",

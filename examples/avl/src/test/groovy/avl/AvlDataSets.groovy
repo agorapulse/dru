@@ -31,9 +31,7 @@ class AvlDataSets {
                         }
                     }
                     map('mission') {
-                        to(missionId: Mission) {
-                            just { id }
-                        }
+                        to(missionId: Mission)
                     }
                 }
             }
