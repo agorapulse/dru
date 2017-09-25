@@ -1,9 +1,6 @@
 package avl
 
-class Villain {
-
-    String name
-    String bio
+class Villain extends Person {
 
     static constraints = { }
 

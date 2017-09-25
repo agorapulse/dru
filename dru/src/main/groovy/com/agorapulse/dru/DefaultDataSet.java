@@ -75,17 +75,7 @@ final class DefaultDataSet implements DataSet {
         for (PreparedDataSet dataSet : others) {
             dataSet.executeOn(dataSetMapping);
         }
-        return load(dataSetMapping);
-    }
-    @Override
-    public DataSet load(DataSetMapping first, DataSetMapping... rest) {
-        loadInternal(first);
-
-        for (DataSetMapping mapping : rest) {
-            loadInternal(mapping);
-        }
-
-        return loaded();
+        return loadInternal(dataSetMapping);
     }
 
     /**
@@ -105,12 +95,16 @@ final class DefaultDataSet implements DataSet {
         return load(new PreparedDataSet(configuration));
     }
 
+    DataSet load(DataSetMapping mapping) {
+        return loadInternal(mapping);
+    }
+
     @Override
     public MissingPropertiesReport getReport() {
         return report;
     }
 
-    private void loadInternal(DataSetMapping mapping) {
+    private DataSet loadInternal(DataSetMapping mapping) {
         for (Source source : mapping.getSources().values()) {
             Parser parser = Parsers.findParser(source);
             Object content = parser.getContent(source);
@@ -123,5 +117,6 @@ final class DefaultDataSet implements DataSet {
             }
         }
         whenLoadedListeners.addAll(mapping.getWhenLoadedListeners());
+        return loaded();
     }
 }

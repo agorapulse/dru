@@ -8,6 +8,7 @@ import com.agorapulse.dru.persistence.ClientFactory
 import com.agorapulse.dru.persistence.meta.ClassMetadata
 import grails.core.GrailsDomainClass
 import grails.testing.gorm.DataTest
+import groovy.util.logging.Slf4j
 import org.grails.datastore.gorm.GormEntity
 
 /**
@@ -15,6 +16,7 @@ import org.grails.datastore.gorm.GormEntity
  */
 class Gorm extends AbstractCacheableClient {
 
+    @Slf4j
     static class Factory implements ClientFactory {
         final int index = 10000
 
@@ -28,7 +30,7 @@ class Gorm extends AbstractCacheableClient {
             boolean supported = unitTest instanceof DataTest
             if (!supported) {
                 if (!unitTest.class.getAnnotation(NoGorm)) {
-                    System.err.println("Gorm Dru client is on the classpath but ${unitTest.getClass()} does not implement $DataTest.name. Please, add @NoGorm annotation to hide this message if this is intended.")
+                    log.error("Gorm Dru client is on the classpath but ${unitTest.getClass()} does not implement $DataTest.name. Please, add @NoGorm annotation to hide this message if this is intended.")
                 }
             }
             return supported

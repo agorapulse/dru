@@ -23,14 +23,6 @@ public interface DataSet  {
 
     /**
      * Loads additional data set mapping into current data set and returns self.
-     * @param first additional prepared data set
-     * @param rest other additional prepared data sets
-     * @return self with items loaded from another data set mappings
-     */
-    DataSet load(DataSetMapping first, DataSetMapping... rest);
-
-    /**
-     * Loads additional data set mapping into current data set and returns self.
      * @param configuration inline configuration closure
      * @return self with items loaded from another data set mapping from the closure
      */

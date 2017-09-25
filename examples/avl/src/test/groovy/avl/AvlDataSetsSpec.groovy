@@ -33,6 +33,7 @@ class AvlDataSetsSpec extends Specification implements DataTest {
         given:
             dru.load(AvlDataSets.missions)
         expect:
+            dru.report.empty
             dru.findAllByType(Mission).size() == 2
             dru.findByTypeAndOriginalId(Mission, 7)
             dru.findAllByType(Agent).size() == 3
@@ -47,6 +48,7 @@ class AvlDataSetsSpec extends Specification implements DataTest {
         given:
             dru.load(AvlDataSets.missions, AvlDataSets.agents)
         expect:
+            dru.report.empty
             dru.findAllByType(Mission).size() == 2
             dru.findByTypeAndOriginalId(Mission, 7)
             dru.findAllByType(Agent).size() == 3
@@ -59,6 +61,7 @@ class AvlDataSetsSpec extends Specification implements DataTest {
         given:
             dru.load(AvlDataSets.missionsYaml)
         expect:
+            dru.report.empty
             dru.findAllByType(Mission).size() == 2
             dru.findByTypeAndOriginalId(Mission, 7)
             dru.findAllByType(Agent).size() == 3
@@ -240,12 +243,31 @@ class AvlDataSetsSpec extends Specification implements DataTest {
             }
         then:
             noExceptionThrown()
+            dru.report.empty
             Agent.list().size() == 2
             Mission.list().size() == 2
             Assignment.list().size() == 4
         and:
             Agent.findByNameAndSecurityLevel('Felonius Gru', 2)
             Agent.findByNameAndSecurityLevel('Lucy Wilde', 5)
+    }
+
+    void 'load persons'() {
+        when:
+            dru.load {
+                include AvlDataSets.persons
+            }
+        then:
+            noExceptionThrown()
+            dru.report.empty
+            Agent.list().size() == 2
+            Mission.list().size() == 2
+            Assignment.list().size() == 4
+            Villain.list().size() == 1
+        and:
+            Agent.findByNameAndSecurityLevel('Felonius Gru', 2)
+            Agent.findByNameAndSecurityLevel('Lucy Wilde', 5)
+            Villain.findByName('El Macho')
     }
 
     void 'load boss'() {

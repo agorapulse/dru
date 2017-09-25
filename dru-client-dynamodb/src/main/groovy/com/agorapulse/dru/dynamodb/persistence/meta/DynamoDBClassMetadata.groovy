@@ -43,10 +43,16 @@ class DynamoDBClassMetadata extends PojoClassMetadata {
     }
 
     PropertyMetadata getHash() {
+        if (!hash) {
+            findHashAndRange()
+        }
         return hash
     }
 
     PropertyMetadata getRange() {
+        if (!range) {
+            findHashAndRange()
+        }
         return range
     }
 

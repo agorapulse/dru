@@ -33,6 +33,10 @@ class MissingPropertiesReport {
         missingProperties.put(missingProperty, missingProperty)
     }
 
+    boolean isEmpty() {
+        return missingProperties.isEmpty()
+    }
+
     @Override
     String toString() {
         final int MINIMAL_WIDTH = 8
