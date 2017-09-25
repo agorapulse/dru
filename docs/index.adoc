@@ -13,6 +13,7 @@ dominance as test data can be set up with database dump but now, when the data r
 data the safest way to load test data is to use your own data persistence layer or underlying framework. Dru comes with
 out of box support for Plain Old Java Objects (POJOs),
 http://gorm.grails.org/[GORM] and http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBMapper.html[AWS DynamoDB].
+It can consume JSON or YAML files as data sources.
 
 [TIP]
 Dru is designed to load complex data models. References by ids are translated into associations even the identity in
@@ -160,13 +161,37 @@ include::../examples/avl/src/test/resources/avl/IgnoreSpec/item.json[]
 You can add condition to type mappings to map to different entities based on source properties.
 
 [source,indent=0,options="nowrap"]
-.Complex Path
+.Conditional Mapping
 ----
 include::../examples/avl/src/test/groovy/avl/ConditionalSpec.groovy[tag="plan"]
 ----
 
 [source,json,indent=0,options="nowrap"]
-.items.json
+.persons.json
 ----
 include::../examples/avl/src/test/resources/avl/ConditionalSpec/persons.json[]
+----
+
+=== Nested Type Mapping
+
+You can nest type mapping to maps complex hierarchical structures.
+
+[source,indent=0,options="nowrap"]
+.Nested Mapping
+----
+include::../examples/avl/src/test/groovy/avl/NestedSpec.groovy[tag="plan"]
+----
+
+[source,json,indent=0,options="nowrap"]
+.agents.json
+----
+include::../examples/avl/src/test/resources/avl/NestedSpec/agents.json[]
+----
+
+You can declare the type mapping at top level so it applies to every occurrence of given type wherever in the tree:
+
+[source,indent=0,options="nowrap"]
+.Top Level Mapping
+----
+include::../examples/avl/src/test/groovy/avl/NestedSpec.groovy[tag="reuse"]
 ----
