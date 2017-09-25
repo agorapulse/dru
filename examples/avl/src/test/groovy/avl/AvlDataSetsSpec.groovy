@@ -244,7 +244,7 @@ class AvlDataSetsSpec extends Specification implements DataTest {
         then:
             noExceptionThrown()
             dru.report.empty
-            Agent.list().size() == 2
+            Agent.list().size() == 3
             Mission.list().size() == 2
             Assignment.list().size() == 4
         and:
@@ -278,6 +278,27 @@ class AvlDataSetsSpec extends Specification implements DataTest {
             Agent.list().size() == 2
             Agent.findByName('Silas Ramsbottom').staff.size() == 1
             Agent.findByName('Silas Ramsbottom').staff.contains(Agent.findByName('Lucy Wilde'))
+    }
+
+    void 'load mission log'() {
+        when:
+            dru.load(AvlDataSets.missionLog)
+        then:
+            thrown(IllegalStateException)
+    }
+
+    void 'load source which does not exist'() {
+        when:
+            dru.load(AvlDataSets.notFound)
+        then:
+            thrown(IllegalStateException)
+    }
+
+    void 'load mission log with wrong type used'() {
+        when:
+            dru.load(AvlDataSets.missionLogWrongType)
+        then:
+            thrown(IllegalArgumentException)
     }
 
 }

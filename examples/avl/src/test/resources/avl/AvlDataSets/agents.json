@@ -7,6 +7,10 @@
     "novice": true,
     "uri": "agents/felonius_gru",
     "characteristics": ["former villain", "pointy nose"],
+    "manager": {
+      "id": 101,
+      "name": "Silas Ramsbottom"
+    },
     "assignments": [
       {
         "mission": {
@@ -39,6 +43,10 @@
     "rank": 5,
     "novice": false,
     "uri": "agents/lucy_wilde",
+    "manager": {
+      "id": 101,
+      "name": "Silas Ramsbottom"
+    },
     "assignments": [
       {
         "mission": {

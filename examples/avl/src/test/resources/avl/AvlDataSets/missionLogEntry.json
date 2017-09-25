@@ -1,0 +1,18 @@
+{
+  "mission": 7,
+  "date": "2013-07-04T12:34:56Z",
+  "log_type": "itemStolen",
+  "description": "Research station was stolen",
+  "agent": null,
+  "villain": null,
+  "item": {
+    "id": "050e4fcf-158d-4f44-9b8b-a6ba6809982e",
+    "name": "PX-41",
+    "description": "The PX-41 is a very dangerous mutator engineered in the top secret PX-Labs, located in the Arctic Circle. It is capable of turning any living things in the world into a purple, furry, indestructible, mindless, killing machine that is so dangerous that it can destroy anything in its path.",
+    "tags": [
+      "mutator",
+      "monsters",
+      "superpowers"
+    ]
+  }
+}

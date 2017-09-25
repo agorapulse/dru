@@ -14,32 +14,34 @@ class AvlDataSets {
                 to (new: Item)
             }
             map ('log') {
-                to(new: MissionLogEntry) {
-                    map('item') {
-                        to(itemName: Item) {
-                            just { name }
-                        }
-                    }
-                    map('agent') {
-                        to(agentId: Agent) {
-                            just { id }
-                        }
-                    }
-                    map('villain') {
-                        to(villainId: Villain) {
-                            just { id }
-                        }
-                    }
-                    map('mission') {
-                        to(missionId: Mission)
-                    }
-                    map('log_type') {
-                        to(type: MissionLogEntryType)
-                    }
-                }
+                to(new: MissionLogEntry)
             }
 
             ignore 'started', 'finished'
+        }
+
+        any (MissionLogEntry) {
+            map('item') {
+                to(itemName: Item) {
+                    just { name }
+                }
+            }
+            map('agent') {
+                to(agentId: Agent) {
+                    just { id }
+                }
+            }
+            map('villain') {
+                to(villainId: Villain) {
+                    just { id }
+                }
+            }
+            map('mission') {
+                to(missionId: Mission)
+            }
+            map('log_type') {
+                to(type: MissionLogEntryType)
+            }
         }
     }
 
@@ -81,6 +83,39 @@ class AvlDataSets {
         from ('missions.yml') {
             map ('missions') {
                 to Mission
+            }
+        }
+    }
+
+    static final PreparedDataSet missionLog = Dru.prepare {
+        include missionMapping
+        include agentMapping
+
+        from ('missionLogEntry.json') {
+            map {
+                to MissionLogEntry
+            }
+        }
+    }
+
+    static final PreparedDataSet missionLogWrongType = Dru.prepare {
+        include missionMapping
+        include agentMapping
+
+        from ('missionLogEntryWrongType.json') {
+            map {
+                to MissionLogEntry
+            }
+        }
+    }
+
+    static final PreparedDataSet notFound = Dru.prepare {
+        include missionMapping
+        include agentMapping
+
+        from ('notFound.json') {
+            map {
+                to MissionLogEntry
             }
         }
     }

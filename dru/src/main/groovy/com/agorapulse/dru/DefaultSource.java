@@ -41,7 +41,12 @@ class DefaultSource implements SourceDefinition, Source {
     @Override
     public InputStream getSourceStream() {
         Class reference = referenceObject instanceof Class ? (Class) referenceObject : referenceObject.getClass();
-        return reference.getResourceAsStream(reference.getSimpleName() + "/" + path);
+        String path = reference.getSimpleName() + "/" + this.path;
+        InputStream stream = reference.getResourceAsStream(path);
+        if (stream == null) {
+            throw new IllegalStateException("Source '" + path + "' not found relative to " + reference);
+        }
+        return stream;
     }
 
     @Override
