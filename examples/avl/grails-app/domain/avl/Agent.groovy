@@ -4,6 +4,8 @@ class Agent extends Person implements WithSecurityLevel {
 
     Long securityLevel
 
+    List<String> characteristics
+
     static hasMany = [assignments: Assignment, staff: Agent]
     static hasOne = [manager: Agent]
 

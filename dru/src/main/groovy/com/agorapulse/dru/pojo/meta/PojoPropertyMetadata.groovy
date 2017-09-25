@@ -1,6 +1,6 @@
 package com.agorapulse.dru.pojo.meta
 
-import com.agorapulse.dru.persistence.meta.PropertyMetadata
+import com.agorapulse.dru.persistence.meta.AbstractPropertyMetadata
 
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
@@ -8,7 +8,7 @@ import java.lang.reflect.Type
 /**
  * Describes property of POJO.
  */
-class PojoPropertyMetadata implements PropertyMetadata {
+class PojoPropertyMetadata extends AbstractPropertyMetadata {
 
     protected final Class clazz
     protected final String name
@@ -87,11 +87,6 @@ class PojoPropertyMetadata implements PropertyMetadata {
     @Override
     boolean isBasicCollectionType() {
         return Collection.isAssignableFrom(type)
-    }
-
-    @Override
-    boolean isCollectionType() {
-        return isBasicCollectionType() || isManyToMany() || isOneToMany()
     }
 
     @SuppressWarnings('Instanceof')

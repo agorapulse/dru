@@ -6,6 +6,7 @@
     "rank": 2,
     "novice": true,
     "uri": "agents/felonius_gru",
+    "characteristics": ["former villain", "pointy nose"],
     "assignments": [
       {
         "mission": {

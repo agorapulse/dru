@@ -1,6 +1,6 @@
 package com.agorapulse.dru.persistence.meta;
 
-public class CachedPropertyMetadata implements PropertyMetadata {
+public class CachedPropertyMetadata extends AbstractPropertyMetadata {
 
     private final String name;
     private final Class type;
@@ -96,11 +96,6 @@ public class CachedPropertyMetadata implements PropertyMetadata {
     @Override
     public boolean isBasicCollectionType() {
         return basicCollectionType;
-    }
-
-    @Override
-    public boolean isCollectionType() {
-        return isBasicCollectionType() || isManyToMany() || isOneToMany();
     }
 
     public PropertyMetadata getOriginal() {
