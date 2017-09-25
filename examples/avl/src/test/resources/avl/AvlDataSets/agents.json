@@ -13,6 +13,7 @@
     },
     "assignments": [
       {
+        "id": 123,
         "mission": {
           "id": 7,
           "title": "Save the World from PX-41"
@@ -24,6 +25,7 @@
         }
       },
       {
+        "id": 124,
         "mission": {
           "id": 13,
           "title": "Prevent Balthazar Bratt to steal Dupont Diamond"
@@ -49,6 +51,7 @@
     },
     "assignments": [
       {
+        "id": 125,
         "mission": {
           "id": 7,
           "title": "Save the World from PX-41"
@@ -60,6 +63,7 @@
         }
       },
       {
+        "id": 126,
         "mission": {
           "id": 13,
           "title": "Prevent Balthazar Bratt to steal Dupont Diamond"

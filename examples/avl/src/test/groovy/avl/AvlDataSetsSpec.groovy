@@ -44,9 +44,7 @@ class AvlDataSetsSpec extends Specification implements DataTest {
             dru.findAllByType(Item).size() == 2
     }
 
-    @Ignore
     void 'loading two data sets with same content'() {
-        // TODO: why is this duplicating
         given:
             dru.load(AvlDataSets.missions, AvlDataSets.agents)
         expect:
