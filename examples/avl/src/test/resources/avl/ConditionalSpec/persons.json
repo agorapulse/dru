@@ -1,0 +1,15 @@
+[
+  {
+    "id": 12345,
+    "name": "Felonius Gru",
+    "bio": "Born from the family with long line of villainy and formerly the world's greatest villain.",
+    "type": "agent"
+  },
+  {
+    "id": 247,
+    "name": "El Macho",
+    "bio": "A former renowned, nearly superhuman-level strong bank robber who now wants to dominate the world",
+    "type": "villain"
+  }
+]
+

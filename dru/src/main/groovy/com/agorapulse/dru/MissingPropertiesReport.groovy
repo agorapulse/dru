@@ -13,6 +13,7 @@ import groovy.transform.PackageScope
 class MissingPropertiesReport {
 
     private static final String DOUBLE_BAR = "\u2016"
+    private static final String EMPTY_STRING = ''
 
     private final Multimap<MissingProperty, MissingProperty> missingProperties = MultimapBuilder
             .treeKeys(
@@ -46,10 +47,10 @@ class MissingPropertiesReport {
         int propertyWidth = MINIMAL_WIDTH
 
         missingProperties.values().each {
-            pathWidth = Math.max(pathWidth, (it.path ?: '').size())
-            typeWidth = Math.max(typeWidth, (it.type.simpleName ?: '').size())
-            valueWidth = Math.max(valueWidth, (it.value?.toString() ?: '').size())
-            propertyWidth = Math.max(propertyWidth, (it.propertyName ?: '').size())
+            pathWidth = Math.max(pathWidth, (it.path ?: EMPTY_STRING).size())
+            typeWidth = Math.max(typeWidth, (it.type.simpleName ?: EMPTY_STRING).size())
+            valueWidth = Math.max(valueWidth, (it.value?.toString() ?: EMPTY_STRING).size())
+            propertyWidth = Math.max(propertyWidth, (it.propertyName ?: EMPTY_STRING).size())
         }
 
         return writeReport(typeWidth, propertyWidth, pathWidth, valueWidth).toString()

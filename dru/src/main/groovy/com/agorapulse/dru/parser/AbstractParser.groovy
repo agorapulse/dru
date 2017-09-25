@@ -13,7 +13,10 @@ abstract class AbstractParser implements Parser {
      */
     public static final String VALUE_KEY = 'value'
 
-    @SuppressWarnings('CatchException')
+    @SuppressWarnings([
+        'CatchException',
+        'Instanceof',
+    ])
     final <T> T convertValue(String path, Object value, Class<T> desiredType) {
         try {
             if (value == null) {
@@ -27,6 +30,9 @@ abstract class AbstractParser implements Parser {
                     return 0 as T
                 }
                 return null
+            }
+            if (value instanceof CharSequence && String.isAssignableFrom(desiredType)) {
+                return value.toString() as T
             }
             doConvertValue(value, desiredType)
         } catch (Exception e) {

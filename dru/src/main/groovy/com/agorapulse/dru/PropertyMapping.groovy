@@ -285,13 +285,14 @@ class PropertyMapping implements PropertyMappingDefinition {
         return typeMappingToUse.process(newStuff)
     }
 
+    @SuppressWarnings('CouldBeElvis')
     private static void handleDefaults(DataSetMapping dataSetMapping, TypeMapping typeMappingToUse, Class type, MockObject fixture, Object newStuff) {
         MockObject defaults = new MockObject()
         dataSetMapping.applyDefaults(type, defaults, fixture.asImmutable())
         typeMappingToUse.defaults.apply(defaults, fixture.asImmutable())
 
         for (Map.Entry<String, Object> defaultValue in defaults.entrySet()) {
-            if (newStuff."$defaultValue.key" == null) {
+            if (!newStuff."$defaultValue.key") {
                 newStuff."$defaultValue.key" = defaultValue.value
             }
         }
@@ -325,8 +326,11 @@ class PropertyMapping implements PropertyMappingDefinition {
     }
 
     @CompileStatic
-    @SuppressWarnings('Instanceof')
+    @SuppressWarnings(['Instanceof'])
     Object processPropertyValueNoMap(DataSet dataSet, DataSetMapping dataSetMapping, TypeMapping typeMappingToUse, Object property) {
+        if (typeMappingToUse && typeMappingToUse.type.isInstance(property)) {
+            return property
+        }
         if (property instanceof String && typeMappingToUse && Enum.isAssignableFrom(typeMappingToUse.type)) {
             return typeMappingToUse.type.getMethod('valueOf', String).invoke(null, property)
         }

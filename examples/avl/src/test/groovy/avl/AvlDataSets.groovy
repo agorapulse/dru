@@ -1,10 +1,13 @@
+// tag::header[]
 package avl
 
 import com.agorapulse.dru.Dru
 import com.agorapulse.dru.PreparedDataSet
 
 class AvlDataSets {
+// end::header[]
 
+    // tag::missions[]
     static final PreparedDataSet missionMapping = Dru.prepare {
         any (Mission) {
             map ('items') {
@@ -75,6 +78,7 @@ class AvlDataSets {
             }
         }
     }
+    // end::missions[]
 
     static final PreparedDataSet missionsYaml = Dru.prepare {
         include missionMapping
@@ -159,5 +163,6 @@ class AvlDataSets {
             }
         }
     }
-
+// tag::footer[]
 }
+// end::footer[]

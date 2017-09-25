@@ -17,6 +17,7 @@
     <ruleset-ref path="rulesets/dry.xml">
         <rule-config name="DuplicateStringLiteral">
             <property name="doNotApplyToClassNames" value="*Spec"/>
+            <property name="ignoreStrings" value="Instanceof"/>
         </rule-config>
         <rule-config name="DuplicateNumberLiteral">
             <property name="doNotApplyToClassNames" value="*Spec"/>

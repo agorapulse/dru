@@ -3,30 +3,170 @@
 [.ribbon]
 image::ribbon.png[link={projectUrl}]
 
-Dru is Data Reconstruction Utility which helps to create and maintain test data based on real-life production data.
+Dru is Data Reconstruction Utility which helps to create and maintain test data based on real-life production data as
+it is for example often easier to grab production data of web application as JSON than trying to create selective
+export from one or more data stores.
+
+The quality of tests depends on the quality of the test data being used. It is important to keep the test data aligned
+with the production data as much as it is possible. This was relatively easy in the time of relational databases'
+dominance as test data can be set up with database dump but now, when the data required for the test can be stored in multiple
+data the safest way to load test data is to use your own data persistence layer or underlying framework. Dru comes with
+out of box support for Plain Old Java Objects (POJOs),
+http://gorm.grails.org/[GORM] and http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBMapper.html[AWS DynamoDB].
+
+[TIP]
+Dru is designed to load complex data models. References by ids are translated into associations even the identity in
+newly created data store is not the same as original one. For example if you have entity `Item` with `id` `5` and
+entity `ItemComment` with property `itemId` with value `5` then the loaded `ItemComment` entity will have `itemId` property
+set to the actual `id` of the loaded `Item` e.g. `1`.
 
 == Installation
 
 Dru is available in JCenter. At the moment, you can use any of POJO, GORM or DynamoDB modules your project.
 
 .Gradle Installation
-[source,groovy,subs='verbatim,attributes']
+[source,subs='verbatim,attributes']
 ----
 repositories {
     jcenter()
 }
 
 dependencies {
-    // pick any of these clients you need
-    // the base module contains just POJO module for binding Plain Old Java Objects
+    // load just simple implementation with POJO client and reflection based parser
     testCompile "com.agorapulse:dru:{version}"
+
+    // and pick any client
     testCompile "com.agorapulse:dru-client-gorm:{version}"
     testCompile "com.agorapulse:dru-client-dynamodb:{version}"
 
-    // and pick the parser
-    // there is only one parser at the moment
+    // and pick any parser
     testCompile "com.agorapulse:dru-parser-json:{version}"
+    testCompile "com.agorapulse:dru-parser-yaml:{version}"
 }
+----
 
+== Setup
+Dru is a JUnit rule which ensures each of your test methods gets fresh data loaded.
 
+[source,indent=0,options="nowrap"]
+.Simple Specification
+----
+include::../examples/avl/src/test/groovy/avl/ItemSpec.groovy[]
+----
+<1> Prepare the data loading plan
+<2> Load the content of `items.json`
+<3> Map the root element to `Item` entity
+<4> Loaded entity is available by its type
+<5> Entity can be loaded by its original id
+<6> Properties are loaded as expected
+<7> Check whether all properties from the source has been used
 
+You can take a look at the `item.json` file containing the test data:
+
+[source,json,indent=0,options="nowrap"]
+.item.json
+----
+include::../examples/avl/src/test/resources/avl/ItemSpec/item.json[]
+----
+
+The file must be located inside a folder of same name as the class where the source was defined
+i.g `avl/ItemSpec/item.json`, resp. `src/test/resources/avl/ItemSpec/item.json` for Gradle project.
+
+== Source Mapping
+
+You can map directly to the root object or array or to any path inside the source you need:
+
+[source,indent=0,options="nowrap"]
+.Complex Path
+----
+include::../examples/avl/src/test/groovy/avl/ItemsPathSpec.groovy[tag="plan"]
+----
+
+[source,json,indent=0,options="nowrap"]
+.items.json
+----
+include::../examples/avl/src/test/resources/avl/ItemsPathSpec/items.json[]
+----
+
+== Property and Type Mapping
+For basic use cases when the source exactly fits the entity properties there is no need for additional mappings.
+
+=== Default Values
+You can set a default value for a property. The object passed as argument to the closure
+is the map obtained from the source.
+
+[source,indent=0,options="nowrap"]
+.Default Value
+----
+include::../examples/avl/src/test/groovy/avl/DefaultValueSpec.groovy[tag="plan"]
+----
+
+[source,json,indent=0,options="nowrap"]
+.item.json
+----
+include::../examples/avl/src/test/resources/avl/DefaultValueSpec/item.json[]
+----
+
+=== Overriding Properties
+You can override any value coming from the source. The object passed as argument to the closure is the map obtained from the source.
+Contrary to defaults, the value is set to overridden value even it is present in the source.
+
+[source,indent=0,options="nowrap"]
+.Overriding Properties
+----
+include::../examples/avl/src/test/groovy/avl/OverrideValueSpec.groovy[tag="plan"]
+----
+
+[source,json,indent=0,options="nowrap"]
+.item.json
+----
+include::../examples/avl/src/test/resources/avl/OverrideValueSpec/item.json[]
+----
+
+=== Aliasing Properties
+You can alias properties with different names in the source and in the entity.
+
+[source,indent=0,options="nowrap"]
+.Aliasing Properties
+----
+include::../examples/avl/src/test/groovy/avl/AliasSpec.groovy[tag="plan"]
+----
+
+[source,json,indent=0,options="nowrap"]
+.item.json
+----
+include::../examples/avl/src/test/resources/avl/AliasSpec/item.json[]
+----
+
+=== Ignoring Properties
+If you want to be sure that every information from the source is persisted you can access
+`MissingPropertiesReport` object from `Dru` instance. The report contains list of properties which
+hasn't been matched. If you explicitly ignore a property for example because it is derived it will not appear in the report.
+
+[source,indent=0,options="nowrap"]
+.Ignoring Properties
+----
+include::../examples/avl/src/test/groovy/avl/IgnoreSpec.groovy[tag="plan"]
+----
+
+[source,json,indent=0,options="nowrap"]
+.item.json
+----
+include::../examples/avl/src/test/resources/avl/IgnoreSpec/item.json[]
+----
+
+=== Conditional Type Mapping
+
+You can add condition to type mappings to map to different entities based on source properties.
+
+[source,indent=0,options="nowrap"]
+.Complex Path
+----
+include::../examples/avl/src/test/groovy/avl/ConditionalSpec.groovy[tag="plan"]
+----
+
+[source,json,indent=0,options="nowrap"]
+.items.json
+----
+include::../examples/avl/src/test/resources/avl/ConditionalSpec/persons.json[]
+----

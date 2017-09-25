@@ -18,7 +18,6 @@ import com.amazonaws.services.dynamodbv2.model.ComparisonOperator
 import com.amazonaws.services.dynamodbv2.model.Condition
 import grails.testing.gorm.DataTest
 import org.junit.Rule
-import spock.lang.Ignore
 import spock.lang.Specification
 
 class AvlDataSetsSpec extends Specification implements DataTest {
@@ -30,19 +29,6 @@ class AvlDataSetsSpec extends Specification implements DataTest {
     }
 
     void ' warmup'() { expect: true }
-
-    void 'entities can be access from the data set'() {
-        given:
-            dru.load(AvlDataSets.missions)
-        expect:
-            dru.report.empty
-            dru.findAllByType(Mission).size() == 2
-            dru.findByTypeAndOriginalId(Mission, 7)
-            dru.findAllByType(Agent).size() == 3
-            dru.findAllByType(Assignment).size() == 4
-            dru.findAllByType(Villain).size() == 2
-            dru.findAllByType(Item).size() == 2
-    }
 
     void 'loading two data sets with same content'() {
         given:
