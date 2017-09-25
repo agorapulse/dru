@@ -3,6 +3,8 @@ package avl
 import com.agorapulse.dru.Dru
 import com.agorapulse.dru.dynamodb.persistence.DruDynamoDBMapper
 import com.agorapulse.dru.dynamodb.persistence.DynamoDB
+import com.agorapulse.dru.gorm.persistence.Gorm
+import com.agorapulse.dru.persistence.Client
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression
@@ -299,6 +301,23 @@ class AvlDataSetsSpec extends Specification implements DataTest {
             dru.load(AvlDataSets.missionLogWrongType)
         then:
             thrown(IllegalArgumentException)
+    }
+
+    void 'test add to'() {
+        when:
+            Client gorm = new Gorm.Factory().newClient(this)
+            dru.load(AvlDataSets.agents)
+            Agent lucy = Agent.findByName('Lucy Wilde')
+            Agent gru = Agent.findByName('Felonius Gru')
+        then:
+            lucy
+            gru
+            !lucy.staff?.contains(gru)
+        when:
+            gorm.addTo(lucy, 'staff', gru)
+        then:
+            lucy.staff.contains(gru)
+
     }
 
 }

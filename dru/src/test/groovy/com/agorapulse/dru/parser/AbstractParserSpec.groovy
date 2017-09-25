@@ -45,6 +45,19 @@ class AbstractParserSpec extends Specification {
             String      | null
     }
 
+    void '#value is converted to #expected for type #type'() {
+        when:
+            String path = 'path'
+            Parser parser = new ReflectionParser()
+        then:
+            parser.convertValue(path, value, type) == expected
+        where:
+            value       | type          | expected
+            '10'        | Integer       | 10
+            'any'       | Boolean       | true
+            ''          | Boolean       | false
+    }
+
     void 'exception is thrown if the conversion cannot be done'() {
         when:
             String path = 'path'
