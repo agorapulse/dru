@@ -248,4 +248,14 @@ class AvlDataSetsSpec extends Specification implements DataTest {
             Agent.findByNameAndSecurityLevel('Lucy Wilde', 5)
     }
 
+    void 'load boss'() {
+        when:
+            dru.load(AvlDataSets.boss)
+        then:
+            noExceptionThrown()
+            Agent.list().size() == 2
+            Agent.findByName('Silas Ramsbottom').staff.size() == 1
+            Agent.findByName('Silas Ramsbottom').staff.contains(Agent.findByName('Lucy Wilde'))
+    }
+
 }

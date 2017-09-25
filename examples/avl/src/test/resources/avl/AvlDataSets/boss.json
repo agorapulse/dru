@@ -1,0 +1,14 @@
+[
+  {
+    "id": 101,
+    "name": "Silas Ramsbottom",
+    "bio": "Head of the Anti-Villain League.",
+    "rank": 10,
+    "novice": false,
+    "underling": {
+      "id": 3456,
+      "name": "Lucy Wilde"
+    }
+  }
+]
+

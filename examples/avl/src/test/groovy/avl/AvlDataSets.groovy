@@ -87,4 +87,18 @@ class AvlDataSets {
         }
     }
 
+    static final PreparedDataSet boss = Dru.prepare {
+        include agentMapping
+
+        from ('boss.json') {
+            map {
+                to (Agent) {
+                    map ('underling') {
+                        to (staff: Agent)
+                    }
+                }
+            }
+        }
+    }
+
 }

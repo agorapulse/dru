@@ -7,7 +7,8 @@ class Agent {
 
     Long securityLevel
 
-    static hasMany = [assignments: Assignment]
+    static hasMany = [assignments: Assignment, staff: Agent]
+    static hasOne = [manager: Agent]
 
     static transients = ['novice']
 
