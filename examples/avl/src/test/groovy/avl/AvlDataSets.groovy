@@ -33,6 +33,9 @@ class AvlDataSets {
                     map('mission') {
                         to(missionId: Mission)
                     }
+                    map('log_type') {
+                        to(type: MissionLogEntryType)
+                    }
                 }
             }
 

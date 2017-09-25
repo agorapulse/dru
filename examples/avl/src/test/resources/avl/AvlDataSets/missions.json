@@ -37,7 +37,7 @@
         {
           "mission": 7,
           "date": "2013-07-04T12:34:56Z",
-          "type": "itemStolen",
+          "log_type": "itemStolen",
           "description": "Research station was stolen",
           "agent": null,
           "villain": null,
@@ -55,7 +55,7 @@
         {
           "mission": 7,
           "date": "2013-07-05T01:23:22Z",
-          "type": "started",
+          "log_type": "started",
           "description": "Mission started by Silas Ramsbottom",
           "agent": {
             "id": 101,
@@ -67,7 +67,7 @@
         {
           "mission": 7,
           "date": "2013-07-05T01:34:11Z",
-          "type": "agentAssigned",
+          "log_type": "agentAssigned",
           "description": "Assigned to Lucy Wilde",
           "agent": {
             "id": 3456,
@@ -79,7 +79,7 @@
         {
           "mission": 7,
           "date": "2013-07-08T20:12:22Z",
-          "type": "agentAssigned",
+          "log_type": "agentAssigned",
           "description": "Assigned to Felonius Gru",
           "agent": {
             "id": 12345,
@@ -91,7 +91,7 @@
         {
           "mission": 7,
           "date": "2013-07-12T14:32:43Z",
-          "type": "progress",
+          "log_type": "progress",
           "description": "Agents assigned to cover mission",
           "agent": null,
           "villain": null,
@@ -103,7 +103,7 @@
         {
           "mission": 7,
           "date": "2013-07-14T09:22:33Z",
-          "type": "villainIdentified",
+          "log_type": "villainIdentified",
           "description": "Identified El Macho",
           "agent": {
             "id": 12345,
@@ -119,7 +119,7 @@
         {
           "mission": 7,
           "date": "2013-07-23T19:13:20Z",
-          "type": "succeeded",
+          "log_type": "succeeded",
           "description": "Felonius Gru defeated El Macho with the help of minions",
           "agent": {
             "id": 12345,

@@ -348,8 +348,8 @@ class PropertyMapping implements PropertyMappingDefinition {
                 return classMetadata.getId(byId.properties)
             }
 
-            // this is ID of something we don't care about so keep it as it is
-            return property
+            throw new IllegalArgumentException("Value $property is mapped to id of $typeMappingToUse.type but it is not loaded yet. " +
+                "Please load the entity before loading this source.")
         }
 
         throw new IllegalArgumentException("Property is not a Map either already processed entity at $fullPath: $property")
