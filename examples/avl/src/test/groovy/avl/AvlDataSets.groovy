@@ -10,6 +10,9 @@ class AvlDataSets {
             map ('items') {
                 to (new: Item)
             }
+            map ('item') {
+                to (new: Item)
+            }
             map ('log') {
                 to(new: MissionLogEntry) {
                     map('item') {
