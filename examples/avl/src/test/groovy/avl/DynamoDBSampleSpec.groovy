@@ -88,5 +88,5 @@ class DynamoDBSampleSpec extends Specification {
         then:
             service.query(7).count == 1
     }
-    // tag::grailsService[]
+    // end::grailsService[]
 }

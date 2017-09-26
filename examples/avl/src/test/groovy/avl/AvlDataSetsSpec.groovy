@@ -171,7 +171,13 @@ class AvlDataSetsSpec extends Specification implements DataTest {
             mapper.count(Item, new DynamoDBQueryExpression<Item>()) == 3
             dru.findAllByType(Item).size() == 3
         when:
-            mapper.batchWrite([new Item(name: 'Lollipop'), new Item(name: 'Statue of Liberty (from Las Vegas)')], [new Item(name: 'Moon')])
+            mapper.batchWrite([
+                new Item(name: 'Lollipop'),
+                new Item(name: 'Statue of Liberty (from Las Vegas)'),
+            ], [
+                new Item(name: 'Moon'),
+                new Item(name: 'Phoebe'),
+            ])
         then:
             mapper.count(Item, new DynamoDBQueryExpression<Item>()) == 4
     }

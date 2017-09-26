@@ -190,6 +190,15 @@ class DruPojoSpec extends Specification {
             count == 2
     }
 
+    void 'add item to data set and retrieve it'() {
+        when:
+            int id = 5
+            Dru dru = Dru.steal(this)
+            dru.add(new Library(name: 'Library of Congress'), id)
+        then:
+            dru.findByTypeAndOriginalId(Library, id)
+    }
+
     public static final Map<String, Object> LIBRARY = [
         name: 'National Library',
         authors: [

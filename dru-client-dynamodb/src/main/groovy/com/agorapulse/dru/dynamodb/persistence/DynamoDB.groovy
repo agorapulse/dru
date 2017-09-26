@@ -61,13 +61,6 @@ class DynamoDB extends Pojo {
         return range ? ":${range}" : null
     }
 
-    static Object getOriginalId(Object entity) {
-        if (!entity) {
-            return null
-        }
-        return INSTANCE.getClassMetadata(entity.getClass()).getId(entity.properties)
-    }
-
     static Object getHash(Object entity) {
         if (!entity) {
             return null
