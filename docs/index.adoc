@@ -195,3 +195,20 @@ You can declare the type mapping at top level so it applies to every occurrence 
 ----
 include::../examples/avl/src/test/groovy/avl/NestedSpec.groovy[tag="reuse"]
 ----
+
+=== Partial Retrieval
+
+You can assign just a particular property of the loaded entity, usually an `id`.
+
+[source,indent=0,options="nowrap"]
+.Partial Retrieval
+----
+include::../examples/avl/src/test/groovy/avl/JustSpec.groovy[tag="plan"]
+----
+
+[source,json,indent=0,options="nowrap"]
+.missionLogEntry.json
+----
+include::../examples/avl/src/test/resources/avl/JustSpec/missionLogEntry.json[]
+----
+

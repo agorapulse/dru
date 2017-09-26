@@ -8,7 +8,6 @@ import com.agorapulse.dru.persistence.ClientFactory
 import com.agorapulse.dru.persistence.meta.ClassMetadata
 import grails.core.GrailsDomainClass
 import grails.testing.gorm.DataTest
-import groovy.util.logging.Slf4j
 import org.grails.datastore.gorm.GormEntity
 
 /**
@@ -16,7 +15,6 @@ import org.grails.datastore.gorm.GormEntity
  */
 class Gorm extends AbstractCacheableClient {
 
-    @Slf4j
     static class Factory implements ClientFactory {
         final int index = 10000
 
@@ -27,18 +25,12 @@ class Gorm extends AbstractCacheableClient {
             'SystemErrPrint',
         ])
         boolean isSupported(Object unitTest) {
-            boolean supported = unitTest instanceof DataTest
-            if (!supported) {
-                if (!unitTest.class.getAnnotation(NoGorm)) {
-                    log.error("Gorm Dru client is on the classpath but ${unitTest.getClass()} does not implement $DataTest.name. Please, add @NoGorm annotation to hide this message if this is intended.")
-                }
-            }
-            return supported
+            return true
         }
 
         @Override
         Client newClient(Object unitTest) {
-            return new Gorm(unitTest as DataTest)
+            return new Gorm(unitTest in DataTest ? unitTest as DataTest : null)
         }
     }
 
@@ -56,6 +48,9 @@ class Gorm extends AbstractCacheableClient {
 
     @Override
     protected ClassMetadata createClassMetadata(Class type) {
+        if (!dataTest) {
+            throw new IllegalStateException("Trying to mock domain $type but the test is not $DataTest.name")
+        }
         ensureMocked(type)
         return new GormClassMetadata(dataTest.grailsApplication.getArtefact('Domain', type.name) as GrailsDomainClass)
     }
@@ -75,7 +70,7 @@ class Gorm extends AbstractCacheableClient {
         return type.newInstance(payload)
     }
 
-    void ensureMocked(Class domainClass) {
+    private void ensureMocked(Class domainClass) {
         if (!mockedDomainClasses.contains(domainClass)) {
             mockedDomainClasses.add(domainClass)
             dataTest.mockDomain(domainClass)

@@ -1,6 +1,4 @@
 dependencies {
     compile project(':dru')
     compile "org.grails:grails-gorm-testing-support:${grailsTestingSupportVersion}"
-
-    testCompile group: 'uk.org.lidalia', name: 'slf4j-test', version: '1.2.0'
 }
