@@ -13,6 +13,8 @@ public interface Client {
 
     <T> T newInstance(Parser parser, Class<T> type, Map<String, Object> payload);
     <T> T save(T object);
+    String getId(Object object);
+    String getId(Class type, Map<String, Object> properties);
     <T> T addTo(T object, String association, Object other);
 
 }

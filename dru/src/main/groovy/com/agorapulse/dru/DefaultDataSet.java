@@ -3,6 +3,7 @@ package com.agorapulse.dru;
 import com.agorapulse.dru.parser.Parser;
 import com.agorapulse.dru.parser.Parsers;
 import com.agorapulse.dru.persistence.Client;
+import com.google.common.base.Preconditions;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 
@@ -49,17 +50,28 @@ final class DefaultDataSet implements DataSet {
     }
 
     @Override
-    public <T> T add(Class<T> type, Object originalId, T entity) {
-        Map<String, Object> instancesByType = createdEntities.get(type);
+    public <T> T add(T entity) {
+        return add(entity, null);
+    }
+
+    @Override
+    public <T> T add(T entity, Object manualId) {
+        Map<String, Object> instancesByType = createdEntities.get(entity.getClass());
         if (instancesByType == null) {
             instancesByType = new LinkedHashMap<>();
-            createdEntities.put(type, instancesByType);
+            createdEntities.put(entity.getClass(), instancesByType);
         }
 
+        String id = manualId != null ? String.valueOf(manualId) : findClient(entity.getClass()).getId(entity);
         String systemId = String.valueOf(System.identityHashCode(entity));
-        if (originalId != null) {
+
+        if (id == null) {
+            id = systemId;
+        }
+
+        if (!systemId.equals(id)) {
             instancesByType.remove(systemId);
-            instancesByType.put(String.valueOf(originalId), entity);
+            instancesByType.put(id, entity);
         } else {
             instancesByType.put(systemId, entity);
         }
@@ -68,12 +80,29 @@ final class DefaultDataSet implements DataSet {
     }
 
     @Override
-    public <T> void remove(Class<T> type, Object originalId) {
-        Map<String, Object> instancesByType = createdEntities.get(type);
-        if (instancesByType == null) {
-            return;
+    @SuppressWarnings("unchecked")
+    public <T> T remove(T object) {
+        Map<String, Object> instances = createdEntities.get(object.getClass());
+        if (instances == null) {
+            return null;
         }
-        instancesByType.remove(String.valueOf(originalId));
+
+        String key = findClient(object.getClass()).getId(object);
+
+        T removed = (T) instances.remove(key);
+
+        if (removed != null) {
+            return removed;
+        }
+
+        for (Map.Entry<String, Object> entry : instances.entrySet()) {
+            if (entry.getValue() != null && entry.getValue().equals(object)) {
+                key = entry.getKey();
+                break;
+            }
+        }
+
+        return key != null ? (T) instances.remove(key) : null;
     }
 
     @Override
@@ -126,5 +155,16 @@ final class DefaultDataSet implements DataSet {
         }
         whenLoadedListeners.addAll(mapping.getWhenLoadedListeners());
         return loaded();
+    }
+
+    private Client findClient(Class type) {
+        Client result = null;
+        for (Client client: clients) {
+            if (client.isSupported(type)) {
+                result = client;
+                break;
+            }
+        }
+        return Preconditions.checkNotNull(result, "Client not found for " + type);
     }
 }

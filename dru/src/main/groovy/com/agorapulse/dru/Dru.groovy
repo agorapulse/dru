@@ -99,13 +99,18 @@ class Dru implements TestRule, DataSet {
     }
 
     @Override
-    <T> T add(Class<T> type, Object id, T entity) {
-        return ensureDataSetInitialized().add(type, id, entity)
+    <T> T add(T entity) {
+        return ensureDataSetInitialized().add(entity)
     }
 
     @Override
-    <T> void remove(Class<T> type, Object id) {
-        ensureDataSetInitialized().remove(type, id)
+    <T> T add(T entity, Object manualId) {
+        return ensureDataSetInitialized().add(entity, manualId)
+    }
+
+    @Override
+    <T> T remove(T object) {
+        ensureDataSetInitialized().remove(object)
     }
 
     @Override

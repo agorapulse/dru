@@ -34,6 +34,13 @@ class DynamoDB extends Pojo {
         return type.getAnnotation(DynamoDBTable)
     }
 
+    @Override
+    String getId(Class type, Map<String, Object> properties) {
+        Object hash = getDynamoDBClassMetadata(type).getHash(properties)
+        Object range = getDynamoDBClassMetadata(type).getRange(properties)
+        return getOriginalId(hash, range)
+    }
+
     DynamoDBClassMetadata getDynamoDBClassMetadata(Class type) {
         super.getClassMetadata(type).original as DynamoDBClassMetadata
     }
@@ -47,14 +54,14 @@ class DynamoDB extends Pojo {
         return new DruDynamoDBMapper(dataSet)
     }
 
-    static Serializable getId(Object hash, Object range) {
+    static Serializable getOriginalId(Object hash, Object range) {
         if (hash) {
             return range ? "${hash}:${range}" : "${hash}:"
         }
         return range ? ":${range}" : null
     }
 
-    static Object getId(Object entity) {
+    static Object getOriginalId(Object entity) {
         if (!entity) {
             return null
         }

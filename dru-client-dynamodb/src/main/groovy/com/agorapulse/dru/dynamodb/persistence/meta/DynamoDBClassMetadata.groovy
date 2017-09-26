@@ -39,7 +39,7 @@ class DynamoDBClassMetadata extends PojoClassMetadata {
         Serializable hashValue = hash ? fixture[hash.name] as Serializable : null
         Serializable rangeValue = range ? fixture[range.name] as Serializable : null
 
-        return DynamoDB.getId(hashValue, rangeValue)
+        return DynamoDB.getOriginalId(hashValue, rangeValue)
     }
 
     PropertyMetadata getHash() {

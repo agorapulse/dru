@@ -20,7 +20,7 @@ import com.amazonaws.services.dynamodbv2.model.ConsumedCapacity
 import groovy.transform.stc.ClosureParams
 import groovy.transform.stc.FromString
 
-import static com.agorapulse.dru.dynamodb.persistence.DynamoDB.getId
+import static com.agorapulse.dru.dynamodb.persistence.DynamoDB.getOriginalId
 
 /**
  * DynamoDBMapper mock implemented on the best afford.
@@ -71,27 +71,41 @@ class DruDynamoDBMapper extends DynamoDBMapper {
 
     @Override
     <T extends Object> T load(Class<T> clazz, Object hashKey, Object rangeKey, DynamoDBMapperConfig config) {
-        dataSet.findByTypeAndOriginalId(clazz, getId(hashKey, rangeKey))
+        T found = dataSet.findByTypeAndOriginalId(clazz, getOriginalId(hashKey, rangeKey))
+        if (found) {
+            return found
+        }
+        return dataSet.findByType(clazz).find {
+            Object hash = DynamoDB.INSTANCE.getHash(it)
+            Object range = DynamoDB.INSTANCE.getRange(it)
+            return hash == hashKey && range == rangeKey
+        } as T
     }
 
     @Override
     <T> T load(T keyObject, DynamoDBMapperConfig config) {
-        dataSet.findByTypeAndOriginalId(keyObject.getClass(), getId(keyObject)) as T
+        T found = dataSet.findByTypeAndOriginalId(keyObject.getClass(), DynamoDB.INSTANCE.getId(keyObject)) as T
+        if (found) {
+            return found
+        }
+        return dataSet.findByType(keyObject.getClass()).find {
+            Object hash = DynamoDB.INSTANCE.getHash(it)
+            Object range = DynamoDB.INSTANCE.getRange(it)
+            return hash == DynamoDB.INSTANCE.getHash(keyObject) && range == DynamoDB.INSTANCE.getRange(keyObject)
+        } as T
     }
 
     @Override
     <T> void save(T object, DynamoDBSaveExpression saveExpression, DynamoDBMapperConfig config) {
         if (object != null) {
-            dataSet.add(object.getClass(), getId(object), object)
-
+            dataSet.add(object)
         }
     }
 
     @Override
     <T> void delete(T object, DynamoDBDeleteExpression deleteExpression, DynamoDBMapperConfig config) {
         if (object != null) {
-            dataSet.remove(object.getClass(), getId(object))
-
+            dataSet.remove(object)
         }
     }
 
@@ -247,7 +261,7 @@ class DruDynamoDBMapper extends DynamoDBMapper {
             }
         }
 
-        List<T> result = items.dropWhile { getId(it) != getId(startKeyInstance) }
+        List<T> result = items.dropWhile { DynamoDB.INSTANCE.getId(it) != DynamoDB.INSTANCE.getId(startKeyInstance) }
         if (result.size() > 1) {
             return result.tail()
         }

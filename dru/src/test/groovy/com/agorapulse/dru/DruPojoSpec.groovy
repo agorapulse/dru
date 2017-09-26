@@ -68,7 +68,7 @@ class DruPojoSpec extends Specification {
             !dru.findByType(String)
             dru.findAllByType(Book).size() == 4
         when:
-            dru.remove(String, 'foo')
+            dru.remove('foo')
         then:
             noExceptionThrown()
 

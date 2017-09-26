@@ -237,6 +237,8 @@ to load data set into existing data set.
 include::../examples/avl/src/test/groovy/avl/DataSetSpec.groovy[tag="plan"]
 ----
 
+// TODO: whenLoaded
+
 [TIP]
 `Dru` is also a data set with special behaviour. It gets cleared after every test method run.
 
@@ -332,3 +334,51 @@ The client is used if `@DynamoDBTable` annotation is present on the class.
 |`@DynamoDBMarshalling`
 |Property is marked as embedded
 |===
+
+
+DynamoDB client determines the hash and range properly from the class so you can later retrieve the entity from the data set.
+
+[source,indent=0,options="nowrap"]
+.Using DynamoDB Client
+----
+include::../examples/avl/src/test/groovy/avl/DynamoDBSampleSpec.groovy[tag="plan"]
+----
+
+[source,json,indent=0,options="nowrap"]
+.library.json
+----
+include::../examples/avl/src/test/resources/avl/DynamoDBSampleSpec/missionLogEntry.json[]
+----
+
+[source,indent=0,options="nowrap"]
+.MissionLogEntry.groovy
+----
+include::../examples/avl/src/main/groovy/avl/MissionLogEntry.groovy[tag="header"]
+
+include::../examples/avl/src/main/groovy/avl/MissionLogEntry.groovy[tag="hashKeyAnno"]
+include::../examples/avl/src/main/groovy/avl/MissionLogEntry.groovy[tag="hashKey"]
+
+include::../examples/avl/src/main/groovy/avl/MissionLogEntry.groovy[tag="properties"]
+
+include::../examples/avl/src/main/groovy/avl/MissionLogEntry.groovy[tag="ext"]
+include::../examples/avl/src/main/groovy/avl/MissionLogEntry.groovy[tag="footer"]
+----
+
+You can create `DynamoDBMapper` based on the data in the data set using `DynamoDB.createMapper(dataSet)`.
+
+[source,indent=0,options="nowrap"]
+.Using DynamoDBMapper
+----
+include::../examples/avl/src/test/groovy/avl/DynamoDBSampleSpec.groovy[tag="mapper"]
+----
+
+If you are using link:https://github.com/agorapulse/grails-aws-sdk/tree/master/grails-aws-sdk-dynamodb[Grails AWS SDK DynamoDB Plugin]
+you can inject such `DynamoDBMapper` into `AbstractDBService` to get instance of the service
+working against the data set.
+
+[source,indent=0,options="nowrap"]
+.Using DynamoDBMapper with Grails Plugin
+----
+include::../examples/avl/src/test/groovy/avl/DynamoDBSampleSpec.groovy[tag="grailsService"]
+----
+

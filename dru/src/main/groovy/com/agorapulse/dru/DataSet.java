@@ -10,8 +10,9 @@ public interface DataSet  {
     <T> T findByTypeAndOriginalId(Class<T> type, Object id);
     <T> List<T> findAllByType(Class<T> type);
     <T> T findByType(Class<T> type);
-    <T> T add(Class<T> type, Object id, T entity);
-    <T> void remove(Class<T> type, Object id);
+    <T> T add(T entity);
+    <T> T add(T entity, Object manualId);
+    <T> T remove(T object);
 
     /**
      * Loads additional prepared data set into current data set and returns self.
@@ -29,7 +30,7 @@ public interface DataSet  {
     DataSet load(@DelegatesTo(value = DataSetMappingDefinition.class, strategy = Closure.DELEGATE_FIRST) Closure<DataSetMappingDefinition> configuration);
 
     /**
-     * Signals that data sets was manually loaded into this data set using {@link #add(Class, Object, Object)} or the
+     * Signals that data sets was manually loaded into this data set using {@link #add(Object)} or the
      * data has been changed significantly so the attached {@link DataSetMappingDefinition.WhenLoaded} listeners
      * should be notified.
      * @return self

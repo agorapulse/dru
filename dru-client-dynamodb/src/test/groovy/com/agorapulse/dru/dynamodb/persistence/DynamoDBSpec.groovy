@@ -12,7 +12,7 @@ class DynamoDBSpec extends Specification {
 
     void 'nulls returns nulls'() {
         expect:
-            DynamoDB.getId(null) == null
+            DynamoDB.getOriginalId(null) == null
             DynamoDB.getHash(null) == null
             DynamoDB.getRange(null) == null
     }
