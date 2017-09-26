@@ -237,8 +237,16 @@ to load data set into existing data set.
 include::../examples/avl/src/test/groovy/avl/DataSetSpec.groovy[tag="plan"]
 ----
 
-// TODO: whenLoaded
+If additional logic needs to be executed when the data set is loaded or changed significantly then you can use `whenLoaded` hook.
+You can trigger the hooks manually using `loaded` method of the data set.
 
+[source,indent=0,options="nowrap"]
+.Using Data Set
+----
+include::../examples/avl/src/test/groovy/avl/WhenLoadedSpec.groovy[tag="plan"]
+----
+<1> First call to the hook is triggered immediately as we are defining the hook inside `load` method
+<2> Second call to the hook is triggered manually using `loaded` method
 [TIP]
 `Dru` is also a data set with special behaviour. It gets cleared after every test method run.
 
@@ -382,3 +390,32 @@ working against the data set.
 include::../examples/avl/src/test/groovy/avl/DynamoDBSampleSpec.groovy[tag="grailsService"]
 ----
 
+=== GORM
+GORM uses the Grails Object Relational Mapping to import entities into test in-memory storage.
+It automatically mocks all the entities involved so there is no need to call to `mockDomains` method.
+Your unit tests must implement `DataTest` trait if you want to take advantage of using Dru with GORM.
+
+[source,indent=0,options="nowrap"]
+.Using GORM Client
+----
+include::../examples/avl/src/test/groovy/avl/GormSpec.groovy[tag="plan"]
+----
+
+[source,json,indent=0,options="nowrap"]
+.agents.json
+----
+include::../examples/avl/src/test/resources/avl/GormSpec/agents.json[]
+----
+
+
+[source,indent=0,options="nowrap"]
+.Agent.groovy
+----
+include::../examples/avl/grails-app/domain/avl/Agent.groovy[tag="header"]
+include::../examples/avl/grails-app/domain/avl/Agent.groovy[tag="properties"]
+include::../examples/avl/grails-app/domain/avl/Agent.groovy[tag="footer"]
+----
+
+[NOTE]
+GORM client is unable to set the id of the entities to the original value. The original value is replaced wherever it is
+obvious from the mapping to the actual generated id.
