@@ -7,6 +7,7 @@ import com.agorapulse.dru.persistence.meta.ClassMetadata
 import com.agorapulse.dru.persistence.meta.PropertyMetadata
 import com.agorapulse.dru.pojo.Pojo
 import com.agorapulse.dru.pojo.meta.PojoClassMetadata
+import com.agorapulse.dru.pojo.meta.PojoPropertyMetadata
 import org.junit.Rule
 import spock.lang.Specification
 
@@ -17,22 +18,31 @@ class DruPojoSpec extends Specification {
 
     @Rule Dru dru = Dru.steal(this)
 
+    void 'guess associations'() {
+        when:
+            PojoPropertyMetadata authors = new PojoPropertyMetadata(Library, 'authors', true)
+        then:
+            authors.referencedPropertyType == Author
+            authors.type == SortedSet
+            authors.association
+            authors.persistent
+            authors.referencedPropertyName == null
+
+            // cannot decide so far
+            authors.oneToMany
+            authors.manyToMany
+
+            !authors.manyToOne
+            !authors.oneToOne
+            !authors.embedded
+    }
+
     void 'load by reflection'() {
         when:
             dru.load {
                 from ('LIBRARY') {
                     map {
-                        to (Library) {
-                            map ('authors') {
-                                to Author
-                            }
-                            map ('genres') {
-                                to Genre
-                            }
-                            map ('books') {
-                                to (Book)
-                            }
-                        }
+                        to Library
                     }
                 }
                 any (Author) {
@@ -56,6 +66,7 @@ class DruPojoSpec extends Specification {
         then:
             dru.findByType(Library)
             !dru.findByType(String)
+            dru.findAllByType(Book).size() == 4
         when:
             dru.remove(String, 'foo')
         then:

@@ -1,0 +1,8 @@
+- id: 12345
+  name: Felonius Gru
+  bio: Born from the family with long line of villainy and formerly the world's greatest
+    villain.
+  securityLevel: 2
+  manager:
+    id: 101
+    name: Silas Ramsbottom

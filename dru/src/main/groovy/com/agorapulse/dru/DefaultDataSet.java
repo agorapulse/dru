@@ -55,7 +55,15 @@ final class DefaultDataSet implements DataSet {
             instancesByType = new LinkedHashMap<>();
             createdEntities.put(type, instancesByType);
         }
-        instancesByType.put(String.valueOf(originalId), entity);
+
+        String systemId = String.valueOf(System.identityHashCode(entity));
+        if (originalId != null) {
+            instancesByType.remove(systemId);
+            instancesByType.put(String.valueOf(originalId), entity);
+        } else {
+            instancesByType.put(systemId, entity);
+        }
+
         return entity;
     }
 

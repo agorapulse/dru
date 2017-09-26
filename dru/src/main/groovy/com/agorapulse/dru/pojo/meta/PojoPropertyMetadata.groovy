@@ -51,27 +51,27 @@ class PojoPropertyMetadata extends AbstractPropertyMetadata {
 
     @Override
     boolean isOneToMany() {
-        return false
+        return toMany
     }
 
     @Override
     boolean isManyToOne() {
-        return false
+        return isAssociation() && !toMany
     }
 
     @Override
     boolean isManyToMany() {
-        return false
+        return toMany
     }
 
     @Override
     boolean isOneToOne() {
-        return false
+        return isAssociation() && !toMany
     }
 
     @Override
     boolean isAssociation() {
-        return false
+        return !isBasicType(referencedPropertyType)
     }
 
     @Override
@@ -86,6 +86,10 @@ class PojoPropertyMetadata extends AbstractPropertyMetadata {
 
     @Override
     boolean isBasicCollectionType() {
+        return !association && toMany
+    }
+
+    private boolean isToMany() {
         return Collection.isAssignableFrom(type)
     }
 
@@ -119,5 +123,9 @@ class PojoPropertyMetadata extends AbstractPropertyMetadata {
             }
         }
         return findItemType(clazz.genericSuperclass)
+    }
+
+    private static boolean isBasicType(Class type) {
+        type.package?.name?.startsWith('java') || type.package?.name?.startsWith('groovy')
     }
 }

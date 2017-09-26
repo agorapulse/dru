@@ -212,3 +212,123 @@ include::../examples/avl/src/test/groovy/avl/JustSpec.groovy[tag="plan"]
 include::../examples/avl/src/test/resources/avl/JustSpec/missionLogEntry.json[]
 ----
 
+
+== Data Sets
+
+Data set is unit of reuse in Dru. Data set can contain multiple sources and mappings.
+The sources are evaluated relatively to the class in which the data set is defined. You usually defined
+one data set for mapping an entity and other to load the source to maximise reuse.
+
+[source,indent=0,options="nowrap"]
+.Agents Data Set
+----
+include::../examples/avl/src/test/groovy/avl/AgentsDataSet.groovy[]
+----
+<1> Define data set for agents mapping
+<2> Define data set for agents data
+<3> Include data set for agents mapping
+
+You can use method `include` to include any existing data set or you can use method `load`
+to load data set into existing data set.
+
+[source,indent=0,options="nowrap"]
+.Using Data Set
+----
+include::../examples/avl/src/test/groovy/avl/DataSetSpec.groovy[tag="plan"]
+----
+
+[TIP]
+`Dru` is also a data set with special behaviour. It gets cleared after every test method run.
+
+== Parsers
+
+Dru loads all parsers available on the classpath automatically. Which client is used is determined by the name of the source.
+
+=== Reflection
+
+Reflection parser is the simples parser. It searches for property of given name in the class where the data set is defined.
+This is a default parser if any other does not support given name.
+
+[source,indent=0,options="nowrap"]
+.Using Reflection Parser
+----
+include::../examples/avl/src/test/groovy/avl/ReflectionSpec.groovy[tag="plan"]
+----
+
+=== JSON
+JSON parser parses JSON files to combination of maps and lists. The source files must end with `.json` to get parsed and
+they must be contained in directory with the same name as the reference class (unit test or data set)
+
+[source,indent=0,options="nowrap"]
+.Using JSON Parser
+----
+include::../examples/avl/src/test/groovy/avl/NestedSpec.groovy[tag="plan"]
+----
+
+[source,json,indent=0,options="nowrap"]
+.agents.json
+----
+include::../examples/avl/src/test/resources/avl/NestedSpec/agents.json[]
+----
+
+=== YAML
+YAML parser parses YAML files to combination of maps and lists. The source files must end with `.yml` or `.yaml` to get parsed and
+they must be contained in directory with the same name as the reference class (unit test or data set)
+
+[source,indent=0,options="nowrap"]
+.Using YAML Parser
+----
+include::../examples/avl/src/test/groovy/avl/YamlSpec.groovy[tag="plan"]
+----
+
+[source,yml,indent=0,options="nowrap"]
+.agents.yml
+----
+include::../examples/avl/src/test/resources/avl/YamlSpec/agents.yml[]
+----
+
+== Clients
+Dru loads all clients available on the classpath automatically if they support the unit test where `Dru` instance is defined.
+
+=== POJO
+
+POJO client is default fallback client which loads data into Plain Old Java Objects.
+POJO client is able to recognize associations but it is unable to load other sides of bidirectional relations.
+
+[source,indent=0,options="nowrap"]
+.Using POJO Client
+----
+include::../examples/avl/src/test/groovy/avl/PojoSpec.groovy[tag="plan"]
+----
+
+[source,json,indent=0,options="nowrap"]
+.library.json
+----
+include::../examples/avl/src/test/resources/avl/PojoSpec/library.json[]
+----
+
+=== DynamoDB
+
+DynamoDB client is extension to POJO client which understands
+link:http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBMapper.Annotations.html[DynamoDB data mapping annotations] (see bellow).
+The client is used if `@DynamoDBTable` annotation is present on the class.
+
+.DynamoDB Annotations
+|===
+|Annotation |Effect
+
+|`@DynamoDBTable`
+|DynamoDB client is used for given class
+
+|`@DynamoDBHashKey`
+|Property is used as hash key part of the id
+
+|`@DynamoDBRangeKey`
+|Property is used as hash range part of the id
+
+|`@DynamoDBIgnore`
+|Property is ignored
+
+|`@DynamoDBMarshalling`
+|Property is marked as embedded
+|===

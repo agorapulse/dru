@@ -249,9 +249,7 @@ class PropertyMapping implements PropertyMappingDefinition {
 
         if (newStuff == null) {
             newStuff = client.newInstance(parser, type, payload)
-            if (id) {
-                dataSet.add(type, id, newStuff)
-            }
+            dataSet.add(type, id, newStuff)
         } else {
             assignProperties(newStuff, payload)
         }
@@ -263,9 +261,7 @@ class PropertyMapping implements PropertyMappingDefinition {
         if (!id) {
             // some client such as GORM can obtain id after save
             id = classMetadata.getId(newStuff.properties)
-            if (id) {
-                dataSet.add(type, id, newStuff)
-            }
+            dataSet.add(type, id, newStuff)
         }
 
         pendingToMany.each { String associationName, Iterable values ->
