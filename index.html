@@ -1584,6 +1584,37 @@ working against the data set.</p>
 }</code></pre>
 </div>
 </div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The Dru&#8217;s implementation of <code>DynamoDBMapper</code> provides limited query and scan capabilities. You can
+query by hash keys and range keys and you can scan with filter. For additional more complex queries you need to implement
+your own logic using  <code>DruDynamoDBMapper</code> callback <code>onQuery</code> and <code>onScan</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">Using Avanced Queries and Scans</div>
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code>void 'advanced dynamodb mapper'() {
+    when: "DynamoDB mapper is created from data set"
+        DruDynamoDBMapper mapper = DynamoDB.createMapper(dru)
+        mapper.onQuery(MissionLogEntry) { MissionLogEntry entry, DynamoDBQueryExpression&lt;MissionLogEntry&gt; query, DynamoDBMapperConfig config -&gt;
+            return entry.agentId == 101
+        }
+    then:
+        mapper.query(MissionLogEntry, buildCompexQuery()).size() == 1
+
+}</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_gorm">GORM</h3>
@@ -1675,7 +1706,7 @@ obvious from the mapping to the actual generated id.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-09-27 08:55:11 CEST
+Last updated 2017-09-27 09:18:56 CEST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
