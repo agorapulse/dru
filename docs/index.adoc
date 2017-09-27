@@ -241,7 +241,7 @@ If additional logic needs to be executed when the data set is loaded or changed 
 You can trigger the hooks manually using `loaded` method of the data set.
 
 [source,indent=0,options="nowrap"]
-.Using Data Set
+.Using Data Set Hooks
 ----
 include::../examples/avl/src/test/groovy/avl/WhenLoadedSpec.groovy[tag="plan"]
 ----
