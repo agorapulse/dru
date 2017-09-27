@@ -11,6 +11,8 @@ class Library implements Comparable<Library> {
     SortedSet<Author> authors
     SortedSet<Book> books
 
+    boolean accessible
+
     @SuppressWarnings([
         'IfStatementCouldBeTernary',
         'IfStatementBraces',

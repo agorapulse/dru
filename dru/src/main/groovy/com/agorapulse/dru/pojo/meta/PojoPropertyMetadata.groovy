@@ -126,6 +126,6 @@ class PojoPropertyMetadata extends AbstractPropertyMetadata {
     }
 
     private static boolean isBasicType(Class type) {
-        type.package?.name?.startsWith('java') || type.package?.name?.startsWith('groovy')
+        type.package?.name?.startsWith('java') || type.package?.name?.startsWith('groovy') || type.primitive
     }
 }

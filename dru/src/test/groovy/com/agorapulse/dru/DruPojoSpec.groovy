@@ -18,7 +18,7 @@ class DruPojoSpec extends Specification {
 
     @Rule Dru dru = Dru.steal(this)
 
-    void 'guess associations'() {
+    void 'guess associations - string'() {
         when:
             PojoPropertyMetadata authors = new PojoPropertyMetadata(Library, 'authors', true)
         then:
@@ -32,6 +32,23 @@ class DruPojoSpec extends Specification {
             authors.oneToMany
             authors.manyToMany
 
+            !authors.manyToOne
+            !authors.oneToOne
+            !authors.embedded
+    }
+
+    void 'guess associations - boolean'() {
+        when:
+            PojoPropertyMetadata authors = new PojoPropertyMetadata(Library, 'accessible', true)
+        then:
+            authors.referencedPropertyType == boolean
+            authors.referencedPropertyName == null
+            authors.type == boolean
+            authors.persistent
+
+            !authors.association
+            !authors.oneToMany
+            !authors.manyToMany
             !authors.manyToOne
             !authors.oneToOne
             !authors.embedded
