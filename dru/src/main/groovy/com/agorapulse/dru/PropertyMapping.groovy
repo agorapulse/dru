@@ -326,9 +326,6 @@ class PropertyMapping implements PropertyMappingDefinition {
         if (property instanceof String && typeMappingToUse && Enum.isAssignableFrom(typeMappingToUse.type)) {
             return typeMappingToUse.type.getMethod('valueOf', String).invoke(null, property)
         }
-        if (dataSet.findAllByType(property.getClass()).contains(property)) {
-            return property
-        }
 
         if (typeMappingToUse && (property instanceof Number || property instanceof CharSequence)) {
             Object byId = dataSet.findByTypeAndOriginalId(typeMappingToUse.type, property)
