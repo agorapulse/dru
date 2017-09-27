@@ -390,6 +390,16 @@ working against the data set.
 include::../examples/avl/src/test/groovy/avl/DynamoDBSampleSpec.groovy[tag="grailsService"]
 ----
 
+The Dru's implementation of `DynamoDBMapper` provides limited query and scan capabilities. You can
+query by hash keys and range keys and you can scan with filter. For additional more complex queries you need to implement
+your own logic using  `DruDynamoDBMapper` callback `onQuery` and `onScan`.
+
+[source,indent=0,options="nowrap"]
+.Using Avanced Queries and Scans
+----
+include::../examples/avl/src/test/groovy/avl/DynamoDBSampleSpec.groovy[tag="advancedMapper"]
+----
+
 === GORM
 GORM uses the Grails Object Relational Mapping to import entities into test in-memory storage.
 It automatically mocks all the entities involved so there is no need to call to `mockDomains` method.
