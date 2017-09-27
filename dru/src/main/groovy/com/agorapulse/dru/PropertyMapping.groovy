@@ -344,8 +344,8 @@ class PropertyMapping implements PropertyMappingDefinition {
                 return classMetadata.getId(byId.properties)
             }
 
-            throw new IllegalStateException("Value $fullPath.$property is mapped to id of $typeMappingToUse.type but it is not loaded yet. " +
-                'Please load the entity before loading this source.')
+            throw new IllegalStateException("Value $property with path $fullPath is mapped to id of $typeMappingToUse.type" +
+                ' but it is not loaded yet. Please load the entity before loading this source.')
         }
 
         throw new IllegalArgumentException("Property is not a Map either already processed entity at $fullPath: $property")
