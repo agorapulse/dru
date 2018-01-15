@@ -6,6 +6,7 @@ import com.agorapulse.dru.pojo.meta.PojoClassMetadata
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIgnore
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey
+import com.google.common.collect.ImmutableSet
 
 /**
  * Describes DynamoDB object class.
@@ -40,6 +41,11 @@ class DynamoDBClassMetadata extends PojoClassMetadata {
         Serializable rangeValue = range ? fixture[range.name] as Serializable : null
 
         return DynamoDB.getOriginalId(hashValue, rangeValue)
+    }
+
+    @Override
+    Set<String> getIdPropertyNames() {
+        return [hash?.name, range?.name].grep().toSet()
     }
 
     PropertyMetadata getHash() {

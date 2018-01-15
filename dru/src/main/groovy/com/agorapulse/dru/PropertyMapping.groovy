@@ -250,7 +250,7 @@ class PropertyMapping implements PropertyMappingDefinition {
         if (newStuff == null) {
             newStuff = client.newInstance(parser, type, payload)
         } else {
-            assignProperties(newStuff, payload)
+            assignProperties(newStuff, payload, classMetadata.idPropertyNames)
         }
 
         handleDefaults(dataSetMapping, typeMappingToUse, type, fixture, newStuff)
@@ -373,8 +373,11 @@ class PropertyMapping implements PropertyMappingDefinition {
         return typeMappingToUse.propertyMappings.findOrCreate(propertyName)
     }
 
-    private static void assignProperties(Object newStuff, Map<String, Object> payload) {
+    private static void assignProperties(Object newStuff, Map<String, Object> payload, Set<String> idNames) {
         payload.each {
+            if (it.key in idNames) {
+                return
+            }
             newStuff."$it.key" = it.value
         }
     }

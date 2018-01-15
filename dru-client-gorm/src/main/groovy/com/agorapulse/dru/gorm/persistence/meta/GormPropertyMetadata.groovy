@@ -1,81 +1,113 @@
 package com.agorapulse.dru.gorm.persistence.meta
 
 import com.agorapulse.dru.persistence.meta.AbstractPropertyMetadata
-import grails.core.GrailsDomainClassProperty
+import org.grails.datastore.mapping.model.PersistentProperty
+import org.grails.datastore.mapping.model.types.Association
+import org.grails.datastore.mapping.model.types.Basic
+import org.grails.datastore.mapping.model.types.Identity
+import org.grails.datastore.mapping.model.types.ManyToMany
+import org.grails.datastore.mapping.model.types.ManyToOne
+import org.grails.datastore.mapping.model.types.OneToMany
+import org.grails.datastore.mapping.model.types.OneToOne
+import org.grails.datastore.mapping.model.types.Simple
 
 /**
  * Describes GORM domain class's persistent property.
  */
 class GormPropertyMetadata extends AbstractPropertyMetadata {
 
-    private final GrailsDomainClassProperty grailsDomainClassProperty
+    private final PersistentProperty persistentProperty
 
-    GormPropertyMetadata(GrailsDomainClassProperty grailsDomainClassProperty) {
-        this.grailsDomainClassProperty = grailsDomainClassProperty
+    GormPropertyMetadata(PersistentProperty persistentProperty) {
+        this.persistentProperty = persistentProperty
     }
 
     @Override
     String getName() {
-        return grailsDomainClassProperty.name
+        return persistentProperty.name
     }
 
     @Override
     Class getType() {
-        return grailsDomainClassProperty.type
+        return persistentProperty.type
     }
 
     @Override
     Class getReferencedPropertyType() {
-        return grailsDomainClassProperty.referencedPropertyType
+        if (persistentProperty instanceof Association && persistentProperty.associatedEntity) {
+            return persistentProperty.associatedEntity.javaClass
+        }
+        if (persistentProperty instanceof Simple) {
+            return persistentProperty.type
+        }
+        if (persistentProperty instanceof Basic) {
+            return persistentProperty.componentType
+        }
+        return persistentProperty.type
     }
 
     @Override
     boolean isPersistent() {
-        return grailsDomainClassProperty.persistent && !grailsDomainClassProperty.identity
+        return persistentProperty && !(persistentProperty instanceof Identity)
     }
 
     @Override
     boolean isOneToMany() {
-        return grailsDomainClassProperty.oneToMany
+        return persistentProperty instanceof OneToMany
     }
 
     @Override
     boolean isManyToOne() {
-        return grailsDomainClassProperty.manyToOne
+        return persistentProperty instanceof ManyToOne
     }
 
     @Override
     boolean isManyToMany() {
-        return grailsDomainClassProperty.manyToMany
+        return persistentProperty instanceof ManyToMany
     }
 
     @Override
     boolean isOneToOne() {
-        return grailsDomainClassProperty.oneToOne
+        return persistentProperty instanceof OneToOne
     }
 
     @Override
     boolean isAssociation() {
-        return grailsDomainClassProperty.association
+        return persistentProperty instanceof Association
     }
 
     @Override
     boolean isOwningSide() {
-        return grailsDomainClassProperty.owningSide
+        return persistentProperty instanceof Association && persistentProperty.owningSide
     }
 
     @Override
     String getReferencedPropertyName() {
-        return grailsDomainClassProperty.referencedPropertyName
+        if (persistentProperty instanceof Association) {
+            if (persistentProperty.referencedPropertyName) {
+                return persistentProperty.referencedPropertyName
+            }
+
+            Association association = persistentProperty as Association
+
+            if (association.associatedEntity) {
+                Association referencedProperty = association.associatedEntity.associations.find { it.associatedEntity == persistentProperty.owner }
+
+                if (referencedProperty) {
+                    return referencedProperty.name
+                }
+            }
+        }
+        return null
     }
 
     @Override
     boolean isEmbedded() {
-        return grailsDomainClassProperty.embedded
+        return persistentProperty instanceof Association && persistentProperty.embedded
     }
 
     @Override
     boolean isBasicCollectionType() {
-        return grailsDomainClassProperty.basicCollectionType
+        return persistentProperty instanceof Basic
     }
 }

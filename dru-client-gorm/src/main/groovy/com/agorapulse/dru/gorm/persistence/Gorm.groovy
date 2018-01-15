@@ -6,8 +6,8 @@ import com.agorapulse.dru.persistence.AbstractCacheableClient
 import com.agorapulse.dru.persistence.Client
 import com.agorapulse.dru.persistence.ClientFactory
 import com.agorapulse.dru.persistence.meta.ClassMetadata
-import grails.core.GrailsDomainClass
 import grails.testing.gorm.DataTest
+import org.grails.datastore.gorm.GormEnhancer
 import org.grails.datastore.gorm.GormEntity
 
 /**
@@ -52,7 +52,7 @@ class Gorm extends AbstractCacheableClient {
             throw new IllegalStateException("Trying to mock domain $type but the test is not $DataTest.name")
         }
         ensureMocked(type)
-        return new GormClassMetadata(dataTest.grailsApplication.getArtefact('Domain', type.name) as GrailsDomainClass)
+        return new GormClassMetadata(GormEnhancer.findStaticApi(type).gormPersistentEntity)
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.agorapulse.dru.pojo.meta
 
 import com.agorapulse.dru.persistence.meta.ClassMetadata
 import com.agorapulse.dru.persistence.meta.PropertyMetadata
+import com.google.common.collect.ImmutableSet
 
 import java.lang.annotation.Annotation
 import java.lang.reflect.AnnotatedElement
@@ -116,6 +117,11 @@ class PojoClassMetadata implements ClassMetadata {
     @Override
     Object getId(Map<String, Object> fixture) {
         return fixture.id ?: fixture.name
+    }
+
+    @Override
+    Set<String> getIdPropertyNames() {
+        return ImmutableSet.of('id')
     }
 
     private Map<String, PropertyMetadata> collectPersistentProperties() {
