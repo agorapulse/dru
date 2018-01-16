@@ -14,6 +14,7 @@ import org.grails.datastore.mapping.model.types.Simple
 /**
  * Describes GORM domain class's persistent property.
  */
+@SuppressWarnings('Instanceof')
 class GormPropertyMetadata extends AbstractPropertyMetadata {
 
     private final PersistentProperty persistentProperty
@@ -33,6 +34,7 @@ class GormPropertyMetadata extends AbstractPropertyMetadata {
     }
 
     @Override
+    @SuppressWarnings('CouldBeSwitchStatement')
     Class getReferencedPropertyType() {
         if (persistentProperty instanceof Association && persistentProperty.associatedEntity) {
             return persistentProperty.associatedEntity.javaClass
