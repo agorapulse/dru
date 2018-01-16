@@ -2,28 +2,28 @@ package com.agorapulse.dru.gorm.persistence.meta
 
 import com.agorapulse.dru.persistence.meta.ClassMetadata
 import com.agorapulse.dru.persistence.meta.PropertyMetadata
-import grails.core.GrailsDomainClass
-import grails.core.GrailsDomainClassProperty
+import org.grails.datastore.mapping.model.PersistentEntity
+import org.grails.datastore.mapping.model.PersistentProperty
 
 /**
  * Describes GORM domain class.
  */
 class GormClassMetadata implements ClassMetadata {
 
-    private final GrailsDomainClass grailsDomainClass
+    private final PersistentEntity persistentEntity
 
-    GormClassMetadata(GrailsDomainClass grailsDomainClass) {
-        this.grailsDomainClass = grailsDomainClass
+    GormClassMetadata(PersistentEntity persistentEntity) {
+        this.persistentEntity = persistentEntity
     }
 
     @Override
     Iterable<PropertyMetadata> getPersistentProperties() {
-        return grailsDomainClass.persistentProperties.collect { new GormPropertyMetadata(it) }
+        return persistentEntity.persistentProperties.collect { new GormPropertyMetadata(it) }
     }
 
     @Override
     PropertyMetadata getPersistentProperty(String name) {
-        GrailsDomainClassProperty property = grailsDomainClass.getPersistentProperty(name)
+        PersistentProperty property = persistentEntity.getPropertyByName(name)
         if (!property) {
             return null
         }
@@ -32,13 +32,18 @@ class GormClassMetadata implements ClassMetadata {
 
     @Override
     Class getType() {
-        return grailsDomainClass.clazz
+        return persistentEntity.javaClass
     }
 
     @Override
     Serializable getId(Map<String, Object> fixture) {
-        GrailsDomainClassProperty identifier = grailsDomainClass.identifier
+        PersistentProperty identifier = persistentEntity.identity
         assert identifier
-        return fixture[identifier.name] as Serializable
+        return fixture[identifier.name].asType(identifier.type) as Serializable
+    }
+
+    @Override
+    Set<String> getIdPropertyNames() {
+        return [persistentEntity.identity?.name].grep().toSet()
     }
 }

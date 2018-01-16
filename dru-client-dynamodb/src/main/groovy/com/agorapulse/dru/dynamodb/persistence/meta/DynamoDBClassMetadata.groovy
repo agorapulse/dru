@@ -42,6 +42,11 @@ class DynamoDBClassMetadata extends PojoClassMetadata {
         return DynamoDB.getOriginalId(hashValue, rangeValue)
     }
 
+    @Override
+    Set<String> getIdPropertyNames() {
+        return [hash?.name, range?.name].grep().toSet()
+    }
+
     PropertyMetadata getHash() {
         if (!hash) {
             findHashAndRange()
