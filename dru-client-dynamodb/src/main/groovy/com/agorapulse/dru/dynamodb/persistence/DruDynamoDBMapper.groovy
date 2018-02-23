@@ -286,7 +286,10 @@ class DruDynamoDBMapper extends DynamoDBMapper {
         List<T> ret = new ArrayList<>(dataSet.findAllByType(type))
 
         if (expression.hashKeyValues) {
-            PropertyMetadata property = DynamoDB.INSTANCE.getDynamoDBClassMetadata(type).hash
+            PropertyMetadata property = expression.indexName ?
+                DynamoDB.INSTANCE.getDynamoDBClassMetadata(type).getHashIndexProperty(expression.indexName) :
+                DynamoDB.INSTANCE.getDynamoDBClassMetadata(type).hash
+
             ret = ret.findAll {
                 it."$property.name" == expression.hashKeyValues."$property.name"
             }

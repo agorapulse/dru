@@ -6,6 +6,7 @@ import com.agorapulse.dru.dynamodb.persistence.DynamoDB
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression
+import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList
 import org.joda.time.DateTime
 import org.junit.Rule
 import spock.lang.Specification
@@ -89,4 +90,19 @@ class DynamoDBSampleSpec extends Specification {
             service.query(7).count == 1
     }
     // end::grailsService[]
+
+    void 'use secondary global index'() {
+        when:
+            DynamoDBMapper mapper = DynamoDB.createMapper(dru)
+
+            DynamoDBQueryExpression queryExpression = new DynamoDBQueryExpression<MissionLogEntry>()
+                .withHashKeyValues(new MissionLogEntry(agentId: 101))
+                .withIndexName('agentIdMissionLogEntryIndex')
+                .withConsistentRead(false)
+
+            PaginatedQueryList<MissionLogEntry> result = mapper.query(MissionLogEntry, queryExpression)
+
+        then:
+            result.size() == 1
+    }
 }
