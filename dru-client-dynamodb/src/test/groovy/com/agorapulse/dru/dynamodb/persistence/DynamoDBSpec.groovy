@@ -64,4 +64,18 @@ class DynamoDBSpec extends Specification {
             ':bar'      | [theRange: 'bar']
             null        | [:]
     }
+
+    void 'find hash index'() {
+        when:
+            ClassMetadata classMetadata = new DynamoDBClassMetadata(DynamoDBTester)
+        then:
+            classMetadata.getHashIndexProperty('foo')
+            classMetadata.getHashIndexProperty('bar')
+            classMetadata.getHashIndexProperty('baz')
+
+        when:
+            classMetadata.getHashIndexProperty('boo')
+        then:
+            thrown(IllegalArgumentException)
+    }
 }

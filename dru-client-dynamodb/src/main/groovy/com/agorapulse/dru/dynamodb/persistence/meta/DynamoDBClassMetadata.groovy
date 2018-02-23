@@ -5,6 +5,7 @@ import com.agorapulse.dru.persistence.meta.PropertyMetadata
 import com.agorapulse.dru.pojo.meta.PojoClassMetadata
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIgnore
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIndexHashKey
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey
 
 /**
@@ -81,5 +82,15 @@ class DynamoDBClassMetadata extends PojoClassMetadata {
                 return
             }
         }
+    }
+
+    PropertyMetadata getHashIndexProperty(String index) {
+        for (PropertyMetadata property in persistentProperties) {
+            DynamoDBIndexHashKey annotation = getAnnotation(type, property.name, DynamoDBIndexHashKey)
+            if (annotation && (annotation.globalSecondaryIndexName() == index || index in annotation.globalSecondaryIndexNames())) {
+                return property
+            }
+        }
+        throw new IllegalArgumentException("Index $index in not associated to any property of $type")
     }
 }
