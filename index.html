@@ -1609,8 +1609,25 @@ your own logic using  <code>DruDynamoDBMapper</code> callback <code>onQuery</cod
 <h3 id="_gorm">GORM</h3>
 <div class="paragraph">
 <p>GORM uses the Grails Object Relational Mapping to import entities into test in-memory storage.
-It automatically mocks all the entities involved so there is no need to call to <code>mockDomains</code> method.
-Your unit tests must implement <code>DataTest</code> trait if you want to take advantage of using Dru with GORM.</p>
+It automatically mocks all the entities involved so there is no need to call to <code>mockDomains</code> method.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+GORM client is unable to set the id of the entities to the original value. The original value is replaced wherever it is
+obvious from the mapping to the actual generated id.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_unit_tests">Unit Tests</h4>
+<div class="paragraph">
+<p>Your unit tests must implement <code>DataTest</code> trait if you want to take advantage of using Dru with GORM.</p>
 </div>
 <div class="listingblock">
 <div class="title">Using GORM Client</div>
@@ -1676,16 +1693,60 @@ void 'entities can be accessed from data set and using GORM methods'() {
 }</code></pre>
 </div>
 </div>
-<div class="admonitionblock note">
+</div>
+<div class="sect3">
+<h4 id="_integration_tests">Integration Tests</h4>
+<div class="paragraph">
+<p>In you integration tests you no longer need to implement <code>DataTest</code> to get Dru working but <code>dru.load()</code>
+needs to be run from a scope which has Hibernate session attached, e.g. inside <code>withNewSession</code> closure.</p>
+</div>
+<div class="listingblock">
+<div class="title">Using GORM Client in Integration Test</div>
+<div class="content">
+<pre>@Rollback
+@Integration                                                                            <i class="conum" data-value="1"></i><b>(1)</b>
+class GormIntegrationSpec extends Specification {
+
+    @Rule Dru dru = Dru.plan {
+        from ('agents.json') {
+            map {
+                to (Agent) {
+                    map ('manager') {
+                        to (Agent)
+                    }
+                }
+            }
+        }
+
+        any (Agent) {
+            defaults { securityLevel = 1 }
+        }
+    }
+
+    void setup() {
+        Agent.withNewSession { dru.load() }                                             <i class="conum" data-value="2"></i><b>(2)</b>
+    }
+
+    void 'entities can be accessed from data set and using GORM methods'() {
+        expect:
+            dru.findAllByType(Agent).size() == 2
+            dru.findByTypeAndOriginalId(Agent, 12345).manager.name == 'Silas Ramsbottom'
+        and:
+            Agent.withNewSession { Agent.count() } == 2
+            Agent.withNewSession { Agent.findByName('Silas Ramsbottom').id } != 12345
+    }
+}</pre>
+</div>
+</div>
+<div class="colist arabic">
 <table>
 <tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-GORM client is unable to set the id of the entities to the original value. The original value is replaced wherever it is
-obvious from the mapping to the actual generated id.
-</td>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Test no longer implment <code>DataTest</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Dru needs to load data within Hibernate session</td>
 </tr>
 </table>
 </div>
@@ -1693,9 +1754,10 @@ obvious from the mapping to the actual generated id.
 </div>
 </div>
 </div>
+</div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-09-27 09:20:19 CEST
+Last updated 2018-03-16 15:58:53 CET
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
