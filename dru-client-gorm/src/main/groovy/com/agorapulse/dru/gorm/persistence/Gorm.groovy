@@ -48,9 +48,6 @@ class Gorm extends AbstractCacheableClient {
 
     @Override
     protected ClassMetadata createClassMetadata(Class type) {
-        if (!dataTest) {
-            throw new IllegalStateException("Trying to mock domain $type but the test is not $DataTest.name")
-        }
         ensureMocked(type)
         return new GormClassMetadata(GormEnhancer.findStaticApi(type).gormPersistentEntity)
     }
@@ -70,7 +67,10 @@ class Gorm extends AbstractCacheableClient {
         return type.newInstance(payload)
     }
 
-    private void ensureMocked(Class domainClass) {
+    void ensureMocked(Class domainClass) {
+        if (dataTest == null) {
+            return
+        }
         if (!mockedDomainClasses.contains(domainClass)) {
             mockedDomainClasses.add(domainClass)
             dataTest.mockDomain(domainClass)
