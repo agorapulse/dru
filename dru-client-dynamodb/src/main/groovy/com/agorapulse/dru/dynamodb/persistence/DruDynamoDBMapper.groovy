@@ -1,6 +1,7 @@
 package com.agorapulse.dru.dynamodb.persistence
 
 import com.agorapulse.dru.DataSet
+import com.agorapulse.dru.dynamodb.persistence.meta.DynamoDBClassMetadata
 import com.agorapulse.dru.persistence.meta.PropertyMetadata
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDeleteExpression
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper
@@ -285,10 +286,12 @@ class DruDynamoDBMapper extends DynamoDBMapper {
     private <T> List<T> findAllMatching(Class<T> type, DynamoDBQueryExpression<T> expression, DynamoDBMapperConfig config) {
         List<T> ret = new ArrayList<>(dataSet.findAllByType(type))
 
+        DynamoDBClassMetadata classMetadata = DynamoDB.INSTANCE.getDynamoDBClassMetadata(type)
+
         if (expression.hashKeyValues) {
             PropertyMetadata property = expression.indexName ?
-                DynamoDB.INSTANCE.getDynamoDBClassMetadata(type).getHashIndexProperty(expression.indexName) :
-                DynamoDB.INSTANCE.getDynamoDBClassMetadata(type).hash
+                classMetadata.getHashIndexProperty(expression.indexName) :
+                classMetadata.hash
 
             ret = ret.findAll {
                 it."$property.name" == expression.hashKeyValues."$property.name"
@@ -298,7 +301,19 @@ class DruDynamoDBMapper extends DynamoDBMapper {
         if (expression.rangeKeyConditions) {
             for (Map.Entry<String, Condition> e in expression.rangeKeyConditions.entrySet()) {
                 ret = ret.findAll {
-                    Object value = it."$e.key"
+                    Object value = null
+                    PropertyMetadata property = classMetadata.getPersistentProperty(e.key)
+                    if (property) {
+                        value = it."$e.key"
+                    } else {
+                        try {
+                            PropertyMetadata rangeIndex = classMetadata.getRangeIndexProperty(e.key)
+                            value = it."$rangeIndex.name"
+                        } catch (IllegalArgumentException iae) {
+                            throw new IllegalArgumentException("Property nor range index $e.key does not exist!", iae)
+                        }
+                    }
+
                     if (value instanceof Date) {
                         value = getTableModel(type).field(e.key).convert(value).getS()
                     }

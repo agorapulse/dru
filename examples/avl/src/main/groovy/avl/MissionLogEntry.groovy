@@ -3,6 +3,7 @@ package avl
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIndexHashKey
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIndexRangeKey
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMarshalling
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable
@@ -45,6 +46,11 @@ class MissionLogEntry {
     @DynamoDBIndexHashKey(globalSecondaryIndexName='agentIdMissionLogEntryIndex')
     @DynamoDBAttribute
     Long agentId
+
+    @DynamoDBIndexRangeKey(localSecondaryIndexName = 'typeAndAgentIdIndex')
+    String getTypeAndAgentId() {
+        "${type}_${agentId}"
+    }
 
     Long villainId
     String itemName

@@ -7,8 +7,12 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression
 import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList
+import com.amazonaws.services.dynamodbv2.model.AttributeValue
+import com.amazonaws.services.dynamodbv2.model.ComparisonOperator
+import com.amazonaws.services.dynamodbv2.model.Condition
 import org.joda.time.DateTime
 import org.junit.Rule
+import spock.lang.IgnoreRest
 import spock.lang.Specification
 
 /**
@@ -104,5 +108,43 @@ class DynamoDBSampleSpec extends Specification {
 
         then:
             result.size() == 1
+    }
+
+    void 'use local range key index'() {
+        when:
+            Condition rangeKeyCondition = new Condition()
+                .withComparisonOperator(ComparisonOperator.BEGINS_WITH)
+                .withAttributeValueList(new AttributeValue().withS('started_'))
+
+            DynamoDBMapper mapper = DynamoDB.createMapper(dru)
+
+            DynamoDBQueryExpression queryExpression = new DynamoDBQueryExpression<MissionLogEntry>()
+                .withHashKeyValues(new MissionLogEntry(missionId: 7))
+                .withConsistentRead(false)
+                .withRangeKeyCondition("typeAndAgentIdIndex", rangeKeyCondition)
+
+            PaginatedQueryList<MissionLogEntry> result = mapper.query(MissionLogEntry, queryExpression)
+
+        then:
+            result.size() == 1
+    }
+
+    void 'use local range key with non-existing index'() {
+        when:
+            Condition rangeKeyCondition = new Condition()
+                .withComparisonOperator(ComparisonOperator.BEGINS_WITH)
+                .withAttributeValueList(new AttributeValue().withS('started_'))
+
+            DynamoDBMapper mapper = DynamoDB.createMapper(dru)
+
+            DynamoDBQueryExpression queryExpression = new DynamoDBQueryExpression<MissionLogEntry>()
+                .withHashKeyValues(new MissionLogEntry(missionId: 7))
+                .withConsistentRead(false)
+                .withRangeKeyCondition("typeAndAgentIdIndexFooBar", rangeKeyCondition)
+
+            PaginatedQueryList<MissionLogEntry> result = mapper.query(MissionLogEntry, queryExpression)
+
+        then:
+            thrown(IllegalArgumentException)
     }
 }
