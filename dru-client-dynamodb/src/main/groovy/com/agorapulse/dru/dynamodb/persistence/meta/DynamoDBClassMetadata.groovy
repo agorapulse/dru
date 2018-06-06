@@ -6,6 +6,7 @@ import com.agorapulse.dru.pojo.meta.PojoClassMetadata
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIgnore
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIndexHashKey
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIndexRangeKey
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey
 
 /**
@@ -27,6 +28,10 @@ class DynamoDBClassMetadata extends PojoClassMetadata {
     protected boolean isPersistent(Class type, String name) {
         if (getAnnotation(type, name, DynamoDBIgnore)) {
             return false
+        }
+
+        if (getAnnotation(type, name, DynamoDBIndexRangeKey)) {
+            return true
         }
 
         return super.isPersistent(type, name)
@@ -94,6 +99,23 @@ class DynamoDBClassMetadata extends PojoClassMetadata {
             DynamoDBIndexHashKey annotation = getAnnotation(type, property.name, DynamoDBIndexHashKey)
             if (annotation && (annotation.globalSecondaryIndexName() == index || index in annotation.globalSecondaryIndexNames())) {
                 return property
+            }
+        }
+        throw new IllegalArgumentException("Index $index in not associated to any property of $type")
+    }
+
+    PropertyMetadata getRangeIndexProperty(String index) {
+        for (PropertyMetadata property in persistentProperties) {
+            if (property) {
+                DynamoDBIndexRangeKey annotation = getAnnotation(type, property.name, DynamoDBIndexRangeKey)
+                if (annotation && (
+                    annotation.globalSecondaryIndexName() == index
+                        || index in annotation.globalSecondaryIndexNames()
+                        || annotation.localSecondaryIndexName() == index
+                        || index in annotation.localSecondaryIndexNames()
+                )) {
+                    return property
+                }
             }
         }
         throw new IllegalArgumentException("Index $index in not associated to any property of $type")
