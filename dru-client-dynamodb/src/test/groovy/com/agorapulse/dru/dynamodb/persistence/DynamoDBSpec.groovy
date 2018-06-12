@@ -72,10 +72,6 @@ class DynamoDBSpec extends Specification {
             classMetadata.getHashIndexProperty('foo')
             classMetadata.getHashIndexProperty('bar')
             classMetadata.getHashIndexProperty('baz')
-
-        when:
-            classMetadata.getHashIndexProperty('boo')
-        then:
-            thrown(IllegalArgumentException)
+            !classMetadata.getHashIndexProperty('boo')
     }
 }

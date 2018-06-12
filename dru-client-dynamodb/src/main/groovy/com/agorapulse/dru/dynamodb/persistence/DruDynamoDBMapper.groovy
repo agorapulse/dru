@@ -297,9 +297,7 @@ class DruDynamoDBMapper extends DynamoDBMapper {
                 }
             }
 
-            if (!property) {
-                property = classMetadata.hash
-            }
+            property = property ?: classMetadata.hash
 
             ret = ret.findAll {
                 it."$property.name" == expression.hashKeyValues."$property.name"

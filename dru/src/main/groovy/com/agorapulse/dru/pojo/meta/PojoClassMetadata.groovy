@@ -59,7 +59,7 @@ class PojoClassMetadata implements ClassMetadata {
     @Override
     Iterable<PropertyMetadata> getPersistentProperties() {
         collectPersistentProperties()
-        return persistentProperties.values().asImmutable()
+        return persistentProperties.values().grep().asImmutable()
     }
 
     static AnnotatedElement getAnnotatedElement(Class type, String propertyName) {
