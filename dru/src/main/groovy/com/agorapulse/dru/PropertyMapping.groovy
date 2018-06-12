@@ -7,6 +7,7 @@ import com.agorapulse.dru.persistence.meta.PropertyMetadata
 import groovy.transform.CompileStatic
 import groovy.transform.stc.ClosureParams
 import groovy.transform.stc.FromString
+import org.codehaus.groovy.runtime.DefaultGroovyMethods
 
 import static com.google.common.base.Preconditions.checkNotNull
 
@@ -338,7 +339,7 @@ class PropertyMapping implements PropertyMappingDefinition {
 
                 ClassMetadata classMetadata = client.getClassMetadata(type)
 
-                return classMetadata.getId(byId.properties)
+                return classMetadata.getId(DefaultGroovyMethods.getProperties(byId))
             }
 
             throw new IllegalStateException("Value $property with path $fullPath is mapped to id of $typeMappingToUse.type" +

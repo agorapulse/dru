@@ -2,6 +2,7 @@ package com.agorapulse.dru.persistence
 
 import com.agorapulse.dru.persistence.meta.CachedClassMetadata
 import com.agorapulse.dru.persistence.meta.ClassMetadata
+import org.codehaus.groovy.runtime.DefaultGroovyMethods
 
 /**
  * Base class for clients with caching capabilities.
@@ -33,7 +34,7 @@ abstract class AbstractCacheableClient implements Client {
 
     @Override
     String getId(Object object) {
-        return getId(object.getClass(), object.properties)
+        return getId(object.getClass(), DefaultGroovyMethods.getProperties(object))
     }
 
     @Override

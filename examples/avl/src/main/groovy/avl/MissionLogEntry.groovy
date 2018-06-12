@@ -55,6 +55,8 @@ class MissionLogEntry {
     Long villainId
     String itemName
 
+    Map properties = null
+
 // tag::footer[]
 }
 // end::footer[]

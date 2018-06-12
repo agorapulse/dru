@@ -7,6 +7,7 @@ import com.agorapulse.dru.persistence.ClientFactory
 import com.agorapulse.dru.persistence.meta.ClassMetadata
 import com.agorapulse.dru.pojo.Pojo
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable
+import org.codehaus.groovy.runtime.DefaultGroovyMethods
 
 /**
  * Client to handle DynamoDB objects.
@@ -65,14 +66,14 @@ class DynamoDB extends Pojo {
         if (!entity) {
             return null
         }
-        return INSTANCE.getDynamoDBClassMetadata(entity.getClass()).getHash(entity.properties)
+        return INSTANCE.getDynamoDBClassMetadata(entity.getClass()).getHash(DefaultGroovyMethods.getProperties(entity))
     }
 
     static Object getRange(Object entity) {
         if (!entity) {
             return null
         }
-        return INSTANCE.getDynamoDBClassMetadata(entity.getClass()).getRange(entity.properties)
+        return INSTANCE.getDynamoDBClassMetadata(entity.getClass()).getRange(DefaultGroovyMethods.getProperties(entity))
     }
 
 }
