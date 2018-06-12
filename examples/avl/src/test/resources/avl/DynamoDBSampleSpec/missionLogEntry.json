@@ -1,7 +1,16 @@
-{
-  "missionId": 7,
-  "date": "2013-07-05T01:23:22Z",
-  "type": "started",
-  "description": "Mission started by Silas Ramsbottom",
-  "agentId": 101
-}
+[
+  {
+    "missionId": 7,
+    "date": "2013-07-05T01:23:22Z",
+    "type": "started",
+    "description": "Mission started by Silas Ramsbottom",
+    "agentId": 101
+  },
+  {
+    "missionId": 7,
+    "date": "2013-07-06T01:23:22Z",
+    "type": "succeeded",
+    "description": "Mission succeeded by Silas Ramsbottom",
+    "agentId": 101
+  }
+]

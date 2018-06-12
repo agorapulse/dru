@@ -50,13 +50,13 @@ class DynamoDBSampleSpec extends Specification {
             mapper.load(new MissionLogEntry(missionId: missionId, date: date))
             mapper.query(MissionLogEntry,
                 new DynamoDBQueryExpression<MissionLogEntry>().withHashKeyValues(new MissionLogEntry(missionId: missionId))
-            ).size() == 1
+            ).size() == 2
 
         and: "the can be also deleted using this mapper"
             mapper.delete(mapper.load(new MissionLogEntry(missionId: missionId, date: date)))
             mapper.query(MissionLogEntry,
                 new DynamoDBQueryExpression<MissionLogEntry>().withHashKeyValues(new MissionLogEntry(missionId: missionId))
-            ).size() == 0
+            ).size() == 1
 
         when: "new entities are saved using this mapper"
             Date now = new Date()
@@ -76,7 +76,7 @@ class DynamoDBSampleSpec extends Specification {
                 return entry.agentId == 101
             }
         then:
-            mapper.query(MissionLogEntry, buildCompexQuery()).size() == 1
+            mapper.query(MissionLogEntry, buildCompexQuery()).size() == 2
 
     }
     // end::advancedMapper[]
@@ -91,7 +91,7 @@ class DynamoDBSampleSpec extends Specification {
             MissionLogEntryDBService service = new MissionLogEntryDBService()
             service.mapper = DynamoDB.createMapper(dru)
         then:
-            service.query(7).count == 1
+            service.query(7).count == 2
     }
     // end::grailsService[]
 
@@ -107,19 +107,26 @@ class DynamoDBSampleSpec extends Specification {
             PaginatedQueryList<MissionLogEntry> result = mapper.query(MissionLogEntry, queryExpression)
 
         then:
-            result.size() == 1
+            result.size() == 2
+
+        when:
+            MissionLogEntry entry = result.first()
+
+        then:
+            entry.description == 'Mission started by Silas Ramsbottom'
     }
 
     void 'use local range key index'() {
         when:
             Condition rangeKeyCondition = new Condition()
                 .withComparisonOperator(ComparisonOperator.BEGINS_WITH)
-                .withAttributeValueList(new AttributeValue().withS('started_'))
+                .withAttributeValueList(new AttributeValue().withS('s'))
 
             DynamoDBMapper mapper = DynamoDB.createMapper(dru)
 
             DynamoDBQueryExpression queryExpression = new DynamoDBQueryExpression<MissionLogEntry>()
                 .withIndexName('typeAndAgentIdIndex')
+                .withScanIndexForward(false)
                 .withHashKeyValues(new MissionLogEntry(missionId: 7))
                 .withConsistentRead(false)
                 .withRangeKeyCondition("typeAndAgentIdIndex", rangeKeyCondition)
@@ -127,7 +134,13 @@ class DynamoDBSampleSpec extends Specification {
             PaginatedQueryList<MissionLogEntry> result = mapper.query(MissionLogEntry, queryExpression)
 
         then:
-            result.size() == 1
+            result.size() == 2
+
+        when:
+            MissionLogEntry entry = result.first()
+
+        then:
+            entry.description == 'Mission succeeded by Silas Ramsbottom'
     }
 
 }
