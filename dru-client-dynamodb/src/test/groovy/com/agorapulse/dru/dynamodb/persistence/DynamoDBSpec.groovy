@@ -73,5 +73,13 @@ class DynamoDBSpec extends Specification {
             classMetadata.getHashIndexProperty('bar')
             classMetadata.getHashIndexProperty('baz')
             !classMetadata.getHashIndexProperty('boo')
+        and:
+            classMetadata.getRangeIndexProperty('foorg')
+            classMetadata.getRangeIndexProperty('barrg')
+            classMetadata.getRangeIndexProperty('bazrg')
+            classMetadata.getRangeIndexProperty('foorl')
+            classMetadata.getRangeIndexProperty('barrl')
+            classMetadata.getRangeIndexProperty('bazrl')
+            !classMetadata.getRangeIndexProperty('boo')
     }
 }
