@@ -119,6 +119,7 @@ class DynamoDBSampleSpec extends Specification {
             DynamoDBMapper mapper = DynamoDB.createMapper(dru)
 
             DynamoDBQueryExpression queryExpression = new DynamoDBQueryExpression<MissionLogEntry>()
+                .withIndexName('typeAndAgentIdIndex')
                 .withHashKeyValues(new MissionLogEntry(missionId: 7))
                 .withConsistentRead(false)
                 .withRangeKeyCondition("typeAndAgentIdIndex", rangeKeyCondition)
@@ -129,22 +130,4 @@ class DynamoDBSampleSpec extends Specification {
             result.size() == 1
     }
 
-    void 'use local range key with non-existing index'() {
-        when:
-            Condition rangeKeyCondition = new Condition()
-                .withComparisonOperator(ComparisonOperator.BEGINS_WITH)
-                .withAttributeValueList(new AttributeValue().withS('started_'))
-
-            DynamoDBMapper mapper = DynamoDB.createMapper(dru)
-
-            DynamoDBQueryExpression queryExpression = new DynamoDBQueryExpression<MissionLogEntry>()
-                .withHashKeyValues(new MissionLogEntry(missionId: 7))
-                .withConsistentRead(false)
-                .withRangeKeyCondition("typeAndAgentIdIndexFooBar", rangeKeyCondition)
-
-            PaginatedQueryList<MissionLogEntry> result = mapper.query(MissionLogEntry, queryExpression)
-
-        then:
-            thrown(IllegalArgumentException)
-    }
 }

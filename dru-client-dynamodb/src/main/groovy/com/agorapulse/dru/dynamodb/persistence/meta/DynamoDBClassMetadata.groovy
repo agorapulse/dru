@@ -101,7 +101,7 @@ class DynamoDBClassMetadata extends PojoClassMetadata {
                 return property
             }
         }
-        throw new IllegalArgumentException("Index $index in not associated to any property of $type")
+        return null
     }
 
     PropertyMetadata getRangeIndexProperty(String index) {
@@ -118,6 +118,6 @@ class DynamoDBClassMetadata extends PojoClassMetadata {
                 }
             }
         }
-        throw new IllegalArgumentException("Index $index in not associated to any property of $type")
+        return null
     }
 }

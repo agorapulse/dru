@@ -65,6 +65,7 @@ class DynamoDBSpec extends Specification {
             null        | [:]
     }
 
+    @SuppressWarnings('UnnecessaryObjectReferences')
     void 'find hash index'() {
         when:
             ClassMetadata classMetadata = new DynamoDBClassMetadata(DynamoDBTester)
@@ -72,10 +73,14 @@ class DynamoDBSpec extends Specification {
             classMetadata.getHashIndexProperty('foo')
             classMetadata.getHashIndexProperty('bar')
             classMetadata.getHashIndexProperty('baz')
-
-        when:
-            classMetadata.getHashIndexProperty('boo')
-        then:
-            thrown(IllegalArgumentException)
+            !classMetadata.getHashIndexProperty('boo')
+        and:
+            classMetadata.getRangeIndexProperty('foorg')
+            classMetadata.getRangeIndexProperty('barrg')
+            classMetadata.getRangeIndexProperty('bazrg')
+            classMetadata.getRangeIndexProperty('foorl')
+            classMetadata.getRangeIndexProperty('barrl')
+            classMetadata.getRangeIndexProperty('bazrl')
+            !classMetadata.getRangeIndexProperty('boo')
     }
 }
