@@ -65,6 +65,7 @@ class DynamoDBSpec extends Specification {
             null        | [:]
     }
 
+    @SuppressWarnings('UnnecessaryObjectReferences')
     void 'find hash index'() {
         when:
             ClassMetadata classMetadata = new DynamoDBClassMetadata(DynamoDBTester)
