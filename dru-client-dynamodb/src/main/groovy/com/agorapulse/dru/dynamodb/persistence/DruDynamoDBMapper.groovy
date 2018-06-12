@@ -289,9 +289,17 @@ class DruDynamoDBMapper extends DynamoDBMapper {
         DynamoDBClassMetadata classMetadata = DynamoDB.INSTANCE.getDynamoDBClassMetadata(type)
 
         if (expression.hashKeyValues) {
-            PropertyMetadata property = expression.indexName ?
-                classMetadata.getHashIndexProperty(expression.indexName) :
-                classMetadata.hash
+            PropertyMetadata property = null
+            if (expression.indexName) {
+                PropertyMetadata hashIndex = classMetadata.getHashIndexProperty(expression.indexName)
+                if (hashIndex) {
+                    property = hashIndex
+                }
+            }
+
+            if (!property) {
+                property = classMetadata.hash
+            }
 
             ret = ret.findAll {
                 it."$property.name" == expression.hashKeyValues."$property.name"
@@ -306,11 +314,9 @@ class DruDynamoDBMapper extends DynamoDBMapper {
                     if (property) {
                         value = it."$e.key"
                     } else {
-                        try {
-                            PropertyMetadata rangeIndex = classMetadata.getRangeIndexProperty(e.key)
+                        PropertyMetadata rangeIndex = classMetadata.getRangeIndexProperty(e.key)
+                        if (rangeIndex) {
                             value = it."$rangeIndex.name"
-                        } catch (IllegalArgumentException iae) {
-                            throw new IllegalArgumentException("Property nor range index $e.key does not exist!", iae)
                         }
                     }
 
