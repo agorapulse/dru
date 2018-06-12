@@ -282,6 +282,7 @@ class DruDynamoDBMapper extends DynamoDBMapper {
     @SuppressWarnings([
         'UnnecessaryGetter',
         'Instanceof',
+        'CouldBeElvis',
     ])
     private <T> List<T> findAllMatching(Class<T> type, DynamoDBQueryExpression<T> expression, DynamoDBMapperConfig config) {
         List<T> ret = new ArrayList<>(dataSet.findAllByType(type))
@@ -329,6 +330,26 @@ class DruDynamoDBMapper extends DynamoDBMapper {
         List<Closure<Boolean>> filters = processQuery[type]
         if (filters) {
             ret = ret.findAll { T item -> filters.every { executeHelper(it, item, expression, config) } }
+        }
+
+        if (expression.indexName) {
+            PropertyMetadata property = classMetadata.getPersistentProperty(expression.indexName)
+
+            if (!property) {
+                property = classMetadata.getHashIndexProperty(expression.indexName)
+            }
+
+            if (!property) {
+                property = classMetadata.getRangeIndexProperty(expression.indexName)
+            }
+
+            if (property) {
+                ret = ret.sort { a, b -> a."$property.name" <=> b."$property.name" }
+            }
+        }
+
+        if (!expression.scanIndexForward) {
+            ret = ret.reverse()
         }
 
         return ret
