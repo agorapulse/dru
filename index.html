@@ -417,7 +417,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 .show-for-print{display:inherit!important}}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="css/dru.css?v=0.4.0" />
+<link rel="stylesheet" href="css/dru.css?v=0.4.1" />
 <style>
 .hidden {
 	display: none;
@@ -585,15 +585,15 @@ set to the actual <code>id</code> of the loaded <code>Item</code> e.g. <code>1</
 
 dependencies {
     // load just simple implementation with POJO client and reflection based parser
-    testCompile "com.agorapulse:dru:0.4.0"
+    testCompile "com.agorapulse:dru:0.4.1"
 
     // and pick any client
-    testCompile "com.agorapulse:dru-client-gorm:0.4.0"
-    testCompile "com.agorapulse:dru-client-dynamodb:0.4.0"
+    testCompile "com.agorapulse:dru-client-gorm:0.4.1"
+    testCompile "com.agorapulse:dru-client-dynamodb:0.4.1"
 
     // and pick any parser
-    testCompile "com.agorapulse:dru-parser-json:0.4.0"
-    testCompile "com.agorapulse:dru-parser-yaml:0.4.0"
+    testCompile "com.agorapulse:dru-parser-json:0.4.1"
+    testCompile "com.agorapulse:dru-parser-yaml:0.4.1"
 }</code></pre>
 </div>
 </div>
@@ -1502,13 +1502,22 @@ void 'mission log entry has agent id assigned'() {
 <div class="listingblock">
 <div class="title">library.json</div>
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-json" data-lang="json">{
-  "missionId": 7,
-  "date": "2013-07-05T01:23:22Z",
-  "type": "started",
-  "description": "Mission started by Silas Ramsbottom",
-  "agentId": 101
-}</code></pre>
+<pre class="highlightjs highlight nowrap"><code class="language-json" data-lang="json">[
+  {
+    "missionId": 7,
+    "date": "2013-07-05T01:23:22Z",
+    "type": "started",
+    "description": "Mission started by Silas Ramsbottom",
+    "agentId": 101
+  },
+  {
+    "missionId": 7,
+    "date": "2013-07-06T01:23:22Z",
+    "type": "succeeded",
+    "description": "Mission succeeded by Silas Ramsbottom",
+    "agentId": 101
+  }
+]</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -1549,13 +1558,13 @@ class MissionLogEntry {
         mapper.load(new MissionLogEntry(missionId: missionId, date: date))
         mapper.query(MissionLogEntry,
             new DynamoDBQueryExpression&lt;MissionLogEntry&gt;().withHashKeyValues(new MissionLogEntry(missionId: missionId))
-        ).size() == 1
+        ).size() == 2
 
     and: "the can be also deleted using this mapper"
         mapper.delete(mapper.load(new MissionLogEntry(missionId: missionId, date: date)))
         mapper.query(MissionLogEntry,
             new DynamoDBQueryExpression&lt;MissionLogEntry&gt;().withHashKeyValues(new MissionLogEntry(missionId: missionId))
-        ).size() == 0
+        ).size() == 1
 
     when: "new entities are saved using this mapper"
         Date now = new Date()
@@ -1580,7 +1589,7 @@ working against the data set.</p>
         MissionLogEntryDBService service = new MissionLogEntryDBService()
         service.mapper = DynamoDB.createMapper(dru)
     then:
-        service.query(7).count == 1
+        service.query(7).count == 2
 }</code></pre>
 </div>
 </div>
@@ -1599,7 +1608,7 @@ your own logic using  <code>DruDynamoDBMapper</code> callback <code>onQuery</cod
             return entry.agentId == 101
         }
     then:
-        mapper.query(MissionLogEntry, buildCompexQuery()).size() == 1
+        mapper.query(MissionLogEntry, buildCompexQuery()).size() == 2
 
 }</code></pre>
 </div>
