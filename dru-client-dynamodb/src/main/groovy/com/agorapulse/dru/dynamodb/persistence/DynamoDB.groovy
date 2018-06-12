@@ -57,7 +57,7 @@ class DynamoDB extends Pojo {
 
     static Serializable getOriginalId(Object hash, Object range) {
         if (hash) {
-            return range ? "${hash}:${range}" : "${hash}:"
+            return range ? "${ensureUniqueString(hash)}:${ensureUniqueString(range)}" : "${ensureUniqueString(hash)}:"
         }
         return range ? ":${range}" : null
     }
@@ -74,6 +74,14 @@ class DynamoDB extends Pojo {
             return null
         }
         return INSTANCE.getDynamoDBClassMetadata(entity.getClass()).getRange(DefaultGroovyMethods.getProperties(entity))
+    }
+
+    @SuppressWarnings('Instanceof')
+    static Object ensureUniqueString(Object object) {
+        if (object instanceof Date) {
+            return object.time
+        }
+        return object
     }
 
 }
