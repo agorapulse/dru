@@ -83,4 +83,12 @@ class DynamoDBSpec extends Specification {
             classMetadata.getRangeIndexProperty('bazrl')
             !classMetadata.getRangeIndexProperty('boo')
     }
+
+    void 'check timestamp ids are different'() {
+        when:
+            Date a = new Date(123456788)
+            Date b = new Date(123456789)
+        then:
+            DynamoDB.ensureUniqueString(a) != DynamoDB.ensureUniqueString(b)
+    }
 }
