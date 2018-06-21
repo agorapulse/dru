@@ -45,7 +45,9 @@ class DruDynamoDBMapper extends DynamoDBMapper {
     private final Map<Class, List<Closure<Boolean>>> processQuery = [:].withDefault { [] }
     private final Map<Class, List<Closure<Boolean>>> processScan = [:].withDefault { [] }
 
-    private Closure<List<DynamoDBMapper.FailedBatch>> processBatchWrite = { Collections.emptyList() }
+    private Closure<List<DynamoDBMapper.FailedBatch>> processBatchWrite = { Iterable<? extends Object> toSave, Iterable<? extends Object> toDelete ->
+        Collections.emptyList()
+    }
 
     DruDynamoDBMapper(DataSet dataSet) {
         super(null)
@@ -73,7 +75,10 @@ class DruDynamoDBMapper extends DynamoDBMapper {
     }
 
     @SuppressWarnings('DuplicateStringLiteral')
-    DruDynamoDBMapper onBatchWrite(@ClosureParams(value = FromString, options = 'Iterable<? extends Object, Iterable<? extends Object>') Closure<List<DynamoDBMapper.FailedBatch>> onBatchWrite) {
+    DruDynamoDBMapper onBatchWrite(
+        @ClosureParams(value = FromString, options = 'Iterable<? extends Object, Iterable<? extends Object>')
+        Closure<List<DynamoDBMapper.FailedBatch>> onBatchWrite
+    ) {
         this.processBatchWrite = onBatchWrite
         return this
     }
