@@ -400,6 +400,14 @@ your own logic using  `DruDynamoDBMapper` callback `onQuery` and `onScan`.
 include::../examples/avl/src/test/groovy/avl/DynamoDBSampleSpec.groovy[tag="advancedMapper"]
 ----
 
+You also so emulate failing batch using `onBatchWrite` method.
+
+[source,indent=0,options="nowrap"]
+.Failing Batch Items
+----
+include::../examples/avl/src/test/groovy/avl/DynamoDBSampleSpec.groovy[tag="batchWriteFailed"]
+----
+
 === GORM
 GORM uses the Grails Object Relational Mapping to import entities into test in-memory storage.
 It automatically mocks all the entities involved so there is no need to call to `mockDomains` method.

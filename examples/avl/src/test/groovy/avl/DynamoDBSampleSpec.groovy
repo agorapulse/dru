@@ -3,6 +3,7 @@ package avl
 import com.agorapulse.dru.Dru
 import com.agorapulse.dru.dynamodb.persistence.DruDynamoDBMapper
 import com.agorapulse.dru.dynamodb.persistence.DynamoDB
+import com.amazonaws.AmazonClientException
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression
@@ -80,6 +81,21 @@ class DynamoDBSampleSpec extends Specification {
 
     }
     // end::advancedMapper[]
+
+    // tag::batchWriteFailed[]
+    void 'fail some writes'() {
+        when:
+            DruDynamoDBMapper mapper = DynamoDB.createMapper(dru)
+            mapper.onBatchWrite { Iterable<MissionLogEntry> toSave, Iterable<MissionLogEntry> toDelete ->
+                [new DynamoDBMapper.FailedBatch(exception: new AmazonClientException("Failed!"))]
+            }
+            List<DynamoDBMapper.FailedBatch> failed = mapper.batchSave(new MissionLogEntry(missionId: 7, date: new Date()))
+        then:
+            failed
+            failed.size() == 1
+            failed[0].exception instanceof AmazonClientException
+    }
+    // end::batchWriteFailed[]
 
     private static DynamoDBQueryExpression<MissionLogEntry> buildCompexQuery() {
         return new DynamoDBQueryExpression<MissionLogEntry>()
