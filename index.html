@@ -417,7 +417,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 .show-for-print{display:inherit!important}}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="css/dru.css?v=0.4.3" />
+<link rel="stylesheet" href="css/dru.css?v=0.4.4" />
 <style>
 .hidden {
 	display: none;
@@ -585,15 +585,15 @@ set to the actual <code>id</code> of the loaded <code>Item</code> e.g. <code>1</
 
 dependencies {
     // load just simple implementation with POJO client and reflection based parser
-    testCompile "com.agorapulse:dru:0.4.3"
+    testCompile "com.agorapulse:dru:0.4.4"
 
     // and pick any client
-    testCompile "com.agorapulse:dru-client-gorm:0.4.3"
-    testCompile "com.agorapulse:dru-client-dynamodb:0.4.3"
+    testCompile "com.agorapulse:dru-client-gorm:0.4.4"
+    testCompile "com.agorapulse:dru-client-dynamodb:0.4.4"
 
     // and pick any parser
-    testCompile "com.agorapulse:dru-parser-json:0.4.3"
-    testCompile "com.agorapulse:dru-parser-yaml:0.4.3"
+    testCompile "com.agorapulse:dru-parser-json:0.4.4"
+    testCompile "com.agorapulse:dru-parser-yaml:0.4.4"
 }</code></pre>
 </div>
 </div>
@@ -1613,6 +1613,26 @@ your own logic using  <code>DruDynamoDBMapper</code> callback <code>onQuery</cod
 }</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>You also so emulate failing batch using <code>onBatchWrite</code> method.</p>
+</div>
+<div class="listingblock">
+<div class="title">Failing Batch Items</div>
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code>void 'fail some writes'() {
+    when:
+        DruDynamoDBMapper mapper = DynamoDB.createMapper(dru)
+        mapper.onBatchWrite { Iterable&lt;MissionLogEntry&gt; toSave, Iterable&lt;MissionLogEntry&gt; toDelete -&gt;
+            [new DynamoDBMapper.FailedBatch(exception: new AmazonClientException("Failed!"))]
+        }
+        List&lt;DynamoDBMapper.FailedBatch&gt; failed = mapper.batchSave(new MissionLogEntry(missionId: 7, date: new Date()))
+    then:
+        failed
+        failed.size() == 1
+        failed[0].exception instanceof AmazonClientException
+}</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_gorm">GORM</h3>
@@ -1766,7 +1786,7 @@ class GormIntegrationSpec extends Specification {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-04-23 11:37:37 CEST
+Last updated 2018-06-21 10:53:38 CEST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
