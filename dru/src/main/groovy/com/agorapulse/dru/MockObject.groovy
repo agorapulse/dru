@@ -11,14 +11,19 @@ import groovy.transform.PackageScope
 
     @Delegate private final Map<String, Object> delegate
 
-    private final Set<String> accessedKeys = new LinkedHashSet<>()
-
-    MockObject(Map<String, Object> delegate) {
-        this.delegate = delegate
-    }
+    private final Set<String> accessedKeys
 
     MockObject() {
-        this.delegate = [:]
+        this([:])
+    }
+
+    MockObject(Map<String, Object> delegate) {
+        this(delegate, new LinkedHashSet<String>())
+    }
+
+    private MockObject(Map<String, Object> delegate, Set<String> accessedKeys) {
+        this.delegate = delegate
+        this.accessedKeys = accessedKeys
     }
 
     Object get(Object key) {
@@ -33,5 +38,13 @@ import groovy.transform.PackageScope
     @Override
     void setProperty(String propertyName, Object newValue) {
         delegate.put(propertyName, newValue)
+    }
+
+    /**
+     * @return an immutable mock object which won't change the delegated map but it still shares
+     * the accessed keys set
+     */
+    MockObject asImmutable() {
+        return new MockObject(delegate.asImmutable(), accessedKeys)
     }
 }

@@ -1,4 +1,6 @@
 dependencies {
+    compile "org.codehaus.groovy:groovy:${project['groovy.version']}"
+
     compile "com.google.guava:guava:${guavaVersion}"
     compile "org.spockframework:spock-core:$spockVersion"
 }
