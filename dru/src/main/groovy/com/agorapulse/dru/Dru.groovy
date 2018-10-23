@@ -84,6 +84,11 @@ class Dru implements TestRule, DataSet {
     }
 
     @Override
+    DataSet changed() {
+        ensureDataSetInitialized().changed()
+    }
+
+    @Override
     <T> T findByTypeAndOriginalId(Class<T> type, Object id) {
         ensureDataSetInitialized().findByTypeAndOriginalId(type, id)
     }

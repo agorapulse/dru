@@ -73,6 +73,11 @@ final class DefaultDataSetMapping implements DataSetMappingDefinition, DataSetMa
     }
 
     @Override
+    public List<OnChange> getOnChangeListeners() {
+        return Collections.unmodifiableList(onChangeListeners);
+    }
+
+    @Override
     public Set<Client> getClients() {
         return clients;
     }
@@ -107,9 +112,16 @@ final class DefaultDataSetMapping implements DataSetMappingDefinition, DataSetMa
         return this;
     }
 
+    @Override
+    public DataSetMappingDefinition onChange(OnChange listener) {
+        onChangeListeners.add(listener);
+        return this;
+    }
+
     private final Set<Client> clients;
     private final Map<String, Source> sources = new LinkedHashMap<>();
     private final TypeMappings typeMappings = new TypeMappings();
     private final List<WhenLoaded> whenLoadedListeners = new ArrayList<>();
+    private final List<OnChange> onChangeListeners = new ArrayList<>();
 
 }

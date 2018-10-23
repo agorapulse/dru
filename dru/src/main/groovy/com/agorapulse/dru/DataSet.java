@@ -38,6 +38,13 @@ public interface DataSet  {
     DataSet loaded();
 
     /**
+     * Signals that data setshas been changed significantly so the attached {@link DataSetMappingDefinition.OnChange} listeners
+     * should be notified.
+     * @return self
+     */
+    DataSet changed();
+
+    /**
      * Get the report of properties which wasn't handled. This can help you to mine more information from your sources.
      * @return the report of properties which wasn't handled
      */

@@ -15,6 +15,7 @@ final class DefaultDataSet implements DataSet {
     private final MissingPropertiesReport report = new MissingPropertiesReport();
     private final Set<Client> clients;
     private final Set<DataSetMappingDefinition.WhenLoaded> whenLoadedListeners = new LinkedHashSet<>();
+    private final Set<DataSetMappingDefinition.OnChange> onChangeListeners = new LinkedHashSet<>();
 
     DefaultDataSet(Set<Client> clients) {
         this.clients = clients;
@@ -76,6 +77,8 @@ final class DefaultDataSet implements DataSet {
             instancesByType.put(systemId, entity);
         }
 
+        changed();
+
         return entity;
     }
 
@@ -92,6 +95,9 @@ final class DefaultDataSet implements DataSet {
         T removed = (T) instances.remove(key);
 
         if (removed != null) {
+
+            changed();
+
             return removed;
         }
 
@@ -102,7 +108,11 @@ final class DefaultDataSet implements DataSet {
             }
         }
 
-        return key != null ? (T) instances.remove(key) : null;
+        removed = key != null ? (T) instances.remove(key) : null;
+
+        changed();
+
+        return removed;
     }
 
     @Override
@@ -123,6 +133,19 @@ final class DefaultDataSet implements DataSet {
     public DataSet loaded() {
         for (DataSetMappingDefinition.WhenLoaded whenLoaded : whenLoadedListeners) {
             whenLoaded.doWhenLoaded(this);
+        }
+        changed();
+        return this;
+    }
+
+    /**
+     * Signals that data sets was changed outside the dataset.
+     * @return self
+     */
+    @Override
+    public DataSet changed() {
+        for (DataSetMappingDefinition.OnChange onChange : onChangeListeners) {
+            onChange.doOnChange(this);
         }
         return this;
     }
@@ -154,6 +177,7 @@ final class DefaultDataSet implements DataSet {
             }
         }
         whenLoadedListeners.addAll(mapping.getWhenLoadedListeners());
+        onChangeListeners.addAll(mapping.getOnChangeListeners());
         return loaded();
     }
 

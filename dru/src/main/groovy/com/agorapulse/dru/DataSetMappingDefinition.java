@@ -23,8 +23,14 @@ public interface DataSetMappingDefinition {
     DataSetMappingDefinition include(PreparedDataSet plan);
 
     DataSetMappingDefinition whenLoaded(WhenLoaded listener);
+    DataSetMappingDefinition onChange(OnChange listener);
+
+    interface OnChange {
+        void doOnChange(DataSet dataSet);
+    }
 
     interface WhenLoaded {
         void doWhenLoaded(DataSet dataSet);
     }
+
 }

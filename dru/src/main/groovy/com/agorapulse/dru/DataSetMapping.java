@@ -11,6 +11,7 @@ interface DataSetMapping {
     Map<String, Source> getSources();
 
     List<DataSetMappingDefinition.WhenLoaded> getWhenLoadedListeners();
+    List<DataSetMappingDefinition.OnChange> getOnChangeListeners();
 
     Set<Client> getClients();
 
