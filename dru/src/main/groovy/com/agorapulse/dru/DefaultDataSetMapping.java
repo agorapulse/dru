@@ -6,6 +6,8 @@ import groovy.lang.DelegatesTo;
 import groovy.transform.stc.ClosureParams;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 final class DefaultDataSetMapping implements DataSetMappingDefinition, DataSetMapping {
@@ -22,6 +24,19 @@ final class DefaultDataSetMapping implements DataSetMappingDefinition, DataSetMa
         if (source == null) {
             Source newSource = new DefaultSource(configuration.getThisObject(), relativePath);
             sources.put(relativePath, newSource);
+            source = newSource;
+        }
+
+        DefaultGroovyMethods.with(source, configuration);
+        return this;
+    }
+
+    @Override
+    public DataSetMappingDefinition from(File file, @DelegatesTo(value = SourceDefinition.class, strategy = Closure.DELEGATE_FIRST) Closure<SourceDefinition> configuration) throws IOException {
+        Source source = sources.get(file.getCanonicalPath());
+        if (source == null) {
+            Source newSource = new FileSource(configuration.getThisObject(), file);
+            sources.put(file.getCanonicalPath(), newSource);
             source = newSource;
         }
 
