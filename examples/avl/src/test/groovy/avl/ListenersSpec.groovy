@@ -64,10 +64,23 @@ class ListenersSpec extends Specification implements DataTest {
                 }
             }
         then:
-            count == 1                                                                  // <1>
+            count == 0
+
         when:
             dru.changed()
         then:
-            count == 2                                                                  // <2>
+            count == 1
+
+        when:
+            Agent gru = new Agent(id: 23456, name: 'Gru')
+            dru.add(gru)
+
+        then:
+            count == 2
+
+        when:
+            dru.remove(gru)
+        then:
+            count == 3
     }
 }

@@ -243,7 +243,7 @@ You can trigger the hooks manually using `loaded` method of the data set.
 [source,indent=0,options="nowrap"]
 .Using Data Set Hooks
 ----
-include::../examples/avl/src/test/groovy/avl/WhenLoadedSpec.groovy[tag="plan"]
+include::../examples/avl/src/test/groovy/avl/ListenersSpec.groovy[tag="plan"]
 ----
 <1> First call to the hook is triggered immediately as we are defining the hook inside `load` method
 <2> Second call to the hook is triggered manually using `loaded` method

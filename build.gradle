@@ -39,7 +39,7 @@ dependencies {
 
 }
 
-String currentVersion = '0.4.7'
+String currentVersion = '0.4.8'
 
 version = currentVersion
 

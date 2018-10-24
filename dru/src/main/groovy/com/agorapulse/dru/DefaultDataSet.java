@@ -134,7 +134,6 @@ final class DefaultDataSet implements DataSet {
         for (DataSetMappingDefinition.WhenLoaded whenLoaded : whenLoadedListeners) {
             whenLoaded.doWhenLoaded(this);
         }
-        changed();
         return this;
     }
 

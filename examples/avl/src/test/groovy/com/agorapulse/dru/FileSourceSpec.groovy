@@ -26,4 +26,20 @@ class FileSourceSpec extends Specification {
             new FileSource(this, fixture).toString().startsWith('FileSource')
     }
 
+    void 'load non existing file'() {
+        given:
+            File fixture = tmp.newFile('items.json')
+            fixture.delete()
+
+        when:
+            Dru dru = Dru.steal(this)
+            dru.load {
+                from fixture, {
+                    map { to Item }
+                }
+            }
+        then:
+            thrown(IllegalArgumentException)
+    }
+
 }
