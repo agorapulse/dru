@@ -13,7 +13,6 @@ import com.amazonaws.services.dynamodbv2.model.ComparisonOperator
 import com.amazonaws.services.dynamodbv2.model.Condition
 import org.joda.time.DateTime
 import org.junit.Rule
-import spock.lang.IgnoreRest
 import spock.lang.Specification
 
 /**
@@ -32,7 +31,7 @@ class DynamoDBSampleSpec extends Specification {
 
     void 'mission log entry has agent id assigned'() {
         given:
-            String id = DynamoDB.getOriginalId(7, '2013-07-05T01:23:22Z')
+            String id = DynamoDB.getOriginalId(MissionLogEntry, 7, '2013-07-05T01:23:22Z')
         expect:
             dru.findByType(MissionLogEntry)
             dru.findByTypeAndOriginalId(MissionLogEntry, id)
@@ -133,13 +132,16 @@ class DynamoDBSampleSpec extends Specification {
     }
 
     void 'use local range key index'() {
+        given: "make an offensive change but do not save"
+            DynamoDBMapper mapper = DynamoDB.createMapper(dru)
+            MissionLogEntryDBService service = new MissionLogEntryDBService(mapper: mapper)
+            service.query(7).results.each {
+                it.missionId = 123
+            }
         when:
             Condition rangeKeyCondition = new Condition()
                 .withComparisonOperator(ComparisonOperator.BEGINS_WITH)
                 .withAttributeValueList(new AttributeValue().withS('s'))
-
-            DynamoDBMapper mapper = DynamoDB.createMapper(dru)
-
             DynamoDBQueryExpression queryExpression = new DynamoDBQueryExpression<MissionLogEntry>()
                 .withIndexName('typeAndAgentIdIndex')
                 .withScanIndexForward(false)

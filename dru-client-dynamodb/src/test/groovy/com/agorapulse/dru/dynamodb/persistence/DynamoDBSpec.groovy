@@ -1,7 +1,11 @@
 package com.agorapulse.dru.dynamodb.persistence
 
+import com.agorapulse.dru.Dru
 import com.agorapulse.dru.dynamodb.persistence.meta.DynamoDBClassMetadata
 import com.agorapulse.dru.persistence.meta.ClassMetadata
+import com.agorapulse.dru.persistence.meta.PropertyMetadata
+import com.agorapulse.dru.pojo.meta.PojoPropertyMetadata
+import com.fasterxml.jackson.databind.util.ISO8601DateFormat
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -86,9 +90,34 @@ class DynamoDBSpec extends Specification {
 
     void 'check timestamp ids are different'() {
         when:
+            PropertyMetadata propertyMetadata = new PojoPropertyMetadata(WithDate, 'update', true)
             Date a = new Date(123456788)
-            Date b = new Date(123456789)
         then:
-            DynamoDB.ensureUniqueString(a) != DynamoDB.ensureUniqueString(b)
+            DynamoDB.ensureUniqueString(a, propertyMetadata) !=
+                DynamoDB.ensureUniqueString(123456789, propertyMetadata)
+
+            DynamoDB.ensureUniqueString(a, propertyMetadata) !=
+                DynamoDB.ensureUniqueString(new ISO8601DateFormat().format(new Date(123456789)), propertyMetadata)
+
+        and: 'using getOriginalId without type is deprecated'
+            DynamoDB.getOriginalId(a, null) != '123456788:'
     }
+
+    void 'items which cannot be simply fetched'() {
+        when:
+            EntityWithCustomIds entity = new EntityWithCustomIds(new EntityWithCustomIdsId('Foo'), new EntityWithCustomIdsId('Bar'))
+            EntityWithCustomIds other = new EntityWithCustomIds(new EntityWithCustomIdsId('Bar'), new EntityWithCustomIdsId('Foo'))
+
+            DruDynamoDBMapper mapper = DynamoDB.createMapper(Dru.steal(this))
+            mapper.save(entity)
+        then:
+            mapper.load(entity)
+            mapper.load(EntityWithCustomIds, entity.parentId, entity.id)
+            !mapper.load(other)
+            !mapper.load(EntityWithCustomIds, other.parentId, other.id)
+    }
+}
+
+class WithDate {
+    Date update
 }

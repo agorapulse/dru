@@ -223,7 +223,7 @@ class AvlDataSetsSpec extends Specification implements DataTest {
             ItemService itemService = new ItemService(mapper: DynamoDB.createMapper(dru))
             itemService.save(new Item(id: id, name: name))
         then:
-            dru.findByTypeAndOriginalId(Item, DynamoDB.getOriginalId(id, name))
+            dru.findByTypeAndOriginalId(Item, DynamoDB.getOriginalId(Item, id, name))
     }
 
     void 'load agents'() {
