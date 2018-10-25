@@ -98,6 +98,9 @@ class DynamoDBSpec extends Specification {
 
             DynamoDB.ensureUniqueString(a, propertyMetadata) !=
                 DynamoDB.ensureUniqueString(new ISO8601DateFormat().format(new Date(123456789)), propertyMetadata)
+
+        and: 'using getOriginalId without type is deprecated'
+            DynamoDB.getOriginalId(a, null) != '123456788:'
     }
 
     void 'items which cannot be simply fetched'() {
