@@ -4,6 +4,9 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable
 
+/**
+ * Sample DynamoDB entity with custom ids.
+ */
 @DynamoDBTable(tableName = 'EntityWithCustomIds')
 class EntityWithCustomIds {
 
@@ -21,12 +24,12 @@ class EntityWithCustomIds {
     EntityWithCustomIdsId getParentId() { return parentId }
     void setParentId(EntityWithCustomIdsId parentId) { this.parentId = parentId }
 
-
     @DynamoDBRangeKey
     EntityWithCustomIdsId getId() { return id }
     void setId(EntityWithCustomIdsId id) { this.id = id }
 
-    boolean equals(o) {
+    @SuppressWarnings(['IfStatementBraces', 'UnnecessaryIfStatement', 'IfStatementCouldBeTernary'])
+    boolean equals(Object o) {
         if (this.is(o)) return true
         if (getClass() != o.class) return false
 
@@ -47,6 +50,9 @@ class EntityWithCustomIds {
 }
 
 class EntityWithCustomIdsId implements Serializable {
+
+    private static final long serialVersionUID = 1
+
     String value
 
     EntityWithCustomIdsId() {
@@ -57,7 +63,8 @@ class EntityWithCustomIdsId implements Serializable {
         this.value = value
     }
 
-    boolean equals(o) {
+    @SuppressWarnings(['IfStatementBraces', 'UnnecessaryIfStatement', 'IfStatementCouldBeTernary'])
+    boolean equals(Object o) {
         if (this.is(o)) return true
         if (getClass() != o.class) return false
 

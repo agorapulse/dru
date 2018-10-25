@@ -97,7 +97,7 @@ class DynamoDBSpec extends Specification {
 
     void 'items which cannot be simply fetched'() {
         when:
-            EntityWithCustomIds entity = new EntityWithCustomIds(new EntityWithCustomIdsId("Foo"), new EntityWithCustomIdsId("Bar"))
+            EntityWithCustomIds entity = new EntityWithCustomIds(new EntityWithCustomIdsId('Foo'), new EntityWithCustomIdsId('Bar'))
 
             DruDynamoDBMapper mapper = DynamoDB.createMapper(Dru.steal(this))
             mapper.save(entity)

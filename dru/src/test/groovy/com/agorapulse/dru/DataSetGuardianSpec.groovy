@@ -3,6 +3,9 @@ package com.agorapulse.dru
 import org.junit.Rule
 import spock.lang.Specification
 
+/**
+ * Tests fof DataSetGuardian
+ */
 class DataSetGuardianSpec extends Specification {
 
     @Rule Dru dru = Dru.steal(this)
@@ -41,7 +44,7 @@ class DataSetGuardianSpec extends Specification {
             1 * mock.load(_ as Closure)
 
         when:
-            guarded.load(Dru.prepare {}, Dru.prepare {})
+            guarded.load(Dru.prepare { }, Dru.prepare { })
         then:
             1 * mock.load(*_)
     }
@@ -78,7 +81,7 @@ class DataSetGuardianSpec extends Specification {
 }
 
 class ImmutableObject {
-    private final String value;
+    private final String value
 
     ImmutableObject(String value) {
         this.value = value
