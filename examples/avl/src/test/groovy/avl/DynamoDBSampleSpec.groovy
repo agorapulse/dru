@@ -13,7 +13,6 @@ import com.amazonaws.services.dynamodbv2.model.ComparisonOperator
 import com.amazonaws.services.dynamodbv2.model.Condition
 import org.joda.time.DateTime
 import org.junit.Rule
-import spock.lang.IgnoreRest
 import spock.lang.Specification
 
 /**
@@ -32,7 +31,7 @@ class DynamoDBSampleSpec extends Specification {
 
     void 'mission log entry has agent id assigned'() {
         given:
-            String id = DynamoDB.getOriginalId(7, '2013-07-05T01:23:22Z')
+            String id = DynamoDB.getOriginalId(MissionLogEntry, 7, '2013-07-05T01:23:22Z')
         expect:
             dru.findByType(MissionLogEntry)
             dru.findByTypeAndOriginalId(MissionLogEntry, id)

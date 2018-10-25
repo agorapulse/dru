@@ -5,8 +5,12 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 
-final class DataSetGuardian implements DataSet {
+/**
+ * Data set adapter which guarantees deep cloning all the saved and retrieved objects.
+ */
+class DataSetGuardian implements DataSet {
 
+    @SuppressWarnings('Instanceof')
     static DataSet guard(DataSet dataSet) {
         if (dataSet instanceof DataSetGuardian) {
             return dataSet
@@ -34,7 +38,7 @@ final class DataSetGuardian implements DataSet {
             return null
         }
         try {
-            return MAPPER.readValue(MAPPER.writeValueAsString(object), object.getClass())
+            return MAPPER.readValue(MAPPER.writeValueAsString(object), (Class<T>) object.getClass())
         } catch (IOException e) {
             throw new IllegalArgumentException("Cannot clone $object", e)
         }
@@ -47,11 +51,7 @@ final class DataSetGuardian implements DataSet {
 
     @Override
     <T> List<T> findAllByType(Class<T> type) {
-        List<T> copy = new ArrayList<>()
-        for (T item : original.findAllByType(type)) {
-            copy.add(deepClone(item))
-        }
-        return Collections.unmodifiableList(copy)
+        return original.findAllByType(type).collect(this.&deepClone).asImmutable() as List<T>
     }
 
     @Override
@@ -98,6 +98,6 @@ final class DataSetGuardian implements DataSet {
 
     @Override
     MissingPropertiesReport getReport() {
-        return original.getReport()
+        return original.report
     }
 }

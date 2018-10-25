@@ -85,7 +85,8 @@ class DruDynamoDBMapper extends DynamoDBMapper {
 
     @Override
     <T extends Object> T load(Class<T> clazz, Object hashKey, Object rangeKey, DynamoDBMapperConfig config) {
-        T found = dataSet.findByTypeAndOriginalId(clazz, getOriginalId(hashKey, rangeKey))
+        DynamoDBClassMetadata classMetadata = DynamoDB.INSTANCE.getDynamoDBClassMetadata(clazz)
+        T found = dataSet.findByTypeAndOriginalId(clazz, getOriginalId(hashKey, classMetadata.hash, rangeKey, classMetadata.range))
         if (found) {
             return found
         }

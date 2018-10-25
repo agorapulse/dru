@@ -2,6 +2,8 @@ package com.agorapulse.dru.dynamodb.persistence
 
 import com.agorapulse.dru.dynamodb.persistence.meta.DynamoDBClassMetadata
 import com.agorapulse.dru.persistence.meta.ClassMetadata
+import com.agorapulse.dru.persistence.meta.PropertyMetadata
+import com.agorapulse.dru.pojo.meta.PojoPropertyMetadata
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -86,9 +88,10 @@ class DynamoDBSpec extends Specification {
 
     void 'check timestamp ids are different'() {
         when:
+            PropertyMetadata propertyMetadata = new PojoPropertyMetadata(Date, 'update', true)
             Date a = new Date(123456788)
             Date b = new Date(123456789)
         then:
-            DynamoDB.ensureUniqueString(a) != DynamoDB.ensureUniqueString(b)
+            DynamoDB.ensureUniqueString(a, propertyMetadata) != DynamoDB.ensureUniqueString(b, propertyMetadata)
     }
 }
