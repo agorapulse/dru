@@ -11,17 +11,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public final class DefensiveDataSetAdapter implements DataSet {
+public final class DataSetGuardian implements DataSet {
 
     public static DataSet guard(DataSet dataSet) {
-        if (dataSet instanceof DefaultDataSet) {
+        if (dataSet instanceof DataSetGuardian) {
             return dataSet;
         }
         if (dataSet instanceof Dru) {
             // guard the nested data set
             return guard(((Dru) dataSet).load());
         }
-        return new DefensiveDataSetAdapter(dataSet);
+        return new DataSetGuardian(dataSet);
     }
 
     private static final ObjectMapper MAPPER = new ObjectMapper()
@@ -31,7 +31,7 @@ public final class DefensiveDataSetAdapter implements DataSet {
 
     private final DataSet original;
 
-    private DefensiveDataSetAdapter(DataSet original) {
+    private DataSetGuardian(DataSet original) {
         this.original = original;
     }
 

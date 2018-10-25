@@ -38,7 +38,7 @@ public interface DataSet  {
     DataSet loaded();
 
     /**
-     * Signals that data setshas been changed significantly so the attached {@link DataSetMappingDefinition.OnChange} listeners
+     * Signals that data set has been changed significantly so the attached {@link DataSetMappingDefinition.OnChange} listeners
      * should be notified.
      * @return self
      */

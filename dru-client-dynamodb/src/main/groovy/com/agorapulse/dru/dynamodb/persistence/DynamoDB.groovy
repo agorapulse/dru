@@ -1,7 +1,7 @@
 package com.agorapulse.dru.dynamodb.persistence
 
 import com.agorapulse.dru.DataSet
-import com.agorapulse.dru.DefensiveDataSetAdapter
+import com.agorapulse.dru.DataSetGuardian
 import com.agorapulse.dru.dynamodb.persistence.meta.DynamoDBClassMetadata
 import com.agorapulse.dru.persistence.Client
 import com.agorapulse.dru.persistence.ClientFactory
@@ -54,7 +54,7 @@ class DynamoDB extends Pojo {
     }
 
     static DruDynamoDBMapper createMapper(DataSet dataSet) {
-        return new DruDynamoDBMapper(DefensiveDataSetAdapter.guard(dataSet))
+        return new DruDynamoDBMapper(DataSetGuardian.guard(dataSet))
     }
 
     static Serializable getOriginalId(Object hash, Object range) {
