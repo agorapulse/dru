@@ -1,12 +1,14 @@
 package com.agorapulse.dru.dynamodb.persistence
 
 import com.agorapulse.dru.DataSet
+import com.agorapulse.dru.DefensiveDataSetAdapter
 import com.agorapulse.dru.dynamodb.persistence.meta.DynamoDBClassMetadata
 import com.agorapulse.dru.persistence.Client
 import com.agorapulse.dru.persistence.ClientFactory
 import com.agorapulse.dru.persistence.meta.ClassMetadata
 import com.agorapulse.dru.pojo.Pojo
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable
+import com.fasterxml.jackson.databind.util.ISO8601Utils
 import org.codehaus.groovy.runtime.DefaultGroovyMethods
 
 /**
@@ -52,7 +54,7 @@ class DynamoDB extends Pojo {
     }
 
     static DruDynamoDBMapper createMapper(DataSet dataSet) {
-        return new DruDynamoDBMapper(dataSet)
+        return new DruDynamoDBMapper(DefensiveDataSetAdapter.guard(dataSet))
     }
 
     static Serializable getOriginalId(Object hash, Object range) {
@@ -79,7 +81,7 @@ class DynamoDB extends Pojo {
     @SuppressWarnings('Instanceof')
     static Object ensureUniqueString(Object object) {
         if (object instanceof Date) {
-            return object.time
+            return ISO8601Utils.format(object)
         }
         return object
     }

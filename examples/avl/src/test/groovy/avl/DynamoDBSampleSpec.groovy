@@ -133,13 +133,16 @@ class DynamoDBSampleSpec extends Specification {
     }
 
     void 'use local range key index'() {
+        given: "make an offensive change but do not save"
+            DynamoDBMapper mapper = DynamoDB.createMapper(dru)
+            MissionLogEntryDBService service = new MissionLogEntryDBService(mapper: mapper)
+            service.query(7).results.each {
+                it.missionId = 123
+            }
         when:
             Condition rangeKeyCondition = new Condition()
                 .withComparisonOperator(ComparisonOperator.BEGINS_WITH)
                 .withAttributeValueList(new AttributeValue().withS('s'))
-
-            DynamoDBMapper mapper = DynamoDB.createMapper(dru)
-
             DynamoDBQueryExpression queryExpression = new DynamoDBQueryExpression<MissionLogEntry>()
                 .withIndexName('typeAndAgentIdIndex')
                 .withScanIndexForward(false)
