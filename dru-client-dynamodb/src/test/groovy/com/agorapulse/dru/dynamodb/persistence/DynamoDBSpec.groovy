@@ -1,5 +1,6 @@
 package com.agorapulse.dru.dynamodb.persistence
 
+import com.agorapulse.dru.Dru
 import com.agorapulse.dru.dynamodb.persistence.meta.DynamoDBClassMetadata
 import com.agorapulse.dru.persistence.meta.ClassMetadata
 import com.agorapulse.dru.persistence.meta.PropertyMetadata
@@ -90,8 +91,18 @@ class DynamoDBSpec extends Specification {
         when:
             PropertyMetadata propertyMetadata = new PojoPropertyMetadata(Date, 'update', true)
             Date a = new Date(123456788)
-            Date b = new Date(123456789)
         then:
-            DynamoDB.ensureUniqueString(a, propertyMetadata) != DynamoDB.ensureUniqueString(b, propertyMetadata)
+            DynamoDB.ensureUniqueString(a, propertyMetadata) != DynamoDB.ensureUniqueString(123456789, propertyMetadata)
+    }
+
+    void 'items which cannot be simply fetched'() {
+        when:
+            EntityWithCustomIds entity = new EntityWithCustomIds(new EntityWithCustomIdsId("Foo"), new EntityWithCustomIdsId("Bar"))
+
+            DruDynamoDBMapper mapper = DynamoDB.createMapper(Dru.steal(this))
+            mapper.save(entity)
+        then:
+            mapper.load(entity)
+            mapper.load(EntityWithCustomIds, entity.parentId, entity.id)
     }
 }

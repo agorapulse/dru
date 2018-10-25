@@ -106,7 +106,7 @@ class DynamoDB extends Pojo {
 
     @SuppressWarnings('Instanceof')
     static Object ensureUniqueString(Object object, PropertyMetadata propertyMetadata) {
-        if (object && Date.isAssignableFrom(propertyMetadata.type)) {
+        if (object && propertyMetadata && Date.isAssignableFrom(propertyMetadata.type)) {
             if (object instanceof Date) {
                 return String.valueOf(object.time)
             }
