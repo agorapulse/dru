@@ -6,8 +6,12 @@ import com.agorapulse.dru.persistence.Client;
 import com.google.common.base.Preconditions;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
+import groovy.transform.stc.ClosureParams;
+import groovy.transform.stc.SimpleType;
+import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 final class DefaultDataSet implements DataSet {
 
@@ -150,7 +154,15 @@ final class DefaultDataSet implements DataSet {
     }
 
     @Override
-    public DataSet load(@DelegatesTo(value = DataSetMappingDefinition.class, strategy = Closure.DELEGATE_FIRST) Closure<DataSetMappingDefinition> configuration) {
+    public DataSet load(
+        @DelegatesTo(value = DataSetMappingDefinition.class, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.dru.DataSetMappingDefinition")
+        Closure<DataSetMappingDefinition> configuration) {
+        return load(ConsumerWithDelegate.create(configuration));
+    }
+
+    @Override
+    public DataSet load(Consumer<DataSetMappingDefinition> configuration) {
         return load(new PreparedDataSet(configuration));
     }
 

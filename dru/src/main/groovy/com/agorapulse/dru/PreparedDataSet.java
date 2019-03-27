@@ -1,18 +1,17 @@
 package com.agorapulse.dru;
 
-import groovy.lang.Closure;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
+import java.util.function.Consumer;
 
 public class PreparedDataSet {
 
-    private final Closure<DataSetMappingDefinition> dataSetDefinitionClosure;
+    private final Consumer<DataSetMappingDefinition> dataSetDefinition;
 
-    PreparedDataSet(Closure<DataSetMappingDefinition> dataSetDefinitionClosure) {
-        this.dataSetDefinitionClosure = dataSetDefinitionClosure;
+    PreparedDataSet(Consumer<DataSetMappingDefinition> dataSetDefinition) {
+        this.dataSetDefinition = dataSetDefinition;
     }
 
     void executeOn(DataSetMappingDefinition dataSet) {
-        DefaultGroovyMethods.with(dataSet, dataSetDefinitionClosure);
+        dataSetDefinition.accept(dataSet);
     }
 
 }

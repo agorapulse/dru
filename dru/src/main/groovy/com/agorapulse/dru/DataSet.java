@@ -2,8 +2,11 @@ package com.agorapulse.dru;
 
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
+import groovy.transform.stc.ClosureParams;
+import groovy.transform.stc.SimpleType;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public interface DataSet  {
 
@@ -27,7 +30,17 @@ public interface DataSet  {
      * @param configuration inline configuration closure
      * @return self with items loaded from another data set mapping from the closure
      */
-    DataSet load(@DelegatesTo(value = DataSetMappingDefinition.class, strategy = Closure.DELEGATE_FIRST) Closure<DataSetMappingDefinition> configuration);
+    DataSet load(
+        @DelegatesTo(value = DataSetMappingDefinition.class, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.dru.DataSetMappingDefinition")
+            Closure<DataSetMappingDefinition> configuration);
+
+    /**
+     * Loads additional data set mapping into current data set and returns self.
+     * @param configuration inline configuration closure
+     * @return self with items loaded from another data set mapping from the closure
+     */
+    DataSet load(Consumer<DataSetMappingDefinition> configuration);
 
     /**
      * Signals that data sets was manually loaded into this data set using {@link #add(Object)} or the

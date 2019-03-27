@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 
+import java.util.function.Consumer
+
 /**
  * Data set adapter which guarantees deep cloning all the saved and retrieved objects.
  */
@@ -83,6 +85,11 @@ class DataSetGuardian implements DataSet {
 
     @Override
     DataSet load(Closure<DataSetMappingDefinition> configuration) {
+        return original.load(configuration)
+    }
+
+    @Override
+    DataSet load(Consumer<DataSetMappingDefinition> configuration) {
         return original.load(configuration)
     }
 
