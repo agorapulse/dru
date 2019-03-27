@@ -1,18 +1,26 @@
 package com.agorapulse.dru
 
+import groovy.transform.CompileStatic
 import groovy.transform.PackageScope
 import groovy.transform.stc.ClosureParams
 import groovy.transform.stc.FromString
+import space.jasan.support.groovy.closure.ConsumerWithDelegate
+import space.jasan.support.groovy.closure.FunctionWithDelegate
+import space.jasan.support.groovy.closure.PredicateWithDelegate
+
+import java.util.function.Function
+import java.util.function.Predicate
 
 /**
  * Mapping from source to specified object of given type.
  * @param <T> type of the destination object
  */
+@CompileStatic
 class TypeMapping<T> implements TypeMappingDefinition<T> {
 
     private final String path
     private final Class<T> type
-    private final List<Closure<Boolean>> conditions = []
+    private final List<Predicate> conditions = []
     private final Set<String> ignored = new LinkedHashSet<String>()
 
     // sets the value directly to the newly created instance if the value is falsy
@@ -23,7 +31,7 @@ class TypeMapping<T> implements TypeMappingDefinition<T> {
 
     private final PropertyMappings propertyMappings
 
-    private Closure query = Closure.IDENTITY
+    private Function query = Function.identity()
 
     @PackageScope String name
 
@@ -38,7 +46,7 @@ class TypeMapping<T> implements TypeMappingDefinition<T> {
         @ClosureParams(value = FromString, options = 'java.util.Map<String, Object>')
         Closure<Boolean> condition
     ) {
-        conditions << condition
+        conditions << PredicateWithDelegate.create(condition)
         return this
     }
 
@@ -74,7 +82,7 @@ class TypeMapping<T> implements TypeMappingDefinition<T> {
         @ClosureParams(value = FromString, options = 'T')
         Closure query
     ) {
-        this.query = query
+        this.query = FunctionWithDelegate.create(query, Closure.DELEGATE_ONLY)
         return this
     }
 
@@ -95,7 +103,7 @@ class TypeMapping<T> implements TypeMappingDefinition<T> {
     @SuppressWarnings('UnnecessaryGetter')
     TypeMappingDefinition<T> ignore(@DelegatesTo(type = 'T', strategy = Closure.DELEGATE_ONLY) Closure ignoreConfigurer) {
         MockObject map = new MockObject()
-        Customisations.prepare(ignoreConfigurer, map)()
+        ConsumerWithDelegate.create(ignoreConfigurer, Closure.DELEGATE_ONLY).accept(map)
         this.@ignored.addAll(map.getAccessedKeys())
         return this
     }
@@ -129,7 +137,7 @@ class TypeMapping<T> implements TypeMappingDefinition<T> {
         return name
     }
 
-    List<Closure<Boolean>> getConditions() {
+    List<Predicate> getConditions() {
         return conditions.asImmutable()
     }
 
@@ -150,7 +158,7 @@ class TypeMapping<T> implements TypeMappingDefinition<T> {
     }
 
     Object process(T result) {
-        Customisations.prepare(query, result)(result)
+        query.apply(result)
     }
 
     @Override
