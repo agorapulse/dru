@@ -3,6 +3,8 @@ package com.agorapulse.dru
 import org.junit.Rule
 import spock.lang.Specification
 
+import java.util.function.Consumer
+
 /**
  * Tests fof DataSetGuardian
  */
@@ -41,7 +43,7 @@ class DataSetGuardianSpec extends Specification {
         when:
             guarded.load { }
         then:
-            1 * mock.load(_ as Closure)
+            1 * mock.load(_ as Consumer)
 
         when:
             guarded.load(Dru.prepare { }, Dru.prepare { })

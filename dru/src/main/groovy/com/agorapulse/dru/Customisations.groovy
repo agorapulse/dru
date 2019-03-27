@@ -1,7 +1,6 @@
 package com.agorapulse.dru
 
 import groovy.transform.PackageScope
-import space.jasan.support.groovy.closure.BiConsumerWithDelegate
 
 import java.util.function.BiConsumer
 
@@ -16,10 +15,6 @@ class Customisations {
         setters.each {
             it.accept(destination, source)
         }
-    }
-
-    void add(Closure closure) {
-        setters << BiConsumerWithDelegate.create(closure, Closure.DELEGATE_ONLY)
     }
 
     void add(BiConsumer biConsumer) {

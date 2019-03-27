@@ -4,11 +4,6 @@ import com.agorapulse.dru.parser.Parser;
 import com.agorapulse.dru.parser.Parsers;
 import com.agorapulse.dru.persistence.Client;
 import com.google.common.base.Preconditions;
-import groovy.lang.Closure;
-import groovy.lang.DelegatesTo;
-import groovy.transform.stc.ClosureParams;
-import groovy.transform.stc.SimpleType;
-import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -17,11 +12,13 @@ final class DefaultDataSet implements DataSet {
 
     private final Map<Class, Map<String, Object>> createdEntities = new LinkedHashMap<>();
     private final MissingPropertiesReport report = new MissingPropertiesReport();
+    private final Object unitTest;
     private final Set<Client> clients;
     private final Set<DataSetMappingDefinition.WhenLoaded> whenLoadedListeners = new LinkedHashSet<>();
     private final Set<DataSetMappingDefinition.OnChange> onChangeListeners = new LinkedHashSet<>();
 
-    DefaultDataSet(Set<Client> clients) {
+    DefaultDataSet(Object unitTest, Set<Client> clients) {
+        this.unitTest = unitTest;
         this.clients = clients;
     }
 
@@ -121,7 +118,7 @@ final class DefaultDataSet implements DataSet {
 
     @Override
     public DataSet load(PreparedDataSet first, PreparedDataSet... others) {
-        DefaultDataSetMapping dataSetMapping = new DefaultDataSetMapping(clients);
+        DefaultDataSetMapping dataSetMapping = new DefaultDataSetMapping(unitTest, clients);
         first.executeOn(dataSetMapping);
         for (PreparedDataSet dataSet : others) {
             dataSet.executeOn(dataSetMapping);
@@ -151,14 +148,6 @@ final class DefaultDataSet implements DataSet {
             onChange.doOnChange(this);
         }
         return this;
-    }
-
-    @Override
-    public DataSet load(
-        @DelegatesTo(value = DataSetMappingDefinition.class, strategy = Closure.DELEGATE_FIRST)
-        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.dru.DataSetMappingDefinition")
-        Closure<DataSetMappingDefinition> configuration) {
-        return load(ConsumerWithDelegate.create(configuration));
     }
 
     @Override

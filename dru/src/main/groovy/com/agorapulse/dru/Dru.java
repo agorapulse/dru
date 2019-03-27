@@ -4,8 +4,6 @@ import com.agorapulse.dru.persistence.Client;
 import com.agorapulse.dru.persistence.Clients;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
-import groovy.transform.stc.ClosureParams;
-import groovy.transform.stc.SimpleType;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -42,6 +40,7 @@ public class Dru implements TestRule, DataSet {
     }
 
     public Dru(Object unitTest, PreparedDataSet preparedDataSet) {
+        this.unitTest = unitTest;
         this.preparedDataSet = preparedDataSet;
         this.clients = new LinkedHashSet<>(Clients.createClients(unitTest));
     }
@@ -70,26 +69,18 @@ public class Dru implements TestRule, DataSet {
 
 
         if (preparedDataSet == null) {
-            return currentDataSet = new DefaultDataSet(clients);
+            return currentDataSet = new DefaultDataSet(unitTest, clients);
         }
 
 
-        DefaultDataSetMapping dataSetMapping = new DefaultDataSetMapping(clients);
+        DefaultDataSetMapping dataSetMapping = new DefaultDataSetMapping(unitTest, clients);
         preparedDataSet.executeOn(dataSetMapping);
 
-        return currentDataSet = new DefaultDataSet(clients).load(dataSetMapping);
+        return currentDataSet = new DefaultDataSet(unitTest, clients).load(dataSetMapping);
     }
 
     public DataSet load(PreparedDataSet first, PreparedDataSet... rest) {
         return ensureDataSetInitialized().load(first, rest);
-    }
-
-    @Override
-    public DataSet load(
-        @DelegatesTo(value = DataSetMappingDefinition.class, strategy = Closure.DELEGATE_FIRST)
-        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.dru.DataSetMappingDefinition")
-            Closure<DataSetMappingDefinition> configuration) {
-        return ensureDataSetInitialized().load(configuration);
     }
 
     @Override
@@ -150,6 +141,7 @@ public class Dru implements TestRule, DataSet {
         return currentDataSet;
     }
 
+    private final Object unitTest;
     private final PreparedDataSet preparedDataSet;
     private final Set<Client> clients;
     private DataSet currentDataSet;

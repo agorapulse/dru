@@ -4,6 +4,7 @@ import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import groovy.transform.stc.ClosureParams;
 import groovy.transform.stc.SimpleType;
+import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -30,10 +31,12 @@ public interface DataSet  {
      * @param configuration inline configuration closure
      * @return self with items loaded from another data set mapping from the closure
      */
-    DataSet load(
+    default DataSet load(
         @DelegatesTo(value = DataSetMappingDefinition.class, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.dru.DataSetMappingDefinition")
-            Closure<DataSetMappingDefinition> configuration);
+            Closure<DataSetMappingDefinition> configuration) {
+        return load(ConsumerWithDelegate.create(configuration));
+    }
 
     /**
      * Loads additional data set mapping into current data set and returns self.
