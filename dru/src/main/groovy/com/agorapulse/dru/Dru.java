@@ -20,7 +20,11 @@ import java.util.function.Consumer;
 public class Dru implements TestRule, DataSet {
 
     public static Dru plan(Object unitTest, Consumer<DataSetMappingDefinition> configuration) {
-        return new Dru(unitTest, new PreparedDataSet(configuration));
+        Object self = unitTest;
+        if (!(self instanceof Class)) {
+            self = self.getClass();
+        }
+        return new Dru(unitTest, new PreparedDataSet((Class<?>) self, configuration));
     }
 
     public static Dru plan(@DelegatesTo(value = DataSetMappingDefinition.class, strategy = Closure.DELEGATE_FIRST) Closure<DataSetMappingDefinition> configuration) {
@@ -31,12 +35,16 @@ public class Dru implements TestRule, DataSet {
         return new Dru(unitTest, null);
     }
 
-    public static PreparedDataSet prepare(Consumer<DataSetMappingDefinition> configuration) {
-        return new PreparedDataSet(configuration);
+    public static PreparedDataSet prepare(Class<?> self, Consumer<DataSetMappingDefinition> configuration) {
+        return new PreparedDataSet(self, configuration);
     }
 
     public static PreparedDataSet prepare(@DelegatesTo(value = DataSetMappingDefinition.class, strategy = Closure.DELEGATE_FIRST) Closure<DataSetMappingDefinition> configuration) {
-        return prepare(ConsumerWithDelegate.create(configuration));
+        Object self = configuration.getThisObject();
+        if (!(self instanceof Class)) {
+            self = self.getClass();
+        }
+        return prepare((Class<?>) self, ConsumerWithDelegate.create(configuration));
     }
 
     public Dru(Object unitTest, PreparedDataSet preparedDataSet) {
@@ -84,8 +92,8 @@ public class Dru implements TestRule, DataSet {
     }
 
     @Override
-    public DataSet load(Consumer<DataSetMappingDefinition> configuration) {
-        return ensureDataSetInitialized().load(configuration);
+    public DataSet load(Class<?> self, Consumer<DataSetMappingDefinition> configuration) {
+        return ensureDataSetInitialized().load(self, configuration);
     }
 
     @Override

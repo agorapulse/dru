@@ -84,8 +84,8 @@ class DataSetGuardian implements DataSet {
     }
 
     @Override
-    DataSet load(Consumer<DataSetMappingDefinition> configuration) {
-        return original.load(configuration)
+    DataSet load(Class<?> self, Consumer<DataSetMappingDefinition> configuration) {
+        return original.load(self, configuration)
     }
 
     @Override

@@ -110,5 +110,9 @@ final class TypeMappings implements Iterable<TypeMapping> {
         return false;
     }
 
+    public void addAll(TypeMappings typeMappings) {
+        this.mappings.putAll(typeMappings.mappings);
+    }
+
     private final Map<Class, TypeMapping> mappings = new LinkedHashMap<>();
 }

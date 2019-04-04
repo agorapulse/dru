@@ -35,15 +35,21 @@ public interface DataSet  {
         @DelegatesTo(value = DataSetMappingDefinition.class, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.dru.DataSetMappingDefinition")
             Closure<DataSetMappingDefinition> configuration) {
-        return load(ConsumerWithDelegate.create(configuration));
+        Object self = configuration.getThisObject();
+        if (!(self instanceof Class)) {
+            self = self.getClass();
+        }
+
+        return load((Class<?>) self, ConsumerWithDelegate.create(configuration));
     }
 
     /**
      * Loads additional data set mapping into current data set and returns self.
+     * @param self the parent object to be used as reference for loading resources
      * @param configuration inline configuration closure
      * @return self with items loaded from another data set mapping from the closure
      */
-    DataSet load(Consumer<DataSetMappingDefinition> configuration);
+    DataSet load(Class<?> self, Consumer<DataSetMappingDefinition> configuration);
 
     /**
      * Signals that data sets was manually loaded into this data set using {@link #add(Object)} or the

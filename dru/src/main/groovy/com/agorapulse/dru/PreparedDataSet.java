@@ -4,9 +4,11 @@ import java.util.function.Consumer;
 
 public class PreparedDataSet {
 
+    private final Class<?> selfType;
     private final Consumer<DataSetMappingDefinition> dataSetDefinition;
 
-    PreparedDataSet(Consumer<DataSetMappingDefinition> dataSetDefinition) {
+    PreparedDataSet(Class<?> selfType, Consumer<DataSetMappingDefinition> dataSetDefinition) {
+        this.selfType = selfType;
         this.dataSetDefinition = dataSetDefinition;
     }
 
@@ -14,4 +16,7 @@ public class PreparedDataSet {
         dataSetDefinition.accept(dataSet);
     }
 
+    public Class<?> getSelfType() {
+        return selfType;
+    }
 }

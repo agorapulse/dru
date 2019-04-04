@@ -189,12 +189,9 @@ class PropertyMapping implements PropertyMappingDefinition {
 
             // this is safe to call as it adds the type to the end of the list if some mappings are already present
             // so anything already present is ignored
-            if (!nestedTypeMapping) {
-                typeMappingToUse.map(propertyName) {
-                    to persistentProperty.referencedPropertyType
-                }
-                nestedTypeMapping = typeMappingToUse.propertyMappings.findOrCreate(propertyName).typeMappings.find(it.value)
-            }
+            nestedTypeMapping = nestedTypeMapping ?: typeMappingToUse
+                .propertyMappings.findOrCreate(propertyName)
+                .typeMappings.findOrCreate(persistentProperty.referencedPropertyType, propertyName)
 
             if (((persistentProperty.embedded || shouldProceedWithNestedMapping) && !persistentProperty.collectionType)
                 || persistentProperty.isOneToOne() || persistentProperty.isManyToOne()

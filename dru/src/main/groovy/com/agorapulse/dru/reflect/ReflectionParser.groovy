@@ -11,8 +11,18 @@ class ReflectionParser extends AbstractParser {
     final int index = Integer.MAX_VALUE - 10000
 
     @Override
+    @SuppressWarnings('Instanceof')
     boolean isSupported(Source source) {
-        return !source.path.contains('.') && source.referenceObject.hasProperty(source.path)
+        if (source.path.contains('.')) {
+            return false
+        }
+
+        if (source.referenceObject instanceof Class) {
+            Class type = source.referenceObject
+            return type.fields.any { it.name == source.path }
+        }
+
+        return source.referenceObject.hasProperty(source.path)
     }
 
     @Override

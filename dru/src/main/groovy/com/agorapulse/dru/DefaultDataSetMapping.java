@@ -55,7 +55,8 @@ final class DefaultDataSetMapping implements DataSetMappingDefinition, DataSetMa
             return this;
         }
         included.add(hashCode);
-        plan.executeOn(this);
+
+        includeInternal(plan);
         return this;
     }
 
@@ -113,6 +114,15 @@ final class DefaultDataSetMapping implements DataSetMappingDefinition, DataSetMa
     public DataSetMappingDefinition onChange(OnChange listener) {
         onChangeListeners.add(listener);
         return this;
+    }
+
+    private void includeInternal(PreparedDataSet plan) {
+        DefaultDataSetMapping mapping = new DefaultDataSetMapping(plan.getSelfType(), clients);
+        plan.executeOn(mapping);
+        sources.putAll(mapping.sources);
+        typeMappings.addAll(mapping.typeMappings);
+        whenLoadedListeners.addAll(mapping.getWhenLoadedListeners());
+        onChangeListeners.addAll(mapping.getOnChangeListeners());
     }
 
     private final Object unitTest;

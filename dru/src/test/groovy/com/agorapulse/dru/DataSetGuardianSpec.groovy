@@ -43,7 +43,7 @@ class DataSetGuardianSpec extends Specification {
         when:
             guarded.load { }
         then:
-            1 * mock.load(_ as Consumer)
+            1 * mock.load(_, _ as Consumer)
 
         when:
             guarded.load(Dru.prepare { }, Dru.prepare { })
