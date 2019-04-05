@@ -1,7 +1,5 @@
 package com.agorapulse.dru
 
-import groovy.transform.PackageScope
-
 import java.util.function.BiConsumer
 
 /**
