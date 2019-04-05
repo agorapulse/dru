@@ -33,7 +33,7 @@ public interface TypeMappingDefinition<T> {
         @ClosureParams(value = FromString.class, options = "java.util.Map<String, Object>")
             Closure<Boolean> condition
     ) {
-        return when(condition);
+        return and(PredicateWithDelegate.create(condition));
     }
 
     default TypeMappingDefinition<T> and(Predicate<Map<String, Object>> condition) {

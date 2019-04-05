@@ -21,12 +21,4 @@ class Customisations {
         setters << biConsumer
     }
 
-    @Deprecated
-    @PackageScope static Closure prepare(Closure closure, Object delegate) {
-        Closure clone = closure.clone() as Closure
-        clone.resolveStrategy = Closure.DELEGATE_ONLY
-        clone.delegate = delegate
-        return clone
-    }
-
 }
