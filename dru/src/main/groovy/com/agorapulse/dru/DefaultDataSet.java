@@ -4,20 +4,21 @@ import com.agorapulse.dru.parser.Parser;
 import com.agorapulse.dru.parser.Parsers;
 import com.agorapulse.dru.persistence.Client;
 import com.google.common.base.Preconditions;
-import groovy.lang.Closure;
-import groovy.lang.DelegatesTo;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 final class DefaultDataSet implements DataSet {
 
     private final Map<Class, Map<String, Object>> createdEntities = new LinkedHashMap<>();
     private final MissingPropertiesReport report = new MissingPropertiesReport();
+    private final Object unitTest;
     private final Set<Client> clients;
     private final Set<DataSetMappingDefinition.WhenLoaded> whenLoadedListeners = new LinkedHashSet<>();
     private final Set<DataSetMappingDefinition.OnChange> onChangeListeners = new LinkedHashSet<>();
 
-    DefaultDataSet(Set<Client> clients) {
+    DefaultDataSet(Object unitTest, Set<Client> clients) {
+        this.unitTest = unitTest;
         this.clients = clients;
     }
 
@@ -117,12 +118,14 @@ final class DefaultDataSet implements DataSet {
 
     @Override
     public DataSet load(PreparedDataSet first, PreparedDataSet... others) {
-        DefaultDataSetMapping dataSetMapping = new DefaultDataSetMapping(clients);
-        first.executeOn(dataSetMapping);
-        for (PreparedDataSet dataSet : others) {
-            dataSet.executeOn(dataSetMapping);
+        List<PreparedDataSet> sets = new ArrayList<>(Arrays.asList(others));
+        sets.add(0, first);
+        for (PreparedDataSet set : sets) {
+            DefaultDataSetMapping dataSetMapping = new DefaultDataSetMapping(set.getSelfType(), clients);
+            first.executeOn(dataSetMapping);
+            loadInternal(dataSetMapping);
         }
-        return loadInternal(dataSetMapping);
+        return loaded();
     }
 
     /**
@@ -150,12 +153,13 @@ final class DefaultDataSet implements DataSet {
     }
 
     @Override
-    public DataSet load(@DelegatesTo(value = DataSetMappingDefinition.class, strategy = Closure.DELEGATE_FIRST) Closure<DataSetMappingDefinition> configuration) {
-        return load(new PreparedDataSet(configuration));
+    public DataSet load(Class<?> self, Consumer<DataSetMappingDefinition> configuration) {
+        return load(new PreparedDataSet(self, configuration));
     }
 
     DataSet load(DataSetMapping mapping) {
-        return loadInternal(mapping);
+        loadInternal(mapping);
+        return loaded();
     }
 
     @Override
@@ -163,7 +167,7 @@ final class DefaultDataSet implements DataSet {
         return report;
     }
 
-    private DataSet loadInternal(DataSetMapping mapping) {
+    private void loadInternal(DataSetMapping mapping) {
         for (Source source : mapping.getSources().values()) {
             Parser parser = Parsers.findParser(source);
             Object content = parser.getContent(source);
@@ -177,7 +181,6 @@ final class DefaultDataSet implements DataSet {
         }
         whenLoadedListeners.addAll(mapping.getWhenLoadedListeners());
         onChangeListeners.addAll(mapping.getOnChangeListeners());
-        return loaded();
     }
 
     private Client findClient(Class type) {

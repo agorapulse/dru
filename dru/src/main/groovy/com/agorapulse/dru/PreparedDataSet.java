@@ -1,18 +1,22 @@
 package com.agorapulse.dru;
 
-import groovy.lang.Closure;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
+import java.util.function.Consumer;
 
 public class PreparedDataSet {
 
-    private final Closure<DataSetMappingDefinition> dataSetDefinitionClosure;
+    private final Class<?> selfType;
+    private final Consumer<DataSetMappingDefinition> dataSetDefinition;
 
-    PreparedDataSet(Closure<DataSetMappingDefinition> dataSetDefinitionClosure) {
-        this.dataSetDefinitionClosure = dataSetDefinitionClosure;
+    PreparedDataSet(Class<?> selfType, Consumer<DataSetMappingDefinition> dataSetDefinition) {
+        this.selfType = selfType;
+        this.dataSetDefinition = dataSetDefinition;
     }
 
     void executeOn(DataSetMappingDefinition dataSet) {
-        DefaultGroovyMethods.with(dataSet, dataSetDefinitionClosure);
+        dataSetDefinition.accept(dataSet);
     }
 
+    public Class<?> getSelfType() {
+        return selfType;
+    }
 }

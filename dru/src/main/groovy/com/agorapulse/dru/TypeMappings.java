@@ -1,11 +1,10 @@
 package com.agorapulse.dru;
 
-import groovy.lang.Closure;
-
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 final class TypeMappings implements Iterable<TypeMapping> {
 
@@ -27,8 +26,8 @@ final class TypeMappings implements Iterable<TypeMapping> {
 
         for (TypeMapping typeMapping : mappings.values()) {
             if (!typeMapping.getConditions().isEmpty()) {
-                for (Closure<Boolean> condition : (Iterable<Closure<Boolean>>) typeMapping.getConditions()) {
-                    if (condition.call(fixture)) {
+                for (Predicate condition : (Iterable<Predicate>) typeMapping.getConditions()) {
+                    if (condition.test(fixture)) {
                         return typeMapping;
                     }
                 }
@@ -109,6 +108,10 @@ final class TypeMappings implements Iterable<TypeMapping> {
         }
 
         return false;
+    }
+
+    public void addAll(TypeMappings typeMappings) {
+        this.mappings.putAll(typeMappings.mappings);
     }
 
     private final Map<Class, TypeMapping> mappings = new LinkedHashMap<>();

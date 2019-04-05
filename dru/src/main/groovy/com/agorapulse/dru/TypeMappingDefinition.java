@@ -4,58 +4,114 @@ import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import groovy.transform.stc.ClosureParams;
 import groovy.transform.stc.FromString;
+import groovy.transform.stc.SimpleType;
+import space.jasan.support.groovy.closure.BiConsumerWithDelegate;
+import space.jasan.support.groovy.closure.ConsumerWithDelegate;
+import space.jasan.support.groovy.closure.FunctionWithDelegate;
+import space.jasan.support.groovy.closure.PredicateWithDelegate;
+
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public interface TypeMappingDefinition<T> {
 
-    TypeMappingDefinition<T> when(
+    default TypeMappingDefinition<T> when(
         @DelegatesTo(type = "java.util.Map<String,Object>", strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = FromString.class, options = "java.util.Map<String, Object>")
             Closure<Boolean> condition
-    );
+    ) {
+        return when(PredicateWithDelegate.create(condition));
+    }
 
-    TypeMappingDefinition<T> and(
+    TypeMappingDefinition<T> when(Predicate<Map<String, Object>> condition);
+
+    default TypeMappingDefinition<T> and(
         @DelegatesTo(type = "java.util.Map<String,Object>", strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = FromString.class, options = "java.util.Map<String, Object>")
             Closure<Boolean> condition
-    );
+    ) {
+        return and(PredicateWithDelegate.create(condition));
+    }
 
-    TypeMappingDefinition<T> defaults(
+    default TypeMappingDefinition<T> and(Predicate<Map<String, Object>> condition) {
+        return when(condition);
+    }
+
+    default TypeMappingDefinition<T> defaults(
         @DelegatesTo(type = "T", strategy = Closure.DELEGATE_ONLY)
         @ClosureParams(value = FromString.class, options = "java.util.Map<String, Object>")
             Closure defaultsSetter
-    );
+    ) {
+        return defaults(BiConsumerWithDelegate.create(defaultsSetter, Closure.DELEGATE_ONLY));
+    }
 
-    TypeMappingDefinition<T> overrides(
+    TypeMappingDefinition<T> defaults(BiConsumer<Map<String, Object>, Map<String, Object>> defaultsSetter);
+
+    default TypeMappingDefinition<T> overrides(
         @DelegatesTo(type = "T", strategy = Closure.DELEGATE_ONLY)
         @ClosureParams(value = FromString.class, options = "java.util.Map<String, Object>")
             Closure defaultsSetter
-    );
+    ) {
+        return overrides(BiConsumerWithDelegate.create(defaultsSetter, Closure.DELEGATE_ONLY));
+    }
 
-    TypeMappingDefinition<T> just(
+    TypeMappingDefinition<T> overrides(BiConsumer<Map<String, Object>, Map<String, Object>> defaultsSetter);
+
+    default TypeMappingDefinition<T> just(
         @DelegatesTo(type = "T", strategy = Closure.DELEGATE_ONLY)
         @ClosureParams(value = FromString.class, options = "T")
-            Closure query
-    );
+            Closure<Object> query
+    ) {
+        return just(FunctionWithDelegate.create(query, Closure.DELEGATE_ONLY));
+    }
+
+    TypeMappingDefinition<T> just(Function<T, Object> query);
 
     TypeMappingDefinition<T> ignore(Iterable<String> ignored);
 
     TypeMappingDefinition<T> ignore(String first, String... rest);
 
-    TypeMappingDefinition<T> ignore(
+    default TypeMappingDefinition<T> ignore(
         @DelegatesTo(type = "T", strategy = Closure.DELEGATE_ONLY)
+        @ClosureParams(value = FromString.class, options = "T")
             Closure ignoreConfigurer
-    );
+    ) {
+        MockObject map = new MockObject();
+        ConsumerWithDelegate.create(ignoreConfigurer, Closure.DELEGATE_ONLY).accept(map);
+        ignore(map.getAccessedKeys());
+        return this;
+    }
 
     PropertyMapping map(String path);
 
-    TypeMappingDefinition<T> map(String path,
-                                 @DelegatesTo(value = PropertyMappingDefinition.class, strategy = Closure.DELEGATE_FIRST)
-                                     Closure<PropertyMappingDefinition> configuration
-    );
+    default TypeMappingDefinition<T> map(
+        String path,
+        @DelegatesTo(value = PropertyMappingDefinition.class, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.dru.PropertyMappingDefinition")
+            Closure<PropertyMappingDefinition> configuration
+    ) {
+        return map(path, ConsumerWithDelegate.create(configuration));
+    }
 
-    TypeMappingDefinition<T> map(Iterable<String> paths,
-                             @DelegatesTo(value = PropertyMappingDefinition.class, strategy = Closure.DELEGATE_FIRST)
-                             Closure<PropertyMappingDefinition> configuration
-    );
+    TypeMappingDefinition<T> map(String path, Consumer<PropertyMappingDefinition> configuration);
+
+    default TypeMappingDefinition<T> map(
+        Iterable<String> paths,
+        @DelegatesTo(value = PropertyMappingDefinition.class, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.dru.PropertyMappingDefinition")
+            Closure<PropertyMappingDefinition> configuration
+    ) {
+        return map(paths, ConsumerWithDelegate.create(configuration));
+    }
+
+    default TypeMappingDefinition<T> map(Iterable<String> paths, Consumer<PropertyMappingDefinition> configuration) {
+        for (String path : paths) {
+            map(path, configuration);
+        }
+        return this;
+    }
 
 }

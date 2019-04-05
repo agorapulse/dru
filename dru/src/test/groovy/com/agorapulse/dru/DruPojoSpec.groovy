@@ -91,6 +91,36 @@ class DruPojoSpec extends Specification {
 
     }
 
+    void 'load by reflection - failure'() {
+        when:
+            dru.load {
+                from ('LIBRARY.books') {
+                    map {
+                        to Book
+                    }
+                }
+                any (Author) {
+                    overrides {
+                        id = it.fullName
+                    }
+                }
+
+                any (Book) {
+                    map ('authors') {
+                        to Author
+                    }
+                    map ('genres') {
+                        to Genre
+                    }
+                    overrides {
+                        id = it.title
+                    }
+                }
+            }
+        then:
+            thrown(IllegalArgumentException)
+    }
+
     void 'Pojo new instance'() {
         given:
             Parser parser = Mock(Parser)

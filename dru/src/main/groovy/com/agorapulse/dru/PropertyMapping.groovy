@@ -5,9 +5,9 @@ import com.agorapulse.dru.persistence.Client
 import com.agorapulse.dru.persistence.meta.ClassMetadata
 import com.agorapulse.dru.persistence.meta.PropertyMetadata
 import groovy.transform.CompileStatic
-import groovy.transform.stc.ClosureParams
-import groovy.transform.stc.FromString
 import org.codehaus.groovy.runtime.DefaultGroovyMethods
+
+import java.util.function.Consumer
 
 import static com.google.common.base.Preconditions.checkNotNull
 
@@ -26,31 +26,27 @@ class PropertyMapping implements PropertyMappingDefinition {
         this.path = path
     }
 
-    @SuppressWarnings('UnnecessaryPublicModifier')
-    public <T> PropertyMappingDefinition to(
+    @Override
+    <T> PropertyMappingDefinition to(
         Class<T> type,
-        @DelegatesTo(type = 'com.agorapulse.dru.TypeMappingDefinition<T>', strategy = Closure.DELEGATE_FIRST)
-        @ClosureParams(value = FromString, options = 'com.agorapulse.dru.TypeMappingDefinition<T>')
-        Closure<TypeMappingDefinition<T>> configuration = Closure.IDENTITY
+        Consumer<TypeMappingDefinition<T>> configuration = { }
     ) {
         TypeMapping<T> mapping = typeMappings.findOrCreate(type, path)
-        mapping.with(configuration)
+        configuration.accept(mapping)
         mapping.ignore(ignored)
         return this
     }
 
-    @SuppressWarnings('UnnecessaryPublicModifier')
-    public <T> PropertyMappingDefinition to(
+    @Override
+    <T> PropertyMappingDefinition to(
         Map<String, Class<T>> propertyAndType,
-        @DelegatesTo(type = 'com.agorapulse.dru.TypeMappingDefinition<T>', strategy = Closure.DELEGATE_FIRST)
-        @ClosureParams(value = FromString, options = 'com.agorapulse.dru.TypeMappingDefinition<T>')
-        Closure<TypeMappingDefinition<T>> configuration = Closure.IDENTITY
+        Consumer<TypeMappingDefinition<T>> configuration = { }
     ) {
         if (!propertyAndType || propertyAndType.size() != 1) {
             throw new IllegalArgumentException("Excatly one 'propertyName: Type' pair expected. Got: $propertyAndType")
         }
         TypeMapping<T> mapping = typeMappings.findOrCreate(propertyAndType.values().first(), path)
-        mapping.with(configuration)
+        configuration.accept(mapping)
         mapping.name = propertyAndType.keySet().first()
         mapping.ignore(ignored)
         return this
@@ -193,12 +189,9 @@ class PropertyMapping implements PropertyMappingDefinition {
 
             // this is safe to call as it adds the type to the end of the list if some mappings are already present
             // so anything already present is ignored
-            if (!nestedTypeMapping) {
-                typeMappingToUse.map(propertyName) {
-                    to persistentProperty.referencedPropertyType
-                }
-                nestedTypeMapping = typeMappingToUse.propertyMappings.findOrCreate(propertyName).typeMappings.find(it.value)
-            }
+            nestedTypeMapping = nestedTypeMapping ?: typeMappingToUse
+                .propertyMappings.findOrCreate(propertyName)
+                .typeMappings.findOrCreate(persistentProperty.referencedPropertyType, propertyName)
 
             if (((persistentProperty.embedded || shouldProceedWithNestedMapping) && !persistentProperty.collectionType)
                 || persistentProperty.isOneToOne() || persistentProperty.isManyToOne()

@@ -337,7 +337,7 @@ class DruDynamoDBMapper extends DynamoDBMapper {
                     if (value instanceof Date) {
                         value = getTableModel(type).field(e.key).convert(value).getS()
                     }
-                    DynamoDBConditions.conditionToClosure(e.value)(value)
+                    DynamoDBConditions.conditionToPredicate(e.value).test(value)
                 }
             }
         }
@@ -375,7 +375,7 @@ class DruDynamoDBMapper extends DynamoDBMapper {
 
         if (expression.scanFilter) {
             for (Map.Entry<String, Condition> e in expression.scanFilter.entrySet()) {
-                ret = ret.findAll { DynamoDBConditions.conditionToClosure(e.value)(it."$e.key") }
+                ret = ret.findAll { DynamoDBConditions.conditionToPredicate(e.value).test(it."$e.key") }
             }
         }
 

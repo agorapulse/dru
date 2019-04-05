@@ -7,6 +7,8 @@ import com.amazonaws.services.dynamodbv2.model.Condition
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import java.util.function.Predicate
+
 import static com.amazonaws.services.dynamodbv2.model.ComparisonOperator.*
 import static java.nio.ByteBuffer.wrap
 
@@ -21,9 +23,9 @@ class DynamoDBConditionsSpec extends Specification {
             Condition condition = new Condition()
                 .withComparisonOperator(operator as ComparisonOperator)
                 .withAttributeValueList(attributeValues)
-            Closure<Boolean> closure = DynamoDBConditions.conditionToClosure(condition)
+            Predicate predicate = DynamoDBConditions.conditionToPredicate(condition)
         then:
-            closure(value) == matches
+            predicate.test(value) == matches
         where:
             matches | value             | operator      | attributeValues
             true    | 1                 | EQ            | [new AttributeValue().withN('1')]
@@ -59,7 +61,7 @@ class DynamoDBConditionsSpec extends Specification {
 
     void 'throw exception when operator is FOO'() {
         when:
-            DynamoDBConditions.conditionToClosure(new Condition().withComparisonOperator('FOO'))
+            DynamoDBConditions.conditionToPredicate(new Condition().withComparisonOperator('FOO'))
         then:
             thrown(IllegalArgumentException)
     }

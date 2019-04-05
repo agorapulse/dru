@@ -1,53 +1,50 @@
 package com.agorapulse.dru;
 
 import com.agorapulse.dru.persistence.Client;
-import groovy.lang.Closure;
-import groovy.lang.DelegatesTo;
-import groovy.transform.stc.ClosureParams;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
 
 final class DefaultDataSetMapping implements DataSetMappingDefinition, DataSetMapping {
 
     private Set<Integer> included = new HashSet<>();
 
-    public DefaultDataSetMapping(Set<Client> clients) {
+    DefaultDataSetMapping(Object unitTest, Set<Client> clients) {
+        this.unitTest = unitTest;
         this.clients = Collections.unmodifiableSet(clients);
     }
 
     @Override
-    public DataSetMappingDefinition from(String relativePath, @DelegatesTo(value = SourceDefinition.class, strategy = Closure.DELEGATE_FIRST) Closure<SourceDefinition> configuration) {
-        Source source = sources.get(relativePath);
+    public DataSetMappingDefinition from(String relativePath, Consumer<SourceDefinition> configuration) {
+        AbstractSource source = sources.get(relativePath);
         if (source == null) {
-            Source newSource = new DefaultSource(configuration.getThisObject(), relativePath);
+            AbstractSource newSource = new DefaultSource(unitTest, relativePath);
             sources.put(relativePath, newSource);
             source = newSource;
         }
 
-        DefaultGroovyMethods.with(source, configuration);
+        configuration.accept(source);
         return this;
     }
 
     @Override
-    public DataSetMappingDefinition from(File file, @DelegatesTo(value = SourceDefinition.class, strategy = Closure.DELEGATE_FIRST) Closure<SourceDefinition> configuration) throws IOException {
-        Source source = sources.get(file.getCanonicalPath());
+    public DataSetMappingDefinition from(File file, Consumer<SourceDefinition> configuration) throws IOException {
+        AbstractSource source = sources.get(file.getCanonicalPath());
         if (source == null) {
-            Source newSource = new FileSource(configuration.getThisObject(), file);
+            AbstractSource newSource = new FileSource(unitTest, file);
             sources.put(file.getCanonicalPath(), newSource);
             source = newSource;
         }
 
-        DefaultGroovyMethods.with(source, configuration);
+        configuration.accept(source);
         return this;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public <T> DataSetMappingDefinition any(Class<T> type, @DelegatesTo(type = "com.agorapulse.dru.TypeMappingDefinition<T>", strategy = Closure.DELEGATE_FIRST) @ClosureParams(value = groovy.transform.stc.FromString.class, options = "com.agorapulse.dru.TypeMappingDefinition<T>") Closure<TypeMappingDefinition<T>> configuration) {
-        DefaultGroovyMethods.with(typeMappings.findOrCreate(type, type.getSimpleName()), configuration);
+    public <T> DataSetMappingDefinition any(Class<T> type, Consumer<TypeMappingDefinition<T>> configuration) {
+        configuration.accept(typeMappings.findOrCreate(type, type.getSimpleName()));
         return this;
     }
 
@@ -58,7 +55,8 @@ final class DefaultDataSetMapping implements DataSetMappingDefinition, DataSetMa
             return this;
         }
         included.add(hashCode);
-        plan.executeOn(this);
+
+        includeInternal(plan);
         return this;
     }
 
@@ -118,8 +116,18 @@ final class DefaultDataSetMapping implements DataSetMappingDefinition, DataSetMa
         return this;
     }
 
+    private void includeInternal(PreparedDataSet plan) {
+        DefaultDataSetMapping mapping = new DefaultDataSetMapping(plan.getSelfType(), clients);
+        plan.executeOn(mapping);
+        sources.putAll(mapping.sources);
+        typeMappings.addAll(mapping.typeMappings);
+        whenLoadedListeners.addAll(mapping.getWhenLoadedListeners());
+        onChangeListeners.addAll(mapping.getOnChangeListeners());
+    }
+
+    private final Object unitTest;
     private final Set<Client> clients;
-    private final Map<String, Source> sources = new LinkedHashMap<>();
+    private final Map<String, AbstractSource> sources = new LinkedHashMap<>();
     private final TypeMappings typeMappings = new TypeMappings();
     private final List<WhenLoaded> whenLoadedListeners = new ArrayList<>();
     private final List<OnChange> onChangeListeners = new ArrayList<>();

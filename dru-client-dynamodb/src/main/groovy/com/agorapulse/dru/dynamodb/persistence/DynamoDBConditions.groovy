@@ -4,19 +4,21 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import com.amazonaws.services.dynamodbv2.model.Condition
 import groovy.transform.PackageScope
 
+import java.util.function.Predicate
+
 /**
  * Helper class to handle DynamoDB conditions.
  */
 @PackageScope class DynamoDBConditions {
 
-    static Closure<Boolean> conditionToClosure(Condition condition) {
-        Closure<Boolean> le = {
+    static Predicate conditionToPredicate(Condition condition) {
+        Predicate le = {
             it <= getValue(condition.attributeValueList.first())
         }
-        Closure<Boolean> ge = {
+        Predicate ge = {
             it >= getValue(condition.attributeValueList.first())
         }
-        Closure<Boolean> contains = {
+        Predicate contains = {
             evaluateContains(it, condition)
         }
         switch (condition.comparisonOperator) {
@@ -42,7 +44,7 @@ import groovy.transform.PackageScope
             }
             case 'CONTAINS': return contains
             case 'NOT_CONTAINS': return {
-                !contains(it)
+                !contains.test(it)
             }
             case 'BEGINS_WITH': return {
                 it != null && it.toString().startsWith(getValue(condition.attributeValueList.first()).toString())

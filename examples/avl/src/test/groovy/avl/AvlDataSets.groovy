@@ -35,8 +35,8 @@ class AvlDataSets {
                 }
             }
             map('villain') {
-                to(villainId: Villain) {
-                    just { id }
+                to('villainId', Villain) { t ->
+                    t.just { id }
                 }
             }
             map('mission') {

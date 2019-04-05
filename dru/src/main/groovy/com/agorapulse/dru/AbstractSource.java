@@ -1,8 +1,6 @@
 package com.agorapulse.dru;
 
-import groovy.lang.Closure;
-import groovy.lang.DelegatesTo;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
+import java.util.function.Consumer;
 
 abstract class AbstractSource implements SourceDefinition, Source {
 
@@ -13,23 +11,16 @@ abstract class AbstractSource implements SourceDefinition, Source {
     }
 
     @Override
-    public final SourceDefinition map(String path,
-                                @DelegatesTo(value = PropertyMappingDefinition.class, strategy = Closure.DELEGATE_FIRST)
-                Closure<PropertyMappingDefinition> configuration
+    public final SourceDefinition map(String path, Consumer<PropertyMappingDefinition> configuration
     ) {
         PropertyMapping mapping = propertyMappings.findOrCreate(path);
-        DefaultGroovyMethods.with(mapping, configuration);
+        configuration.accept(mapping);
         return this;
     }
 
     @Override
     public final String getPath() {
         return path;
-    }
-
-    @Override
-    public final SourceDefinition map(Closure<PropertyMappingDefinition> configuration) {
-        return map("", configuration);
     }
 
     public final Object getReferenceObject() {
