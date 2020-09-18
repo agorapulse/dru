@@ -101,6 +101,7 @@ subprojects {
 
     checkstyle {
         configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+        toolVersion = '8.27'
     }
 
     codenarc {
