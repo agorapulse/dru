@@ -8,6 +8,7 @@ import spock.lang.Specification
 /**
  * Test loading persons using YAML parser.
  */
+@SuppressWarnings('NestedBlockDepth')
 class YamlSpec extends Specification implements DataTest {
 
     // tag::plan[]

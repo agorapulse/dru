@@ -2,6 +2,9 @@ package avl
 
 import spock.lang.Specification
 
+/**
+ * Tests for Agent.
+ */
 class AgentSpec extends Specification {
 
     void 'test is novice'() {

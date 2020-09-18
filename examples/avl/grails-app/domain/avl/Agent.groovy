@@ -1,6 +1,14 @@
 package avl
 
+@SuppressWarnings([
+    'GrailsDomainHasEquals',
+    'GrailsDomainHasToString',
+    'ClassJavadoc',
+])
 // tag::header[]
+/**
+ * The person representing an agent.
+ */
 class Agent extends Person implements WithSecurityLevel {
 // end::header[]
 
@@ -17,7 +25,6 @@ class Agent extends Person implements WithSecurityLevel {
         bio nullable: true
     }
     // end::properties[]
-
 
     static hasMany = [assignments: Assignment, staff: Agent]
 

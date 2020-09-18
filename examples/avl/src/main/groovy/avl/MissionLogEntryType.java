@@ -1,5 +1,8 @@
 package avl;
 
+/**
+ * The mission log entry type.
+ */
 public enum MissionLogEntryType {
 
     started,

@@ -4,6 +4,10 @@ package avl
 import com.agorapulse.dru.Dru
 import com.agorapulse.dru.PreparedDataSet
 
+@SuppressWarnings(['PropertyName', 'DuplicateStringLiteral', 'ClassJavadoc'])
+/**
+ * AVL Datasets.
+ */
 class AvlDataSets {
 // end::header[]
 

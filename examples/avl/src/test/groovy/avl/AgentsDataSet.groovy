@@ -6,6 +6,7 @@ import com.agorapulse.dru.PreparedDataSet
 /**
  * Agents data set.
  */
+@SuppressWarnings('FieldName')
 class AgentsDataSet {
     public static final PreparedDataSet agentsMapping = Dru.prepare {                   // <1>
         any (Agent) {

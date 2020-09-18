@@ -1,7 +1,6 @@
 package avl
 
 import com.agorapulse.dru.Dru
-import grails.testing.gorm.DataTest
 import org.junit.Rule
 import spock.lang.Specification
 

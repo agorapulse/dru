@@ -9,7 +9,6 @@ import spock.lang.Specification
  */
 class DefaultValueSpec extends Specification {
 
-
     // tag::plan[]
     @Rule Dru dru = Dru.plan {
         from ('item.json') {

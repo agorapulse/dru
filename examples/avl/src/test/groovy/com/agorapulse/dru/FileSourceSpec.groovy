@@ -6,10 +6,12 @@ import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 
+/**
+ * Tests for the file sources.
+ */
 class FileSourceSpec extends Specification {
 
     @Rule TemporaryFolder tmp
-
 
     void 'load from file'() {
         given:

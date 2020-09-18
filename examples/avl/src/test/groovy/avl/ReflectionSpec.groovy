@@ -8,6 +8,12 @@ import spock.lang.Specification
 /**
  * Test loading persons.
  */
+@SuppressWarnings([
+    'UnusedPrivateField',
+    'SpaceAroundMapEntryColon',
+    'NestedBlockDepth',
+    'TrailingComma',
+])
 class ReflectionSpec extends Specification implements DataTest {
 
     // tag::plan[]

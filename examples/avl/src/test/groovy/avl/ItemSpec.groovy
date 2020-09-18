@@ -1,15 +1,14 @@
 package avl
 
 import com.agorapulse.dru.Dru
-import grails.testing.gorm.DataTest
 import org.junit.Rule
 import spock.lang.Specification
 
 /**
  * Test loading item.
  */
+@SuppressWarnings('LineLength')
 class ItemSpec extends Specification {
-
 
     @Rule Dru dru = Dru.plan {                                                          // <1>
         from ('item.json') {                                                            // <2>
@@ -25,7 +24,7 @@ class ItemSpec extends Specification {
         then:
             item
             item.name == 'PX-41'                                                        // <6>
-            item.description == "The PX-41 is a very dangerous mutator engineered in the top secret PX-Labs, located in the Arctic Circle. It is capable of turning any living things in the world into a purple, furry, indestructible, mindless, killing machine that is so dangerous that it can destroy anything in its path."
+            item.description == 'The PX-41 is a very dangerous mutator engineered in the top secret PX-Labs, located in the Arctic Circle. It is capable of turning any living things in the world into a purple, furry, indestructible, mindless, killing machine that is so dangerous that it can destroy anything in its path.'
             item.tags.contains('superpowers')
     }
 

@@ -8,6 +8,12 @@ import spock.lang.Specification
 /**
  * Test loading persons.
  */
+@SuppressWarnings([
+    'UnusedPrivateField',
+    'SpaceAroundMapEntryColon',
+    'NestedBlockDepth',
+    'TrailingComma',
+])
 class ListenersSpec extends Specification implements DataTest {
 
     private static final List<Map<String, Object>> AGENTS = [

@@ -8,6 +8,7 @@ import spock.lang.Specification
 /**
  * Testing retrieving just single value.
  */
+@SuppressWarnings('NestedBlockDepth')
 class JustSpec extends Specification implements DataTest {
 
     // tag::plan[]

@@ -8,8 +8,11 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMarshalling
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable
 
+/**
+ * The mission log entry.
+ */
 // tag::header[]
-@DynamoDBTable(tableName = "MissionLogEntry")
+@DynamoDBTable(tableName = 'MissionLogEntry')
 class MissionLogEntry {
 // end::header[]
 

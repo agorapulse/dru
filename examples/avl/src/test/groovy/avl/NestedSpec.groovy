@@ -8,6 +8,7 @@ import spock.lang.Specification
 /**
  * Test loading persons.
  */
+@SuppressWarnings('NestedBlockDepth')
 class NestedSpec extends Specification implements DataTest {
 
     // tag::plan[]

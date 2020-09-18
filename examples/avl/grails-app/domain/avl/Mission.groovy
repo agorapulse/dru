@@ -1,5 +1,14 @@
 package avl
 
+@SuppressWarnings([
+    'GrailsDomainHasEquals',
+    'GrailsDomainHasToString',
+    'ClassJavadoc',
+    'DuplicateMapLiteral',
+])
+/**
+ * Agent's mission.
+ */
 class Mission {
 
     String title

@@ -8,6 +8,9 @@ import spock.util.mop.ConfineMetaClassChanges
 
 import javax.servlet.ServletContext
 
+/**
+ * Sanity checks.
+ */
 class SanitySpec extends Specification {
 
     @ConfineMetaClassChanges(GrailsApp)
@@ -30,12 +33,12 @@ class SanitySpec extends Specification {
             !new BootStrap().destroy()
     }
 
-
     void 'test get table name'() {
         expect:
             DruDynamoDBMapper.getTableNameUsingConfig(Item, DynamoDBMapperConfig.builder().build()) == 'Item'
     }
 
+    @SuppressWarnings('UnusedObject')
     void 'new marshaller test'() {
         when:
             new ExtMarshaller()
