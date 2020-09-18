@@ -35,7 +35,7 @@ allprojects {
 
 dependencies {
     // https://mvnrepository.com/artifact/io.spring.asciidoctor/spring-asciidoctor-extensions
-    asciidoctor group: 'io.spring.asciidoctor', name: 'spring-asciidoctor-extensions', version: '0.1.1.RELEASE'
+    asciidoctor 'com.bmuschko:asciidoctorj-tabbed-code-extension:0.3'
 
 }
 
