@@ -1,4 +1,6 @@
 rootProject.name = 'dru'
 
 include 'dru', 'dru-client-gorm', 'dru-client-dynamodb', 'dru-parser-json', 'dru-parser-yaml'
-include 'examples/avl'
+include 'examples-avl'
+
+project(":examples-avl").projectDir = file("./examples/avl")
