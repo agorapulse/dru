@@ -1,7 +1,6 @@
 package avl
 
 import com.agorapulse.dru.Dru
-import grails.testing.gorm.DataTest
 import grails.testing.mixin.integration.Integration
 import org.junit.Rule
 import org.springframework.test.annotation.Rollback
