@@ -12,12 +12,17 @@
         </rule-config>
     </ruleset-ref>
     <ruleset-ref path="rulesets/concurrency.xml"/>
-    <ruleset-ref path="rulesets/convention.xml"/>
+    <ruleset-ref path="rulesets/convention.xml">
+        <rule-config name="CompileStatic">
+            <property name="doNotApplyToClassNames" value="*Function,*Spec"/>
+            <property name="doNotApplyToFileNames" value="*Function.groovy,*Spec.groovy"/>
+        </rule-config>
+        <exclude name="ImplicitClosureParameter"/>
+    </ruleset-ref>
     <ruleset-ref path="rulesets/design.xml"/>
     <ruleset-ref path="rulesets/dry.xml">
         <rule-config name="DuplicateStringLiteral">
             <property name="doNotApplyToClassNames" value="*Spec"/>
-            <property name="ignoreStrings" value="Instanceof"/>
         </rule-config>
         <rule-config name="DuplicateNumberLiteral">
             <property name="doNotApplyToClassNames" value="*Spec"/>
@@ -34,18 +39,33 @@
         <rule-config name="LineLength">
             <property name="length" value="160"/>
         </rule-config>
-        <rule-config name="SpaceAroundMapEntryColon">
-            <property name="characterAfterColonRegex" value="\s"/>
-        </rule-config>
+        <exclude name="Indentation"/>
+        <exclude name="SpaceAroundMapEntryColon"/>
     </ruleset-ref>
     <ruleset-ref path="rulesets/generic.xml"/>
     <ruleset-ref path="rulesets/grails.xml"/>
     <ruleset-ref path="rulesets/groovyism.xml"/>
     <ruleset-ref path="rulesets/imports.xml">
+        <rule-config name="NoWildcardImports">
+            <property name="ignoreStaticImports" value="true"/>
+        </rule-config>
         <exclude name="MisorderedStaticImports"/>
     </ruleset-ref>
     <ruleset-ref path="rulesets/jdbc.xml"/>
-    <ruleset-ref path="rulesets/junit.xml"/>
+    <ruleset-ref path="rulesets/junit.xml">
+        <rule-config name="JUnitPublicNonTestMethod">
+            <property name="applyToClassNames" value="Test,Tests,TestCase"/>
+        </rule-config>
+        <rule-config name="JUnitPublicProperty">
+            <property name="applyToClassNames" value="Test,Tests,TestCase"/>
+        </rule-config>
+        <rule-config name="JUnitPublicField">
+            <property name="applyToClassNames" value="Test,Tests,TestCase"/>
+        </rule-config>
+        <rule-config name="JUnitTestMethodWithoutAssert">
+            <property name="applyToClassNames" value="Test,Tests,TestCase"/>
+        </rule-config>
+    </ruleset-ref>
     <ruleset-ref path="rulesets/logging.xml"/>
     <ruleset-ref path="rulesets/naming.xml">
         <rule-config name="FieldName">

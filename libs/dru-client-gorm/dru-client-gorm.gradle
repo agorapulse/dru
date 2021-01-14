@@ -1,0 +1,4 @@
+dependencies {
+    api project(':dru')
+    api "org.grails:grails-gorm-testing-support:${grailsTestingSupportVersion}"
+}
