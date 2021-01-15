@@ -133,7 +133,7 @@ allprojects {
 
 subprojects {
     dependencies {
-        codenarc "org.codenarc:CodeNarc:${codenarc.toolVersion}"
+        codenarc "org.codenarc:CodeNarc:${config.quality.codenarc.toolVersion}"
         codenarc "org.codehaus.groovy:groovy-templates"
     }
 }

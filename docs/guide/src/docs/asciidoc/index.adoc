@@ -52,7 +52,7 @@ Dru is a JUnit rule which ensures each of your test methods gets fresh data load
 [source,indent=0,options="nowrap"]
 .Simple Specification
 ----
-include::../examples/dru-example-avl/src/test/groovy/avl/ItemSpec.groovy[]
+include::{root-dir}/examples/dru-grails-example/src/test/groovy/avl/ItemSpec.groovy[lines=18..-1]
 ----
 <1> Prepare the data loading plan
 <2> Load the content of `items.json`
@@ -67,7 +67,7 @@ You can take a look at the `item.json` file containing the test data:
 [source,json,indent=0,options="nowrap"]
 .item.json
 ----
-include::../examples/dru-example-avl/src/test/resources/avl/ItemSpec/item.json[]
+include::{root-dir}/examples/dru-grails-example/src/test/resources/avl/ItemSpec/item.json[]
 ----
 
 The file must be located inside a folder of same name as the class where the source was defined
@@ -80,13 +80,13 @@ You can map directly to the root object or array or to any path inside the sourc
 [source,indent=0,options="nowrap"]
 .Complex Path
 ----
-include::../examples/dru-example-avl/src/test/groovy/avl/ItemsPathSpec.groovy[tag="plan"]
+include::{root-dir}/examples/dru-grails-example/src/test/groovy/avl/ItemsPathSpec.groovy[tag="plan"]
 ----
 
 [source,json,indent=0,options="nowrap"]
 .items.json
 ----
-include::../examples/dru-example-avl/src/test/resources/avl/ItemsPathSpec/items.json[]
+include::{root-dir}/examples/dru-grails-example/src/test/resources/avl/ItemsPathSpec/items.json[]
 ----
 
 == Property and Type Mapping
@@ -99,13 +99,13 @@ is the map obtained from the source.
 [source,indent=0,options="nowrap"]
 .Default Value
 ----
-include::../examples/dru-example-avl/src/test/groovy/avl/DefaultValueSpec.groovy[tag="plan"]
+include::{root-dir}/examples/dru-grails-example/src/test/groovy/avl/DefaultValueSpec.groovy[tag="plan"]
 ----
 
 [source,json,indent=0,options="nowrap"]
 .item.json
 ----
-include::../examples/dru-example-avl/src/test/resources/avl/DefaultValueSpec/item.json[]
+include::{root-dir}/examples/dru-grails-example/src/test/resources/avl/DefaultValueSpec/item.json[]
 ----
 
 === Overriding Properties
@@ -115,13 +115,13 @@ Contrary to defaults, the value is set to overridden value even it is present in
 [source,indent=0,options="nowrap"]
 .Overriding Properties
 ----
-include::../examples/dru-example-avl/src/test/groovy/avl/OverrideValueSpec.groovy[tag="plan"]
+include::{root-dir}/examples/dru-grails-example/src/test/groovy/avl/OverrideValueSpec.groovy[tag="plan"]
 ----
 
 [source,json,indent=0,options="nowrap"]
 .item.json
 ----
-include::../examples/dru-example-avl/src/test/resources/avl/OverrideValueSpec/item.json[]
+include::{root-dir}/examples/dru-grails-example/src/test/resources/avl/OverrideValueSpec/item.json[]
 ----
 
 === Aliasing Properties
@@ -130,13 +130,13 @@ You can alias properties with different names in the source and in the entity.
 [source,indent=0,options="nowrap"]
 .Aliasing Properties
 ----
-include::../examples/dru-example-avl/src/test/groovy/avl/AliasSpec.groovy[tag="plan"]
+include::{root-dir}/examples/dru-grails-example/src/test/groovy/avl/AliasSpec.groovy[tag="plan"]
 ----
 
 [source,json,indent=0,options="nowrap"]
 .item.json
 ----
-include::../examples/dru-example-avl/src/test/resources/avl/AliasSpec/item.json[]
+include::{root-dir}/examples/dru-grails-example/src/test/resources/avl/AliasSpec/item.json[]
 ----
 
 === Ignoring Properties
@@ -147,13 +147,13 @@ hasn't been matched. If you explicitly ignore a property for example because it 
 [source,indent=0,options="nowrap"]
 .Ignoring Properties
 ----
-include::../examples/dru-example-avl/src/test/groovy/avl/IgnoreSpec.groovy[tag="plan"]
+include::{root-dir}/examples/dru-grails-example/src/test/groovy/avl/IgnoreSpec.groovy[tag="plan"]
 ----
 
 [source,json,indent=0,options="nowrap"]
 .item.json
 ----
-include::../examples/dru-example-avl/src/test/resources/avl/IgnoreSpec/item.json[]
+include::{root-dir}/examples/dru-grails-example/src/test/resources/avl/IgnoreSpec/item.json[]
 ----
 
 === Conditional Type Mapping
@@ -163,13 +163,13 @@ You can add condition to type mappings to map to different entities based on sou
 [source,indent=0,options="nowrap"]
 .Conditional Mapping
 ----
-include::../examples/dru-example-avl/src/test/groovy/avl/ConditionalSpec.groovy[tag="plan"]
+include::{root-dir}/examples/dru-grails-example/src/test/groovy/avl/ConditionalSpec.groovy[tag="plan"]
 ----
 
 [source,json,indent=0,options="nowrap"]
 .persons.json
 ----
-include::../examples/dru-example-avl/src/test/resources/avl/ConditionalSpec/persons.json[]
+include::{root-dir}/examples/dru-grails-example/src/test/resources/avl/ConditionalSpec/persons.json[]
 ----
 
 === Nested Type Mapping
@@ -179,13 +179,13 @@ You can nest type mapping to maps complex hierarchical structures.
 [source,indent=0,options="nowrap"]
 .Nested Mapping
 ----
-include::../examples/dru-example-avl/src/test/groovy/avl/NestedSpec.groovy[tag="plan"]
+include::{root-dir}/examples/dru-grails-example/src/test/groovy/avl/NestedSpec.groovy[tag="plan"]
 ----
 
 [source,json,indent=0,options="nowrap"]
 .agents.json
 ----
-include::../examples/dru-example-avl/src/test/resources/avl/NestedSpec/agents.json[]
+include::{root-dir}/examples/dru-grails-example/src/test/resources/avl/NestedSpec/agents.json[]
 ----
 
 You can declare the type mapping at top level so it applies to every occurrence of given type wherever in the tree:
@@ -193,7 +193,7 @@ You can declare the type mapping at top level so it applies to every occurrence 
 [source,indent=0,options="nowrap"]
 .Top Level Mapping
 ----
-include::../examples/dru-example-avl/src/test/groovy/avl/NestedSpec.groovy[tag="reuse"]
+include::{root-dir}/examples/dru-grails-example/src/test/groovy/avl/NestedSpec.groovy[tag="reuse"]
 ----
 
 === Partial Retrieval
@@ -203,13 +203,13 @@ You can assign just a particular property of the loaded entity, usually an `id`.
 [source,indent=0,options="nowrap"]
 .Partial Retrieval
 ----
-include::../examples/dru-example-avl/src/test/groovy/avl/JustSpec.groovy[tag="plan"]
+include::{root-dir}/examples/dru-grails-example/src/test/groovy/avl/JustSpec.groovy[tag="plan"]
 ----
 
 [source,json,indent=0,options="nowrap"]
 .missionLogEntry.json
 ----
-include::../examples/dru-example-avl/src/test/resources/avl/JustSpec/missionLogEntry.json[]
+include::{root-dir}/examples/dru-grails-example/src/test/resources/avl/JustSpec/missionLogEntry.json[]
 ----
 
 
@@ -222,7 +222,7 @@ one data set for mapping an entity and other to load the source to maximise reus
 [source,indent=0,options="nowrap"]
 .Agents Data Set
 ----
-include::../examples/dru-example-avl/src/test/groovy/avl/AgentsDataSet.groovy[]
+include::{root-dir}/examples/dru-grails-example/src/test/groovy/avl/AgentsDataSet.groovy[lines=18..-1]
 ----
 <1> Define data set for agents mapping
 <2> Define data set for agents data
@@ -234,7 +234,7 @@ to load data set into existing data set.
 [source,indent=0,options="nowrap"]
 .Using Data Set
 ----
-include::../examples/dru-example-avl/src/test/groovy/avl/DataSetSpec.groovy[tag="plan"]
+include::{root-dir}/examples/dru-grails-example/src/test/groovy/avl/DataSetSpec.groovy[tag="plan"]
 ----
 
 If additional logic needs to be executed when the data set is loaded or changed significantly then you can use `whenLoaded` hook.
@@ -243,7 +243,7 @@ You can trigger the hooks manually using `loaded` method of the data set.
 [source,indent=0,options="nowrap"]
 .Using Data Set Hooks
 ----
-include::../examples/dru-example-avl/src/test/groovy/avl/ListenersSpec.groovy[tag="plan"]
+include::{root-dir}/examples/dru-grails-example/src/test/groovy/avl/ListenersSpec.groovy[tag="plan"]
 ----
 <1> First call to the hook is triggered immediately as we are defining the hook inside `load` method
 <2> Second call to the hook is triggered manually using `loaded` method
@@ -262,7 +262,7 @@ This is a default parser if any other does not support given name.
 [source,indent=0,options="nowrap"]
 .Using Reflection Parser
 ----
-include::../examples/dru-example-avl/src/test/groovy/avl/ReflectionSpec.groovy[tag="plan"]
+include::{root-dir}/examples/dru-grails-example/src/test/groovy/avl/ReflectionSpec.groovy[tag="plan"]
 ----
 
 === JSON
@@ -272,13 +272,13 @@ they must be contained in directory with the same name as the reference class (u
 [source,indent=0,options="nowrap"]
 .Using JSON Parser
 ----
-include::../examples/dru-example-avl/src/test/groovy/avl/NestedSpec.groovy[tag="plan"]
+include::{root-dir}/examples/dru-grails-example/src/test/groovy/avl/NestedSpec.groovy[tag="plan"]
 ----
 
 [source,json,indent=0,options="nowrap"]
 .agents.json
 ----
-include::../examples/dru-example-avl/src/test/resources/avl/NestedSpec/agents.json[]
+include::{root-dir}/examples/dru-grails-example/src/test/resources/avl/NestedSpec/agents.json[]
 ----
 
 === YAML
@@ -288,13 +288,13 @@ they must be contained in directory with the same name as the reference class (u
 [source,indent=0,options="nowrap"]
 .Using YAML Parser
 ----
-include::../examples/dru-example-avl/src/test/groovy/avl/YamlSpec.groovy[tag="plan"]
+include::{root-dir}/examples/dru-grails-example/src/test/groovy/avl/YamlSpec.groovy[tag="plan"]
 ----
 
 [source,yml,indent=0,options="nowrap"]
 .agents.yml
 ----
-include::../examples/dru-example-avl/src/test/resources/avl/YamlSpec/agents.yml[]
+include::{root-dir}/examples/dru-grails-example/src/test/resources/avl/YamlSpec/agents.yml[lines=18..-1]
 ----
 
 == Clients
@@ -308,13 +308,13 @@ POJO client is able to recognize associations but it is unable to load other sid
 [source,indent=0,options="nowrap"]
 .Using POJO Client
 ----
-include::../examples/dru-example-avl/src/test/groovy/avl/PojoSpec.groovy[tag="plan"]
+include::{root-dir}/examples/dru-grails-example/src/test/groovy/avl/PojoSpec.groovy[tag="plan"]
 ----
 
 [source,json,indent=0,options="nowrap"]
 .library.json
 ----
-include::../examples/dru-example-avl/src/test/resources/avl/PojoSpec/library.json[]
+include::{root-dir}/examples/dru-grails-example/src/test/resources/avl/PojoSpec/library.json[]
 ----
 
 === DynamoDB
@@ -349,27 +349,27 @@ DynamoDB client determines the hash and range properly from the class so you can
 [source,indent=0,options="nowrap"]
 .Using DynamoDB Client
 ----
-include::../examples/dru-example-avl/src/test/groovy/avl/DynamoDBSampleSpec.groovy[tag="plan"]
+include::{root-dir}/examples/dru-grails-example/src/test/groovy/avl/DynamoDBSampleSpec.groovy[tag="plan"]
 ----
 
 [source,json,indent=0,options="nowrap"]
 .library.json
 ----
-include::../examples/dru-example-avl/src/test/resources/avl/DynamoDBSampleSpec/missionLogEntry.json[]
+include::{root-dir}/examples/dru-grails-example/src/test/resources/avl/DynamoDBSampleSpec/missionLogEntry.json[]
 ----
 
 [source,indent=0,options="nowrap"]
 .MissionLogEntry.groovy
 ----
-include::../examples/dru-example-avl/src/main/groovy/avl/MissionLogEntry.groovy[tag="header"]
+include::{root-dir}/examples/dru-grails-example/src/main/groovy/avl/MissionLogEntry.groovy[tag="header"]
 
-include::../examples/dru-example-avl/src/main/groovy/avl/MissionLogEntry.groovy[tag="hashKeyAnno"]
-include::../examples/dru-example-avl/src/main/groovy/avl/MissionLogEntry.groovy[tag="hashKey"]
+include::{root-dir}/examples/dru-grails-example/src/main/groovy/avl/MissionLogEntry.groovy[tag="hashKeyAnno"]
+include::{root-dir}/examples/dru-grails-example/src/main/groovy/avl/MissionLogEntry.groovy[tag="hashKey"]
 
-include::../examples/dru-example-avl/src/main/groovy/avl/MissionLogEntry.groovy[tag="properties"]
+include::{root-dir}/examples/dru-grails-example/src/main/groovy/avl/MissionLogEntry.groovy[tag="properties"]
 
-include::../examples/dru-example-avl/src/main/groovy/avl/MissionLogEntry.groovy[tag="ext"]
-include::../examples/dru-example-avl/src/main/groovy/avl/MissionLogEntry.groovy[tag="footer"]
+include::{root-dir}/examples/dru-grails-example/src/main/groovy/avl/MissionLogEntry.groovy[tag="ext"]
+include::{root-dir}/examples/dru-grails-example/src/main/groovy/avl/MissionLogEntry.groovy[tag="footer"]
 ----
 
 You can create `DynamoDBMapper` based on the data in the data set using `DynamoDB.createMapper(dataSet)`.
@@ -377,7 +377,7 @@ You can create `DynamoDBMapper` based on the data in the data set using `DynamoD
 [source,indent=0,options="nowrap"]
 .Using DynamoDBMapper
 ----
-include::../examples/dru-example-avl/src/test/groovy/avl/DynamoDBSampleSpec.groovy[tag="mapper"]
+include::{root-dir}/examples/dru-grails-example/src/test/groovy/avl/DynamoDBSampleSpec.groovy[tag="mapper"]
 ----
 
 If you are using link:https://github.com/agorapulse/grails-aws-sdk/tree/master/grails-aws-sdk-dynamodb[Grails AWS SDK DynamoDB Plugin]
@@ -387,7 +387,7 @@ working against the data set.
 [source,indent=0,options="nowrap"]
 .Using DynamoDBMapper with Grails Plugin
 ----
-include::../examples/dru-example-avl/src/test/groovy/avl/DynamoDBSampleSpec.groovy[tag="grailsService"]
+include::{root-dir}/examples/dru-grails-example/src/test/groovy/avl/DynamoDBSampleSpec.groovy[tag="grailsService"]
 ----
 
 The Dru's implementation of `DynamoDBMapper` provides limited query and scan capabilities. You can
@@ -397,7 +397,7 @@ your own logic using  `DruDynamoDBMapper` callback `onQuery` and `onScan`.
 [source,indent=0,options="nowrap"]
 .Using Avanced Queries and Scans
 ----
-include::../examples/dru-example-avl/src/test/groovy/avl/DynamoDBSampleSpec.groovy[tag="advancedMapper"]
+include::{root-dir}/examples/dru-grails-example/src/test/groovy/avl/DynamoDBSampleSpec.groovy[tag="advancedMapper"]
 ----
 
 You also so emulate failing batch using `onBatchWrite` method.
@@ -405,7 +405,7 @@ You also so emulate failing batch using `onBatchWrite` method.
 [source,indent=0,options="nowrap"]
 .Failing Batch Items
 ----
-include::../examples/dru-example-avl/src/test/groovy/avl/DynamoDBSampleSpec.groovy[tag="batchWriteFailed"]
+include::{root-dir}/examples/dru-grails-example/src/test/groovy/avl/DynamoDBSampleSpec.groovy[tag="batchWriteFailed"]
 ----
 
 === GORM
@@ -422,22 +422,22 @@ Your unit tests must implement `DataTest` trait if you want to take advantage of
 [source,indent=0,options="nowrap"]
 .Using GORM Client
 ----
-include::../examples/dru-example-avl/src/test/groovy/avl/GormSpec.groovy[tag="plan"]
+include::{root-dir}/examples/dru-grails-example/src/test/groovy/avl/GormSpec.groovy[tag="plan"]
 ----
 
 [source,json,indent=0,options="nowrap"]
 .agents.json
 ----
-include::../examples/dru-example-avl/src/test/resources/avl/GormSpec/agents.json[]
+include::{root-dir}/examples/dru-grails-example/src/test/resources/avl/GormSpec/agents.json[]
 ----
 
 
 [source,indent=0,options="nowrap"]
 .Agent.groovy
 ----
-include::../examples/dru-example-avl/grails-app/domain/avl/Agent.groovy[tag="header"]
-include::../examples/dru-example-avl/grails-app/domain/avl/Agent.groovy[tag="properties"]
-include::../examples/dru-example-avl/grails-app/domain/avl/Agent.groovy[tag="footer"]
+include::{root-dir}/examples/dru-grails-example/grails-app/domain/avl/Agent.groovy[tag="header"]
+include::{root-dir}/examples/dru-grails-example/grails-app/domain/avl/Agent.groovy[tag="properties"]
+include::{root-dir}/examples/dru-grails-example/grails-app/domain/avl/Agent.groovy[tag="footer"]
 ----
 
 ==== Integration Tests
@@ -447,7 +447,7 @@ needs to be run from a scope which has Hibernate session attached, e.g. inside `
 
 .Using GORM Client in Integration Test
 ----
-include::../examples/dru-example-avl/src/integration-test/groovy/avl/GormIntegrationSpec.groovy[tag="plan"]
+include::{root-dir}/examples/dru-grails-example/src/integration-test/groovy/avl/GormIntegrationSpec.groovy[tag="plan"]
 ----
 <1> Test no longer implment `DataTest`
 <2> Dru needs to load data within Hibernate session
