@@ -31,7 +31,8 @@ public class Parsers {
         Map<Integer, Parser> parsersMap = new TreeMap<>();
         ServiceLoader<Parser> allParsers = ServiceLoader.load(Parser.class);
         for (Parser parser : allParsers) {
-            parsersMap.put(parser.getIndex(), parser);
+            parsersMap.put(parser.
+                getIndex(), parser);
         }
         availableParsers = Collections.unmodifiableSet(new LinkedHashSet<>(parsersMap.values()));
     }

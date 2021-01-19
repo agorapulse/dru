@@ -25,7 +25,12 @@ import com.agorapulse.dru.parser.AbstractParser
  */
 class ReflectionParser extends AbstractParser {
 
-    final int index = Integer.MAX_VALUE - 10000
+    private static final int INDEX = Integer.MAX_VALUE - 10000;
+
+    @Override
+    int getIndex() {
+        return INDEX;
+    }
 
     @Override
     @SuppressWarnings('Instanceof')

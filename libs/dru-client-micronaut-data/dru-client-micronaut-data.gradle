@@ -1,0 +1,4 @@
+dependencies {
+    api project(':dru')
+    implementation "io.micronaut.data:micronaut-data-model:$micronautDataVersion"
+}
