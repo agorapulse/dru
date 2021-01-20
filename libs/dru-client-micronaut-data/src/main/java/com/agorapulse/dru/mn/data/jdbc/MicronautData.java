@@ -133,7 +133,9 @@ public class MicronautData extends AbstractCacheableClient implements Client {
                         return object;
                     }
                     Object result = transactionManager.executeWrite(s -> saveMethod.invoke(repository, object));
-                    return asEntity(result, object);
+                    return asSingleEntity(result, object).doOnError(th -> {
+                        LOGGER.error("Exception saving object asynchronously " + object, th);
+                    }).blockingGet();
                 } catch (Exception e) {
                     LOGGER.error("Exception saving object " + object, e);
                     throw e;
@@ -188,26 +190,22 @@ public class MicronautData extends AbstractCacheableClient implements Client {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> T asEntity(Object result, T original) {
+    private <T> Single<T> asSingleEntity(Object result, T original) {
         if (original.getClass().isInstance(result)) {
-            return (T) result;
+            return Single.just((T) result);
         }
         if (result instanceof CompletableFuture) {
-            try {
-                return ((CompletableFuture<T>) result).get();
-            } catch (InterruptedException | ExecutionException e) {
-                throw new IllegalStateException("Exception during asynchronous save of " + original, e);
-            }
+            return Single.fromFuture((CompletableFuture<T>) result);
         }
         if (result instanceof Single) {
-            return ((Single<T>) result).blockingGet();
+            return (Single<T>) result;
         }
         if (result instanceof Publisher) {
-            return Single.fromPublisher((Publisher<T>) result).blockingGet();
+            return Single.fromPublisher((Publisher<T>) result);
         }
 
         LOGGER.warn("Cannot cast object " + result + " to " + original.getClass());
 
-        return original;
+        return Single.just(original);
     }
 }
