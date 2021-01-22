@@ -17,21 +17,18 @@
  */
 package dru.micronaut.example.jpa;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
-@SuppressWarnings({"JpaObjectClassSignatureInspection", "FieldMayBeFinal"})
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private String title;
     private int pages;
-
-    public Book(String title, int pages) {
-        this.title = title;
-        this.pages = pages;
-    }
 
     public Long getId() {
         return id;
@@ -45,8 +42,16 @@ public class Book {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public int getPages() {
         return pages;
+    }
+
+    public void setPages(int pages) {
+        this.pages = pages;
     }
 
     @Override

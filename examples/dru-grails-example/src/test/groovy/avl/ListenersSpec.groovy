@@ -19,7 +19,7 @@ package avl
 
 import com.agorapulse.dru.Dru
 import grails.testing.gorm.DataTest
-import org.junit.Rule
+import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 /**
@@ -41,7 +41,7 @@ class ListenersSpec extends Specification implements DataTest {
     ]
 
     // tag::plan[]
-    @Rule Dru dru = Dru.plan {
+    @AutoCleanup Dru dru = Dru.create {
         from ('AGENTS') {
             map {
                 to (Agent) {

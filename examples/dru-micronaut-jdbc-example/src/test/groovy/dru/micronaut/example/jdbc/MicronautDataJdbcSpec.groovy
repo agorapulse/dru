@@ -115,7 +115,7 @@ class MicronautDataJdbcSpec extends Specification implements ApplicationContextP
 
     void 'load books'() {
         given:
-            Dru.plan {
+            Dru.create {
                 from 'BOOKS', {
                     map {
                         to Book
@@ -128,7 +128,7 @@ class MicronautDataJdbcSpec extends Specification implements ApplicationContextP
 
     void 'load pets'() {
         given:
-            Dru.plan {
+            Dru.create {
                 from 'PETS', {
                     map {
                         to Pet
@@ -144,7 +144,7 @@ class MicronautDataJdbcSpec extends Specification implements ApplicationContextP
 
     void 'load sales with references'() {
         given:
-            Dru.plan {
+            Dru.create {
                 from 'MANUFACTURERS', {
                     map {
                         to Manufacturer

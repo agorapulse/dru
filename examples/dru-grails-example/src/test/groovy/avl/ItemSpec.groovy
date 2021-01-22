@@ -18,8 +18,7 @@
 package avl
 
 import com.agorapulse.dru.Dru
-import grails.testing.gorm.DataTest
-import org.junit.Rule
+import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 /**
@@ -28,7 +27,7 @@ import spock.lang.Specification
 class ItemSpec extends Specification {
 
 
-    @Rule Dru dru = Dru.plan {                                                          // <1>
+    @AutoCleanup Dru dru = Dru.create {                                                   // <1>
         from ('item.json') {                                                            // <2>
             map { to Item }                                                             // <3>
         }

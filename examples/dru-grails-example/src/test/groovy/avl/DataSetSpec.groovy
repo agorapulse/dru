@@ -20,7 +20,7 @@ package avl
 import com.agorapulse.dru.DataSet
 import com.agorapulse.dru.Dru
 import grails.testing.gorm.DataTest
-import org.junit.Rule
+import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 /**
@@ -29,7 +29,7 @@ import spock.lang.Specification
 class DataSetSpec extends Specification implements DataTest {
 
     // tag::plan[]
-    @Rule Dru dru = Dru.plan {
+    @AutoCleanup Dru dru = Dru.create {
         include AgentsDataSet.agents
     }
 
@@ -41,7 +41,7 @@ class DataSetSpec extends Specification implements DataTest {
 
     void 'agents get loaded from data set using load'() {
         given:
-            DataSet dataSet = Dru.steal(this).load(AgentsDataSet.agents)
+            DataSet dataSet = Dru.create(this).load(AgentsDataSet.agents)
         expect:
             dataSet.findAllByType(Agent).size() == 2
             dataSet.findByTypeAndOriginalId(Agent, 12345).manager.name == 'Silas Ramsbottom'

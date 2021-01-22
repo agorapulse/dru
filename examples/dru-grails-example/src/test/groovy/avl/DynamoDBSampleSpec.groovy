@@ -29,7 +29,7 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator
 import com.amazonaws.services.dynamodbv2.model.Condition
 import org.joda.time.DateTime
-import org.junit.Rule
+import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 /**
@@ -38,7 +38,7 @@ import spock.lang.Specification
 class DynamoDBSampleSpec extends Specification {
 
     // tag::plan[]
-    @Rule Dru dru = Dru.plan {
+    @AutoCleanup Dru dru = Dru.create {
         from ('missionLogEntry.json') {
             map {
                 to MissionLogEntry

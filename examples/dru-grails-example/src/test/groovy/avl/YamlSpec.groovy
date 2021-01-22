@@ -19,7 +19,7 @@ package avl
 
 import com.agorapulse.dru.Dru
 import grails.testing.gorm.DataTest
-import org.junit.Rule
+import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 /**
@@ -28,7 +28,7 @@ import spock.lang.Specification
 class YamlSpec extends Specification implements DataTest {
 
     // tag::plan[]
-    @Rule Dru dru = Dru.plan {
+    @AutoCleanup Dru dru = Dru.create {
         from ('agents.yml') {
             map {
                 to (Agent) {

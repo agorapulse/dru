@@ -49,13 +49,11 @@ class MicronautDataJpaSpec extends Specification implements ApplicationContextPr
             id    : 12345,
             title : 'It',
             pages : 1116,
-            author: [id: 666],
         ],
         [
             id    : 12666,
             title : 'The Shining',
             pages : 659,
-            author: [id: 666],
         ],
     ]
 
@@ -153,7 +151,7 @@ class MicronautDataJpaSpec extends Specification implements ApplicationContextPr
 
     void 'load books'() {
         given:
-            Dru.plan {
+            Dru.create {
                 from 'BOOKS', {
                     map {
                         to Book
@@ -166,7 +164,7 @@ class MicronautDataJpaSpec extends Specification implements ApplicationContextPr
 
     void 'load pets'() {
         given:
-            Dru.plan {
+            Dru.create {
                 from 'PETS', {
                     map {
                         to Pet
@@ -182,34 +180,7 @@ class MicronautDataJpaSpec extends Specification implements ApplicationContextPr
 
     void 'load sales with references'() {
         given:
-            Dru.plan {
-                from 'MANUFACTURERS', {
-                    map {
-                        to Manufacturer
-                    }
-                }
-                from 'PRODUCTS', {
-                    map {
-                        to Product
-                    }
-                }
-                from 'SALES', {
-                    map {
-                        to Sale
-                    }
-                }
-            }.load()
-        expect:
-            verifyAll {
-                Flowable.fromPublisher(manufacturerRepository.count()).blockingFirst() == 1
-                productRepository.count().get() == 2
-                saleRepository.count().blockingGet() == 2
-            }
-    }
-
-    void 'load from a different side'() {
-        given:
-            Dru.plan {
+            Dru.create {
                 from 'MANUFACTURERS', {
                     map {
                         to Manufacturer

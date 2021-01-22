@@ -34,12 +34,12 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator
 import com.amazonaws.services.dynamodbv2.model.Condition
 import grails.testing.gorm.DataTest
-import org.junit.Rule
+import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 class AvlDataSetsSpec extends Specification implements DataTest {
 
-    @Rule Dru dru = Dru.plan {
+    @AutoCleanup Dru dru = Dru.create {
         whenLoaded {
             println it.report
         }

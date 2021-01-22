@@ -18,10 +18,9 @@
 package avl
 
 import com.agorapulse.dru.Dru
-import grails.testing.gorm.DataTest
 import grails.testing.mixin.integration.Integration
-import org.junit.Rule
 import org.springframework.test.annotation.Rollback
+import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 /**
@@ -32,7 +31,7 @@ import spock.lang.Specification
 @Integration                                                                            // <1>
 class GormIntegrationSpec extends Specification {
 
-    @Rule Dru dru = Dru.plan {
+    @AutoCleanup Dru dru = Dru.create {
         from ('agents.json') {
             map {
                 to (Agent) {

@@ -49,7 +49,9 @@ class JacksonParser extends AbstractParser {
     }
 
     private static ObjectMapper initMapper() {
-        return new ObjectMapper()
+        ObjectMapper mapper = new ObjectMapper()
+        mapper.findAndRegisterModules()
+        return mapper
     }
 
 }

@@ -25,7 +25,7 @@ import com.agorapulse.dru.persistence.meta.PropertyMetadata
 import com.agorapulse.dru.pojo.Pojo
 import com.agorapulse.dru.pojo.meta.PojoClassMetadata
 import com.agorapulse.dru.pojo.meta.PojoPropertyMetadata
-import org.junit.Rule
+import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 /**
@@ -33,7 +33,7 @@ import spock.lang.Specification
  */
 class DruPojoSpec extends Specification {
 
-    @Rule Dru dru = Dru.steal(this)
+    @AutoCleanup Dru dru = Dru.create(this)
 
     void 'guess associations - string'() {
         when:
@@ -232,7 +232,7 @@ class DruPojoSpec extends Specification {
     void 'triggers loaded'() {
         when:
             int count = 0
-            Dru dru = Dru.steal(this)
+            Dru dru = Dru.create(this)
             PreparedDataSet whenLoadedDataSet = Dru.prepare {
                 whenLoaded {
                     count = count + 1
@@ -257,7 +257,7 @@ class DruPojoSpec extends Specification {
     void 'add item to data set and retrieve it'() {
         when:
             int id = 5
-            Dru dru = Dru.steal(this)
+            Dru dru = Dru.create(this)
             dru.add(new Library(name: 'Library of Congress'), id)
         then:
             dru.findByTypeAndOriginalId(Library, id)

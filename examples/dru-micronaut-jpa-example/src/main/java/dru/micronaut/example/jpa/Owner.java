@@ -17,14 +17,11 @@
  */
 package dru.micronaut.example.jpa;
 
-import io.micronaut.core.annotation.Creator;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-@SuppressWarnings({"JpaObjectClassSignatureInspection", "FieldMayBeFinal"})
 public class Owner {
 
     @Id
@@ -32,11 +29,6 @@ public class Owner {
     private Long id;
     private String name;
     private int age;
-
-    @Creator
-    public Owner(String name) {
-        this.name = name;
-    }
 
     public int getAge() {
         return age;
@@ -48,6 +40,10 @@ public class Owner {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getId() {

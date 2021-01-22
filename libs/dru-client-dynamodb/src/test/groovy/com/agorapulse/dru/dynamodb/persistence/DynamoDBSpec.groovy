@@ -125,7 +125,7 @@ class DynamoDBSpec extends Specification {
             EntityWithCustomIds entity = new EntityWithCustomIds(new EntityWithCustomIdsId('Foo'), new EntityWithCustomIdsId('Bar'))
             EntityWithCustomIds other = new EntityWithCustomIds(new EntityWithCustomIdsId('Bar'), new EntityWithCustomIdsId('Foo'))
 
-            DruDynamoDBMapper mapper = DynamoDB.createMapper(Dru.steal(this))
+            DruDynamoDBMapper mapper = DynamoDB.createMapper(Dru.create(this))
             mapper.save(entity)
         then:
             mapper.load(entity)

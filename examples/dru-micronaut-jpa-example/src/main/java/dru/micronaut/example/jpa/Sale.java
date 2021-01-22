@@ -20,28 +20,31 @@ package dru.micronaut.example.jpa;
 import javax.persistence.*;
 
 @Entity
-@SuppressWarnings({"JpaObjectClassSignatureInspection"})
 public class Sale {
 
     @ManyToOne
-    private final Product product;
-    private final Integer quantity;
+    private Product product;
+
+    private Integer quantity;
 
     @Id
     @GeneratedValue
     private Long id;
 
-    public Sale(Product product, Integer quantity) {
-        this.product = product;
-        this.quantity = quantity;
-    }
-
     public Product getProduct() {
         return product;
     }
 
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
     public Integer getQuantity() {
         return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
     public Long getId() {

@@ -18,7 +18,7 @@
 package avl
 
 import com.agorapulse.dru.Dru
-import org.junit.Rule
+import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 /**
@@ -28,7 +28,7 @@ class AliasSpec extends Specification {
 
 
     // tag::plan[]
-    @Rule Dru dru = Dru.plan {
+    @AutoCleanup Dru dru = Dru.create {
         from ('item.json') {
             map {
                 to (Item) {

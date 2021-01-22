@@ -32,7 +32,7 @@ class FileSourceSpec extends Specification {
         given:
             File fixture = tmp.newFile('items.json')
             fixture.text = JsonOutput.toJson(new Item(id: 'Id', name: 'Name', description: 'Description'))
-            Dru dru = Dru.steal(this)
+            Dru dru = Dru.create(this)
             dru.load {
                 from fixture, {
                     map { to Item }
@@ -49,7 +49,7 @@ class FileSourceSpec extends Specification {
             fixture.delete()
 
         when:
-            Dru dru = Dru.steal(this)
+            Dru dru = Dru.create(this)
             dru.load {
                 from fixture, {
                     map { to Item }

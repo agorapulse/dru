@@ -33,4 +33,5 @@
     </root>
     <logger name="io.micronaut.data" level="trace" />
     <logger name="io.micronaut.context.condition" level="trace" />
+    <logger name="com.agorapulse.dru" level="trace" />
 </configuration>

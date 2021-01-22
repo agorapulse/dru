@@ -26,6 +26,8 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,9 +36,9 @@ import java.util.function.Consumer;
 /**
  * Data Reconstruction Utility
  */
-public class Dru implements TestRule, DataSet {
+public class Dru implements TestRule, DataSet, Closeable {
 
-    public static Dru plan(Object unitTest, Consumer<DataSetMappingDefinition> configuration) {
+    public static Dru create(Object unitTest, Consumer<DataSetMappingDefinition> configuration) {
         Object self = unitTest;
         if (!(self instanceof Class)) {
             self = self.getClass();
@@ -44,10 +46,34 @@ public class Dru implements TestRule, DataSet {
         return new Dru(unitTest, new PreparedDataSet((Class<?>) self, configuration));
     }
 
+    public static Dru create(@DelegatesTo(value = DataSetMappingDefinition.class, strategy = Closure.DELEGATE_FIRST) Closure<DataSetMappingDefinition> configuration) {
+        return create(configuration.getThisObject(), ConsumerWithDelegate.create(configuration));
+    }
+
+    public static Dru create(Object unitTest) {
+        return new Dru(unitTest, null);
+    }
+
+    /**
+     * @deprecated use {@link #create(Object, Consumer) instead}
+     */
+    @Deprecated
+    public static Dru plan(Object unitTest, Consumer<DataSetMappingDefinition> configuration) {
+        return create(unitTest, configuration);
+    }
+
+    /**
+     * @deprecated use {@link #create(Closure) instead}
+     */
+    @Deprecated
     public static Dru plan(@DelegatesTo(value = DataSetMappingDefinition.class, strategy = Closure.DELEGATE_FIRST) Closure<DataSetMappingDefinition> configuration) {
         return plan(configuration.getThisObject(), ConsumerWithDelegate.create(configuration));
     }
 
+    /**
+     * @deprecated use {@link #create(Object) instead}
+     */
+    @Deprecated
     public static Dru steal(Object unitTest) {
         return new Dru(unitTest, null);
     }
@@ -76,7 +102,7 @@ public class Dru implements TestRule, DataSet {
             @Override
             public void evaluate() throws Throwable {
                 base.evaluate();
-                currentDataSet = null;
+                close();
             }
 
         };
@@ -156,6 +182,11 @@ public class Dru implements TestRule, DataSet {
     @Override
     public MissingPropertiesReport getReport() {
         return ensureDataSetInitialized().getReport();
+    }
+
+    @Override
+    public void close() {
+        currentDataSet = null;
     }
 
     private DataSet ensureDataSetInitialized() {

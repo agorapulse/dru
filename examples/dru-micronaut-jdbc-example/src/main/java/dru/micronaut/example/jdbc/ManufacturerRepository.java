@@ -17,11 +17,21 @@
  */
 package dru.micronaut.example.jdbc;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
 import io.micronaut.data.model.query.builder.sql.Dialect;
 import io.micronaut.data.repository.reactive.ReactiveStreamsCrudRepository;
+import org.reactivestreams.Publisher;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @JdbcRepository(dialect = Dialect.H2)
 public interface ManufacturerRepository extends ReactiveStreamsCrudRepository<Manufacturer, Long> {
+
+    @NonNull
+    @SingleResult
+    Publisher<Manufacturer> update(@Valid @NotNull @NonNull Manufacturer entity);
 
 }

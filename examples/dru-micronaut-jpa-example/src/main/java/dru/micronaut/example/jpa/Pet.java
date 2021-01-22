@@ -17,13 +17,12 @@
  */
 package dru.micronaut.example.jpa;
 
-import io.micronaut.core.annotation.Creator;
-
-import javax.annotation.Nullable;
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
-@SuppressWarnings({"FieldMayBeFinal", "JpaObjectClassSignatureInspection"})
 public class Pet {
     public enum PetType {
         DOG,
@@ -38,18 +37,20 @@ public class Pet {
     private Owner owner;
     private PetType type = PetType.DOG;
 
-    @Creator
-    public Pet(String name, @Nullable Owner owner) {
-        this.name = name;
-        this.owner = owner;
-    }
-
     public Owner getOwner() {
         return owner;
     }
 
+    public void setOwner(Owner owner) {
+        this.owner = owner;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getId() {

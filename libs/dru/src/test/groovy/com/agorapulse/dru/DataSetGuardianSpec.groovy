@@ -17,7 +17,7 @@
  */
 package com.agorapulse.dru
 
-import org.junit.Rule
+import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 import java.util.function.Consumer
@@ -27,7 +27,7 @@ import java.util.function.Consumer
  */
 class DataSetGuardianSpec extends Specification {
 
-    @Rule Dru dru = Dru.steal(this)
+    @AutoCleanup Dru dru = Dru.create(this)
 
     DataSet dataSet
     DataSet guardian

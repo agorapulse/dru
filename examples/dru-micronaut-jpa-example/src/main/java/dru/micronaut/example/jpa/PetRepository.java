@@ -20,12 +20,13 @@ package dru.micronaut.example.jpa;
 import io.micronaut.data.annotation.Repository;
 import io.micronaut.data.repository.GenericRepository;
 
-import java.util.UUID;
+import java.util.Optional;
 
 @Repository
-public interface PetRepository extends GenericRepository<Pet, UUID> {
+public interface PetRepository extends GenericRepository<Pet, Long> {
 
     int count();
     Pet save(Pet pet);
+    Optional<Pet> findById(Long id);
 
 }

@@ -19,7 +19,6 @@ package dru.micronaut.example.jpa;
 
 import javax.persistence.*;
 
-@SuppressWarnings({"JpaObjectClassSignatureInspection", "FieldMayBeFinal"})
 @Entity
 public class Product {
 
@@ -29,11 +28,6 @@ public class Product {
     private String name;
     @ManyToOne
     private Manufacturer manufacturer;
-
-    public Product(String name, Manufacturer manufacturer) {
-        this.name = name;
-        this.manufacturer = manufacturer;
-    }
 
     public Long getId() {
         return id;
@@ -47,8 +41,16 @@ public class Product {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Manufacturer getManufacturer() {
         return manufacturer;
+    }
+
+    public void setManufacturer(Manufacturer manufacturer) {
+        this.manufacturer = manufacturer;
     }
 
     @Override

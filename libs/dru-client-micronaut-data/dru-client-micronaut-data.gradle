@@ -16,6 +16,11 @@
  * limitations under the License.
  */
 dependencies {
+    annotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
+    annotationProcessor "io.micronaut:micronaut-inject-java"
+    annotationProcessor "io.micronaut:micronaut-validation"
+
     api project(':dru')
     implementation "io.micronaut.data:micronaut-data-model:$micronautDataVersion"
+    compileOnly 'jakarta.persistence:jakarta.persistence-api:2.2.2'
 }
