@@ -48,6 +48,7 @@ asciidoctor {
         'source-highlighter': 'prettify',
         'root-dir': rootDir,
         'project-slug': slug,
+        'docinfo': 'shared',
     ]
 
 }

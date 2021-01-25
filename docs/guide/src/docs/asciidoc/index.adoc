@@ -34,20 +34,24 @@ repositories {
 
 dependencies {
     // load just simple implementation with POJO client and reflection based parser
-    testCompile "com.agorapulse:dru:{version}"
+    testCompile "com.agorapulse:dru:{project-version}"
 
     // and pick any client
-    testCompile "com.agorapulse:dru-client-gorm:{version}"
-    testCompile "com.agorapulse:dru-client-dynamodb:{version}"
+    testCompile "com.agorapulse:dru-client-dynamodb:{project-version}"
+    testCompile "com.agorapulse:dru-client-gorm:{project-version}"
+    testCompile "com.agorapulse:dru-client-micronaut-data:{project-version}"
 
     // and pick any parser
-    testCompile "com.agorapulse:dru-parser-json:{version}"
-    testCompile "com.agorapulse:dru-parser-yaml:{version}"
+    testCompile "com.agorapulse:dru-parser-json:{project-version}"
+    testCompile "com.agorapulse:dru-parser-yaml:{project-version}"
 }
 ----
 
 == Setup
-Dru is a JUnit rule which ensures each of your test methods gets fresh data loaded.
+
+`Dru` provides `Closable` interface. Calling `close` at the end of the test will guarantee that fresh data are loaded
+for the next test. If you are using Spock then you can use `@AutoCleaenup` annotation on the field to call the `close`
+method automatically.
 
 [source,indent=0,options="nowrap"]
 .Simple Specification
@@ -451,3 +455,20 @@ include::{root-dir}/examples/dru-grails-example/src/integration-test/groovy/avl/
 ----
 <1> Test no longer implment `DataTest`
 <2> Dru needs to load data within Hibernate session
+
+=== Micronaut Data
+
+Dru can help you set up Micronaut Data JPA and JDBC entities if you make your test class implementing `io.micronaut.context.ApplicationContextProvider`.
+
+[source,indent=0,options="nowrap"]
+.Using GORM Client
+----
+include::{root-dir}/examples/dru-micronaut-jdbc-example/src/test/groovy/dru/micronaut/example/jdbc/BookDataSpec.groovy[lines=18..-1]
+----
+<1> The specification class must implement `ApplicationContextProvider`
+<2> The inline data definition (could be also load from JSON or YAML using a particular parsers)
+<3> Mapping `BOOK` data to the `Book` entity
+<4> Injecting the `ApplicationContext applicationContext` field to satisfy the `ApplicationContextProvider` interface
+<5> Injecting the repository bean
+<6> Loading the data before each test
+<7> Verifying the data was loaded in the test method

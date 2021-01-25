@@ -27,7 +27,7 @@ import spock.lang.Specification
 class ItemSpec extends Specification {
 
 
-    @AutoCleanup Dru dru = Dru.create {                                                   // <1>
+    @AutoCleanup Dru dru = Dru.create {                                                 // <1>
         from ('item.json') {                                                            // <2>
             map { to Item }                                                             // <3>
         }
