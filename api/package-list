@@ -1,0 +1,10 @@
+avl
+com.agorapulse.dru
+com.agorapulse.dru.mn.data.jdbc
+com.agorapulse.dru.mn.data.jdbc.meta
+com.agorapulse.dru.mn.data.jdbc.parser
+com.agorapulse.dru.parser
+com.agorapulse.dru.persistence
+com.agorapulse.dru.persistence.meta
+dru.micronaut.example.jdbc
+dru.micronaut.example.jpa
