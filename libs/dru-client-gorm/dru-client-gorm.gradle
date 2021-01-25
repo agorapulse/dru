@@ -15,6 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+config {
+    bintray {
+        enabled = true
+    }
+}
+
 dependencies {
     api project(':dru')
     api "org.grails:grails-gorm-testing-support:${grailsTestingSupportVersion}"

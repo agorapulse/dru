@@ -15,6 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+config {
+    bintray {
+        enabled = true
+    }
+}
+
 dependencies {
     compile project(':dru')
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"

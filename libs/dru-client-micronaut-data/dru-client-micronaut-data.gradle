@@ -15,6 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+config {
+    bintray {
+        enabled = true
+    }
+}
+
 dependencies {
     annotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
     annotationProcessor "io.micronaut:micronaut-inject-java"
