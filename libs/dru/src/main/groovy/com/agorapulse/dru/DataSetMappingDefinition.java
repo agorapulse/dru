@@ -70,7 +70,23 @@ public interface DataSetMappingDefinition {
 
     DataSetMappingDefinition whenLoaded(WhenLoaded listener);
 
+    default DataSetMappingDefinition whenLoaded(
+        @DelegatesTo(type = "com.agorapulse.dru.DataSet", strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = FromString.class, options = "com.agorapulse.dru.DataSet")
+        Closure<?> listener
+    ) {
+        return whenLoaded(dataSet -> ConsumerWithDelegate.create(listener).accept(dataSet));
+    }
+
     DataSetMappingDefinition onChange(OnChange listener);
+
+    default DataSetMappingDefinition onChange(
+        @DelegatesTo(type = "com.agorapulse.dru.DataSet", strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = FromString.class, options = "com.agorapulse.dru.DataSet")
+            Closure<?> listener
+    ) {
+        return onChange(dataSet -> ConsumerWithDelegate.create(listener).accept(dataSet));
+    }
 
     interface OnChange {
         void doOnChange(DataSet dataSet);
