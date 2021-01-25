@@ -27,7 +27,6 @@ import org.junit.runners.model.Statement;
 import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -96,11 +95,17 @@ public class Dru implements TestRule, DataSet, Closeable {
         this.clients = new LinkedHashSet<>(Clients.createClients(unitTest));
     }
 
+    /**
+     * @deprecated next version will be based on JUnit Rule
+     */
+    @Deprecated
     @Override
     public Statement apply(final Statement base, Description description) {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
+                System.err.println("You are using Dru as JUnit Rule. If you are using Spock, migrate to @AutoCleanup annotation" +
+                    " or call dru.close() in the tear down method manually.");
                 base.evaluate();
                 close();
             }
