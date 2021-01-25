@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":18,"i1":6,"i2":18,"i3":6,"i4":18,"i5":6,"i6":6,"i7":6,"i8":6};
+var methods = {"i0":18,"i1":6,"i2":18,"i3":6,"i4":18,"i5":6,"i6":6,"i7":18,"i8":6,"i9":18,"i10":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -178,10 +178,18 @@ var activeTableTab = "activeTableTab";
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/agorapulse/dru/DataSetMappingDefinition.html#include-com.agorapulse.dru.PreparedDataSet-">include</a></span>(<a href="../../../com/agorapulse/dru/PreparedDataSet.html" title="class in com.agorapulse.dru">PreparedDataSet</a>&nbsp;plan)</code>&nbsp;</td>
 </tr>
 <tr id="i7" class="rowColor">
+<td class="colFirst"><code>default <a href="../../../com/agorapulse/dru/DataSetMappingDefinition.html" title="interface in com.agorapulse.dru">DataSetMappingDefinition</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/agorapulse/dru/DataSetMappingDefinition.html#onChange-groovy.lang.Closure-">onChange</a></span>(groovy.lang.Closure&lt;?&gt;&nbsp;listener)</code>&nbsp;</td>
+</tr>
+<tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="../../../com/agorapulse/dru/DataSetMappingDefinition.html" title="interface in com.agorapulse.dru">DataSetMappingDefinition</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/agorapulse/dru/DataSetMappingDefinition.html#onChange-com.agorapulse.dru.DataSetMappingDefinition.OnChange-">onChange</a></span>(<a href="../../../com/agorapulse/dru/DataSetMappingDefinition.OnChange.html" title="interface in com.agorapulse.dru">DataSetMappingDefinition.OnChange</a>&nbsp;listener)</code>&nbsp;</td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
+<td class="colFirst"><code>default <a href="../../../com/agorapulse/dru/DataSetMappingDefinition.html" title="interface in com.agorapulse.dru">DataSetMappingDefinition</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/agorapulse/dru/DataSetMappingDefinition.html#whenLoaded-groovy.lang.Closure-">whenLoaded</a></span>(groovy.lang.Closure&lt;?&gt;&nbsp;listener)</code>&nbsp;</td>
+</tr>
+<tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="../../../com/agorapulse/dru/DataSetMappingDefinition.html" title="interface in com.agorapulse.dru">DataSetMappingDefinition</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/agorapulse/dru/DataSetMappingDefinition.html#whenLoaded-com.agorapulse.dru.DataSetMappingDefinition.WhenLoaded-">whenLoaded</a></span>(<a href="../../../com/agorapulse/dru/DataSetMappingDefinition.WhenLoaded.html" title="interface in com.agorapulse.dru">DataSetMappingDefinition.WhenLoaded</a>&nbsp;listener)</code>&nbsp;</td>
 </tr>
@@ -291,13 +299,33 @@ var activeTableTab = "activeTableTab";
 <pre><a href="../../../com/agorapulse/dru/DataSetMappingDefinition.html" title="interface in com.agorapulse.dru">DataSetMappingDefinition</a>&nbsp;whenLoaded(<a href="../../../com/agorapulse/dru/DataSetMappingDefinition.WhenLoaded.html" title="interface in com.agorapulse.dru">DataSetMappingDefinition.WhenLoaded</a>&nbsp;listener)</pre>
 </li>
 </ul>
+<a name="whenLoaded-groovy.lang.Closure-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>whenLoaded</h4>
+<pre>default&nbsp;<a href="../../../com/agorapulse/dru/DataSetMappingDefinition.html" title="interface in com.agorapulse.dru">DataSetMappingDefinition</a>&nbsp;whenLoaded(@DelegatesTo(type="com.agorapulse.dru.DataSet",strategy=1)
+                                            groovy.lang.Closure&lt;?&gt;&nbsp;listener)</pre>
+</li>
+</ul>
 <a name="onChange-com.agorapulse.dru.DataSetMappingDefinition.OnChange-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>onChange</h4>
+<pre><a href="../../../com/agorapulse/dru/DataSetMappingDefinition.html" title="interface in com.agorapulse.dru">DataSetMappingDefinition</a>&nbsp;onChange(<a href="../../../com/agorapulse/dru/DataSetMappingDefinition.OnChange.html" title="interface in com.agorapulse.dru">DataSetMappingDefinition.OnChange</a>&nbsp;listener)</pre>
+</li>
+</ul>
+<a name="onChange-groovy.lang.Closure-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>onChange</h4>
-<pre><a href="../../../com/agorapulse/dru/DataSetMappingDefinition.html" title="interface in com.agorapulse.dru">DataSetMappingDefinition</a>&nbsp;onChange(<a href="../../../com/agorapulse/dru/DataSetMappingDefinition.OnChange.html" title="interface in com.agorapulse.dru">DataSetMappingDefinition.OnChange</a>&nbsp;listener)</pre>
+<pre>default&nbsp;<a href="../../../com/agorapulse/dru/DataSetMappingDefinition.html" title="interface in com.agorapulse.dru">DataSetMappingDefinition</a>&nbsp;onChange(@DelegatesTo(type="com.agorapulse.dru.DataSet",strategy=1)
+                                          groovy.lang.Closure&lt;?&gt;&nbsp;listener)</pre>
 </li>
 </ul>
 </li>

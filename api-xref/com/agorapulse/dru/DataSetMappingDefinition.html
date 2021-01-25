@@ -78,17 +78,33 @@
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>      <a name="DataSetMappingDefinition" href="../../../com/agorapulse/dru/DataSetMappingDefinition.html#DataSetMappingDefinition">DataSetMappingDefinition</a> whenLoaded(WhenLoaded listener);
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>  
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>      <a name="DataSetMappingDefinition" href="../../../com/agorapulse/dru/DataSetMappingDefinition.html#DataSetMappingDefinition">DataSetMappingDefinition</a> onChange(OnChange listener);
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>  
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>      <strong class="jxr_keyword">interface</strong> OnChange {
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>          <strong class="jxr_keyword">void</strong> doOnChange(<a name="DataSet" href="../../../com/agorapulse/dru/DataSet.html#DataSet">DataSet</a> dataSet);
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>      }
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>  
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>      <strong class="jxr_keyword">interface</strong> WhenLoaded {
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>          <strong class="jxr_keyword">void</strong> doWhenLoaded(<a name="DataSet" href="../../../com/agorapulse/dru/DataSet.html#DataSet">DataSet</a> dataSet);
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>      }
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>      <strong class="jxr_keyword">default</strong> <a name="DataSetMappingDefinition" href="../../../com/agorapulse/dru/DataSetMappingDefinition.html#DataSetMappingDefinition">DataSetMappingDefinition</a> whenLoaded(
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>          @DelegatesTo(type = <span class="jxr_string">"com.agorapulse.dru.DataSet"</span>, strategy = Closure.DELEGATE_FIRST)
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>          @ClosureParams(value = FromString.<strong class="jxr_keyword">class</strong>, options = <span class="jxr_string">"com.agorapulse.dru.DataSet"</span>)
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>          Closure&lt;?&gt; listener
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>      ) {
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>          <strong class="jxr_keyword">return</strong> whenLoaded(dataSet -&gt; ConsumerWithDelegate.create(listener).accept(dataSet));
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>      }
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>      <a name="DataSetMappingDefinition" href="../../../com/agorapulse/dru/DataSetMappingDefinition.html#DataSetMappingDefinition">DataSetMappingDefinition</a> onChange(OnChange listener);
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>  
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>  }
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">default</strong> <a name="DataSetMappingDefinition" href="../../../com/agorapulse/dru/DataSetMappingDefinition.html#DataSetMappingDefinition">DataSetMappingDefinition</a> onChange(
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>          @DelegatesTo(type = <span class="jxr_string">"com.agorapulse.dru.DataSet"</span>, strategy = Closure.DELEGATE_FIRST)
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>          @ClosureParams(value = FromString.<strong class="jxr_keyword">class</strong>, options = <span class="jxr_string">"com.agorapulse.dru.DataSet"</span>)
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>              Closure&lt;?&gt; listener
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>      ) {
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>          <strong class="jxr_keyword">return</strong> onChange(dataSet -&gt; ConsumerWithDelegate.create(listener).accept(dataSet));
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>      }
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      <strong class="jxr_keyword">interface</strong> OnChange {
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>          <strong class="jxr_keyword">void</strong> doOnChange(<a name="DataSet" href="../../../com/agorapulse/dru/DataSet.html#DataSet">DataSet</a> dataSet);
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>      }
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>      <strong class="jxr_keyword">interface</strong> WhenLoaded {
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>          <strong class="jxr_keyword">void</strong> doWhenLoaded(<a name="DataSet" href="../../../com/agorapulse/dru/DataSet.html#DataSet">DataSet</a> dataSet);
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>      }
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  }
 </pre>
 <hr/>
 <div id="footer"></div>
