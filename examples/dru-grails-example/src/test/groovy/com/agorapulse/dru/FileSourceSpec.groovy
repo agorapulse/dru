@@ -44,14 +44,14 @@ class FileSourceSpec extends Specification {
     }
 
     void 'load from file - no mapping'() {
-        given:
+        when:
             File fixture = tmp.newFile('items.json')
             fixture.text = JsonOutput.toJson(new Item(id: 'Id', name: 'Name', description: 'Description'))
             Dru dru = Dru.create(this)
             dru.load {
                 from fixture
             }
-        expect:
+        then:
             noExceptionThrown()
     }
 
