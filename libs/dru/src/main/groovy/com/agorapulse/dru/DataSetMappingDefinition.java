@@ -39,6 +39,10 @@ public interface DataSetMappingDefinition {
         return from(relativePath, ConsumerWithDelegate.create(configuration));
     }
 
+    default DataSetMappingDefinition from(String relativePath) {
+        return from(relativePath, s -> {});
+    }
+
     DataSetMappingDefinition from(String relativePath, Consumer<SourceDefinition> configuration);
 
     default DataSetMappingDefinition from(
@@ -48,6 +52,10 @@ public interface DataSetMappingDefinition {
             Closure<SourceDefinition> configuration
     ) throws IOException {
         return from(file, ConsumerWithDelegate.create(configuration));
+    }
+
+    default DataSetMappingDefinition from(File file) throws IOException {
+        return from(file, s -> {});
     }
 
     DataSetMappingDefinition from(File file, Consumer<SourceDefinition> configuration) throws IOException;

@@ -34,16 +34,17 @@ repositories {
 
 dependencies {
     // load just simple implementation with POJO client and reflection based parser
-    testCompile "com.agorapulse:dru:{project-version}"
+    testImplementation "com.agorapulse:dru:{project-version}"
 
     // and pick any client
-    testCompile "com.agorapulse:dru-client-dynamodb:{project-version}"
-    testCompile "com.agorapulse:dru-client-gorm:{project-version}"
-    testCompile "com.agorapulse:dru-client-micronaut-data:{project-version}"
+    testImplementation "com.agorapulse:dru-client-dynamodb:{project-version}"
+    testImplementation "com.agorapulse:dru-client-gorm:{project-version}"
+    testImplementation "com.agorapulse:dru-client-micronaut-data:{project-version}"
 
     // and pick any parser
-    testCompile "com.agorapulse:dru-parser-json:{project-version}"
-    testCompile "com.agorapulse:dru-parser-yaml:{project-version}"
+    testImplementation "com.agorapulse:dru-parser-json:{project-version}"
+    testImplementation "com.agorapulse:dru-parser-sql:{project-version}"
+    testImplementation "com.agorapulse:dru-parser-yaml:{project-version}"
 }
 ----
 
@@ -285,6 +286,38 @@ include::{root-dir}/examples/dru-grails-example/src/test/groovy/avl/NestedSpec.g
 include::{root-dir}/examples/dru-grails-example/src/test/resources/avl/NestedSpec/agents.json[]
 ----
 
+=== SQL
+
+SQL parser runs provided SQL scripts. The results `SELECT` statements are loaded as map of a following structure:
+
+----
+[
+    table_name: [
+      [column_1: value_1, column_2: value_2, ...],
+      ...
+    ],
+    ...
+]
+----
+
+TIP: Some database implementation such as H2 returns the table and column names all-upper-case. You can see the results when you set `com.agorapulse.dru.sql` logger to `DEBUG`.
+
+The source files must end with `.sql` to get parsed and
+they must be contained in a directory with the same name as the reference class (unit test or data set).
+
+
+[source,indent=0,options="nowrap"]
+.Using SQL Parser
+----
+include::{root-dir}/libs/dru-parser-sql/src/test/groovy/com/agorapulse/dru/parser/sql/BasicSqlParserSpec.groovy[lines=18..-1]
+----
+<1> The unit test class must implement `DataSourceProvider`
+<2> The data source definition
+<3> Use a SQL script to populate data. The mapping can be omitted if the script contains no selects e.g. `from 'books.sql'`.
+<4> You can map a table to an object
+<5> You can map a column to a property
+<6> Use Dru's `DataSet` methods to obtain the objects loaded
+
 === YAML
 YAML parser parses YAML files to combination of maps and lists. The source files must end with `.yml` or `.yaml` to get parsed and
 they must be contained in directory with the same name as the reference class (unit test or data set)
@@ -461,7 +494,7 @@ include::{root-dir}/examples/dru-grails-example/src/integration-test/groovy/avl/
 Dru can help you set up Micronaut Data JPA and JDBC entities if you make your test class implementing `io.micronaut.context.ApplicationContextProvider`.
 
 [source,indent=0,options="nowrap"]
-.Using GORM Client
+.Using Micronaut Data Client
 ----
 include::{root-dir}/examples/dru-micronaut-jdbc-example/src/test/groovy/dru/micronaut/example/jdbc/BookDataSpec.groovy[lines=18..-1]
 ----
