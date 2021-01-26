@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="./asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="css/dru.css?v=0.7.0" />
+<link rel="stylesheet" href="css/dru.css?v=0.7.1" />
 <style>
 .hidden {
     display: none;
@@ -91,7 +91,7 @@ $(addBlockSwitches);
 <div id="header">
 <h1>Dru - Data Reconstruction Utility</h1>
 <div class="details">
-<span id="revnumber">version 0.7.0</span>
+<span id="revnumber">version 0.7.1</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -115,7 +115,8 @@ $(addBlockSwitches);
 <ul class="sectlevel2">
 <li><a href="#_reflection">6.1. Reflection</a></li>
 <li><a href="#_json">6.2. JSON</a></li>
-<li><a href="#_yaml">6.3. YAML</a></li>
+<li><a href="#_sql">6.3. SQL</a></li>
+<li><a href="#_yaml">6.4. YAML</a></li>
 </ul>
 </li>
 <li><a href="#_clients">7. Clients</a>
@@ -183,16 +184,17 @@ set to the actual <code>id</code> of the loaded <code>Item</code> e.g. <code>1</
 
 dependencies {
     // load just simple implementation with POJO client and reflection based parser
-    testCompile "com.agorapulse:dru:0.7.0"
+    testImplementation "com.agorapulse:dru:0.7.1"
 
     // and pick any client
-    testCompile "com.agorapulse:dru-client-dynamodb:0.7.0"
-    testCompile "com.agorapulse:dru-client-gorm:0.7.0"
-    testCompile "com.agorapulse:dru-client-micronaut-data:0.7.0"
+    testImplementation "com.agorapulse:dru-client-dynamodb:0.7.1"
+    testImplementation "com.agorapulse:dru-client-gorm:0.7.1"
+    testImplementation "com.agorapulse:dru-client-micronaut-data:0.7.1"
 
     // and pick any parser
-    testCompile "com.agorapulse:dru-parser-json:0.7.0"
-    testCompile "com.agorapulse:dru-parser-yaml:0.7.0"
+    testImplementation "com.agorapulse:dru-parser-json:0.7.1"
+    testImplementation "com.agorapulse:dru-parser-sql:0.7.1"
+    testImplementation "com.agorapulse:dru-parser-yaml:0.7.1"
 }</code></pre>
 </div>
 </div>
@@ -952,7 +954,116 @@ void 'nested properties are mapped'() {
 </div>
 </div>
 <div class="sect2">
-<h3 id="_yaml"><a class="anchor" href="#_yaml"></a>6.3. YAML</h3>
+<h3 id="_sql"><a class="anchor" href="#_sql"></a>6.3. SQL</h3>
+<div class="paragraph">
+<p>SQL parser runs provided SQL scripts. The results <code>SELECT</code> statements are loaded as map of a following structure:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[
+    table_name: [
+      [column_1: value_1, column_2: value_2, ...],
+      ...
+    ],
+    ...
+]</pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Some database implementation such as H2 returns the table and column names all-upper-case. You can see the results when you set <code>com.agorapulse.dru.sql</code> logger to <code>DEBUG</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The source files must end with <code>.sql</code> to get parsed and
+they must be contained in a directory with the same name as the reference class (unit test or data set).</p>
+</div>
+<div class="listingblock">
+<div class="title">Using SQL Parser</div>
+<div class="content">
+<pre class="prettyprint highlight nowrap"><code>package com.agorapulse.dru.parser.sql
+
+import com.agorapulse.dru.Dru
+import org.h2.jdbcx.JdbcDataSource
+import spock.lang.Specification
+
+import javax.sql.DataSource
+
+class BasicSqlParserSpec extends Specification implements DataSourceProvider {          <i class="conum" data-value="1"></i><b>(1)</b>
+
+    DataSource dataSource = new JdbcDataSource(                                         <i class="conum" data-value="2"></i><b>(2)</b>
+        URL: 'jdbc:h2:mem:default',
+        user: 'sa',
+        password: 'sa',
+    )
+
+    Dru dru = Dru.create {
+        from 'books.sql', {                                                             <i class="conum" data-value="3"></i><b>(3)</b>
+            map 'BOOK', {                                                               <i class="conum" data-value="4"></i><b>(4)</b>
+                to Book, {
+                    map 'PAGES', { to (pages: Integer) }                                <i class="conum" data-value="5"></i><b>(5)</b>
+                    map 'TITLE', { to (title: String) }
+                }
+            }
+        }
+    }
+
+    void setup() {
+        dru.load()
+    }
+
+    void 'load using sql into object'() {
+        when:
+            List&lt;Book&gt; books = dru.findAllByType(Book)                                  <i class="conum" data-value="6"></i><b>(6)</b>
+        then:
+            books.size() == 2
+            books.first().title == 'It'
+            books.first().pages == 1116
+            books.last().title == 'The Shining'
+            books.last().pages == 659
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The unit test class must implement <code>DataSourceProvider</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The data source definition</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Use a SQL script to populate data. The mapping can be omitted if the script contains no selects e.g. <code>from 'books.sql'</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>You can map a table to an object</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>You can map a column to a property</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Use Dru&#8217;s <code>DataSet</code> methods to obtain the objects loaded</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_yaml"><a class="anchor" href="#_yaml"></a>6.4. YAML</h3>
 <div class="paragraph">
 <p>YAML parser parses YAML files to combination of maps and lists. The source files must end with <code>.yml</code> or <code>.yaml</code> to get parsed and
 they must be contained in directory with the same name as the reference class (unit test or data set)</p>
@@ -1399,7 +1510,7 @@ class GormIntegrationSpec extends Specification {
 <p>Dru can help you set up Micronaut Data JPA and JDBC entities if you make your test class implementing <code>io.micronaut.context.ApplicationContextProvider</code>.</p>
 </div>
 <div class="listingblock">
-<div class="title">Using GORM Client</div>
+<div class="title">Using Micronaut Data Client</div>
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code>package dru.micronaut.example.jdbc
 
@@ -1491,8 +1602,8 @@ class BookDataSpec extends Specification implements ApplicationContextProvider {
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.7.0<br>
-Last updated 2021-01-25 15:11:20 UTC
+Version 0.7.1<br>
+Last updated 2021-01-26 10:00:56 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
