@@ -43,6 +43,18 @@ class FileSourceSpec extends Specification {
             new FileSource(this, fixture).toString().startsWith('FileSource')
     }
 
+    void 'load from file - no mapping'() {
+        given:
+            File fixture = tmp.newFile('items.json')
+            fixture.text = JsonOutput.toJson(new Item(id: 'Id', name: 'Name', description: 'Description'))
+            Dru dru = Dru.create(this)
+            dru.load {
+                from fixture
+            }
+        expect:
+            noExceptionThrown()
+    }
+
     void 'load non existing file'() {
         given:
             File fixture = tmp.newFile('items.json')
