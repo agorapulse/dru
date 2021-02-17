@@ -17,8 +17,7 @@
  */
 package com.agorapulse.dru.persistence.meta;
 
-import com.google.common.collect.ImmutableSet;
-
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -37,7 +36,7 @@ public class CachedClassMetadata implements ClassMetadata {
             this.persistentProperties.put(metadata.getName(), new CachedPropertyMetadata(metadata));
         }
         this.original = original;
-        this.idPropertyNames = ImmutableSet.copyOf(original.getIdPropertyNames());
+        this.idPropertyNames = new HashSet<>(original.getIdPropertyNames());
     }
 
     @Override
@@ -73,7 +72,7 @@ public class CachedClassMetadata implements ClassMetadata {
 
     @Override
     public Set<String> getIdPropertyNames() {
-        return idPropertyNames;
+        return new HashSet<>(idPropertyNames);
     }
 
     public ClassMetadata getOriginal() {

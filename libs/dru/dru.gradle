@@ -26,10 +26,7 @@ dependencies {
     compile "org.codehaus.groovy:groovy:${project['groovy.version']}"
     compileOnly "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
 
-    compile group: 'space.jasan', name: 'groovy-closure-support', version: '0.5.2'
-
-    compile "com.google.guava:guava:${guavaVersion}"
-    compile "org.spockframework:spock-core:$spockVersion"
+    compile group: 'space.jasan', name: 'groovy-closure-support', version: '0.6.3'
 
     testCompile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
 }

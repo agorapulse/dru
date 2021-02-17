@@ -17,8 +17,6 @@
  */
 package com.agorapulse.dru
 
-import com.google.common.collect.Multimap
-import com.google.common.collect.MultimapBuilder
 import groovy.transform.PackageScope
 
 /**
@@ -32,23 +30,20 @@ class MissingPropertiesReport {
     private static final String DOUBLE_BAR = "\u2016"
     private static final String EMPTY_STRING = ''
 
-    private final Multimap<MissingProperty, MissingProperty> missingProperties = MultimapBuilder
-            .treeKeys(
-                { MissingProperty a, MissingProperty b ->
-                    if (a.type == b.type) {
-                        if (a.propertyName == b.propertyName) {
-                            return a.path <=> b.path
-                        }
-                        return a.propertyName <=> b.propertyName
-                    }
-                    return a.type.simpleName <=> b.type.simpleName
-                } as Comparator<MissingProperty>
-            )
-            .arrayListValues()
-            .build()
+    private static final Comparator<MissingProperty> MISSING_PROPERTY_COMPARATOR = { MissingProperty a, MissingProperty b ->
+        if (a.type == b.type) {
+            if (a.propertyName == b.propertyName) {
+                return a.path <=> b.path
+            }
+            return a.propertyName <=> b.propertyName
+        }
+        return a.type.simpleName <=> b.type.simpleName
+    } as Comparator<MissingProperty>
+
+    private final Map<MissingProperty, List<MissingProperty>> missingProperties = new TreeMap<>(MISSING_PROPERTY_COMPARATOR)
 
     @PackageScope void add(MissingProperty missingProperty) {
-        missingProperties.put(missingProperty, missingProperty)
+        missingProperties.computeIfAbsent(missingProperty) { new ArrayList<>() }.add(missingProperty)
     }
 
     boolean isEmpty() {
@@ -63,7 +58,7 @@ class MissingPropertiesReport {
         int valueWidth = MINIMAL_WIDTH
         int propertyWidth = MINIMAL_WIDTH
 
-        missingProperties.values().each {
+        missingProperties.collectMany { it.value }.each {
             pathWidth = Math.max(pathWidth, (it.path ?: EMPTY_STRING).size())
             typeWidth = Math.max(typeWidth, (it.type.simpleName ?: EMPTY_STRING).size())
             valueWidth = Math.max(valueWidth, (it.value?.toString() ?: EMPTY_STRING).size())
@@ -91,7 +86,7 @@ class MissingPropertiesReport {
         if (missingProperties.isEmpty()) {
             writeOkMessage(writer, lineWidth)
         } else {
-            missingProperties.asMap().values().each { Collection<MissingProperty> missing ->
+            missingProperties.values().each { List<MissingProperty> missing ->
                 MissingProperty toPrint = missing.find { it.value } ?: missing.first()
                 writer.println "$DOUBLE_BAR ${toPrint.type.simpleName.padRight(typeWidth)} | ${toPrint.propertyName.padRight(propertyWidth)} | ${toPrint.path.padRight(pathWidth)} | ${(toPrint.value != null ? toPrint.value.toString() : '<null>').padRight(valueWidth)} $DOUBLE_BAR"
             }

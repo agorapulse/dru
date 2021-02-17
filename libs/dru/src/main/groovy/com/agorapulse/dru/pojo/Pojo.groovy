@@ -24,7 +24,7 @@ import com.agorapulse.dru.persistence.ClientFactory
 import com.agorapulse.dru.persistence.meta.ClassMetadata
 import com.agorapulse.dru.persistence.meta.PropertyMetadata
 import com.agorapulse.dru.pojo.meta.PojoClassMetadata
-import com.google.common.primitives.Primitives
+import com.agorapulse.dru.util.Primitives
 
 /**
  * Pojo client handles Plain Old Java Objects.

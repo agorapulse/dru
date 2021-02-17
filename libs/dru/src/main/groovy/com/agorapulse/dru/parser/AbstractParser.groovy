@@ -17,7 +17,7 @@
  */
 package com.agorapulse.dru.parser
 
-import com.google.common.primitives.Primitives
+import com.agorapulse.dru.util.Primitives
 
 /**
  * Base class for parsers with convenient methods to convert values and to find all matching elements.

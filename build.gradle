@@ -124,9 +124,7 @@ config {
 
 allprojects {
     repositories {
-        jcenter()
         mavenCentral()
-        maven { url  "https://dl.bintray.com/agorapulse/libs" }
         maven { url "https://repo.spring.io/release"  }
         maven { url "https://repo.grails.org/grails/core" }
     }
@@ -150,6 +148,10 @@ projects {
         dirs(['libs', 'examples']) { Project subproject ->
             sourceCompatibility = 1.8
             targetCompatibility = 1.8
+
+            dependencies {
+                testCompile "org.spockframework:spock-core:$spockVersion"
+            }
 
             config {
                 bintray {

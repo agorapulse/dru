@@ -20,7 +20,6 @@ package com.agorapulse.dru;
 import com.agorapulse.dru.parser.Parser;
 import com.agorapulse.dru.parser.Parsers;
 import com.agorapulse.dru.persistence.Client;
-import com.google.common.base.Preconditions;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -208,6 +207,6 @@ final class DefaultDataSet implements DataSet {
                 break;
             }
         }
-        return Preconditions.checkNotNull(result, "Client not found for " + type);
+        return Objects.requireNonNull(result, "Client not found for " + type);
     }
 }
