@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="./asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="css/dru.css?v=0.7.1" />
+<link rel="stylesheet" href="css/dru.css?v=0.8.0" />
 <style>
 .hidden {
     display: none;
@@ -91,7 +91,7 @@ $(addBlockSwitches);
 <div id="header">
 <h1>Dru - Data Reconstruction Utility</h1>
 <div class="details">
-<span id="revnumber">version 0.7.1</span>
+<span id="revnumber">version 0.8.0</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -179,22 +179,22 @@ set to the actual <code>id</code> of the loaded <code>Item</code> e.g. <code>1</
 <div class="title">Gradle Installation</div>
 <div class="content">
 <pre class="prettyprint highlight"><code>repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
     // load just simple implementation with POJO client and reflection based parser
-    testImplementation "com.agorapulse:dru:0.7.1"
+    testImplementation "com.agorapulse:dru:0.8.0"
 
     // and pick any client
-    testImplementation "com.agorapulse:dru-client-dynamodb:0.7.1"
-    testImplementation "com.agorapulse:dru-client-gorm:0.7.1"
-    testImplementation "com.agorapulse:dru-client-micronaut-data:0.7.1"
+    testImplementation "com.agorapulse:dru-client-dynamodb:0.8.0"
+    testImplementation "com.agorapulse:dru-client-gorm:0.8.0"
+    testImplementation "com.agorapulse:dru-client-micronaut-data:0.8.0"
 
     // and pick any parser
-    testImplementation "com.agorapulse:dru-parser-json:0.7.1"
-    testImplementation "com.agorapulse:dru-parser-sql:0.7.1"
-    testImplementation "com.agorapulse:dru-parser-yaml:0.7.1"
+    testImplementation "com.agorapulse:dru-parser-json:0.8.0"
+    testImplementation "com.agorapulse:dru-parser-sql:0.8.0"
+    testImplementation "com.agorapulse:dru-parser-yaml:0.8.0"
 }</code></pre>
 </div>
 </div>
@@ -1602,8 +1602,8 @@ class BookDataSpec extends Specification implements ApplicationContextProvider {
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.7.1<br>
-Last updated 2021-01-26 10:00:56 UTC
+Version 0.8.0<br>
+Last updated 2021-02-17 15:43:13 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">

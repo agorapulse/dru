@@ -7,5 +7,6 @@ com.agorapulse.dru.parser
 com.agorapulse.dru.parser.sql
 com.agorapulse.dru.persistence
 com.agorapulse.dru.persistence.meta
+com.agorapulse.dru.util
 dru.micronaut.example.jdbc
 dru.micronaut.example.jpa
