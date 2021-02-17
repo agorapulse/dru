@@ -29,7 +29,7 @@ Dru is available in JCenter. At the moment, you can use any of POJO, GORM or Dyn
 [source,subs='verbatim,attributes']
 ----
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {

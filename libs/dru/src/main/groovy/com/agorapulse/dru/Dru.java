@@ -21,9 +21,6 @@ import com.agorapulse.dru.persistence.Client;
 import com.agorapulse.dru.persistence.Clients;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
-import org.junit.rules.TestRule;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
 import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
 import java.io.Closeable;
@@ -35,7 +32,7 @@ import java.util.function.Consumer;
 /**
  * Data Reconstruction Utility
  */
-public class Dru implements TestRule, DataSet, Closeable {
+public class Dru implements DataSet, Closeable {
 
     public static Dru create(Object unitTest, Consumer<DataSetMappingDefinition> configuration) {
         Object self = unitTest;
@@ -93,24 +90,6 @@ public class Dru implements TestRule, DataSet, Closeable {
         this.unitTest = unitTest;
         this.preparedDataSet = preparedDataSet;
         this.clients = new LinkedHashSet<>(Clients.createClients(unitTest));
-    }
-
-    /**
-     * @deprecated next version will be based on JUnit Rule
-     */
-    @Deprecated
-    @Override
-    public Statement apply(final Statement base, Description description) {
-        return new Statement() {
-            @Override
-            public void evaluate() throws Throwable {
-                System.err.println("You are using Dru as JUnit Rule. If you are using Spock, migrate to @AutoCleanup annotation" +
-                    " or call dru.close() in the tear down method manually.");
-                base.evaluate();
-                close();
-            }
-
-        };
     }
 
     /**
