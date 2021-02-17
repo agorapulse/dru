@@ -26,8 +26,6 @@ import org.codehaus.groovy.runtime.DefaultGroovyMethods
 
 import java.util.function.Consumer
 
-import static com.google.common.base.Preconditions.checkNotNull
-
 /**
  * Mapping of the source property to one or more type mappings.
  */
@@ -128,13 +126,13 @@ class PropertyMapping implements PropertyMappingDefinition {
 
         typeMappingToUse = typeMappingToUse ?: typeMappings.find(fixture)
 
-        checkNotNull(typeMappingToUse, "No type definition for $this and $fixture")
+        Objects.requireNonNull(typeMappingToUse, "No type definition for $this and $fixture")
 
         Class type = typeMappingToUse.type
 
         Client client = findClient(dataSetMapping, type, typeMappingToUse, property)
 
-        ClassMetadata classMetadata = checkNotNull(client.getClassMetadata(type), "No class metadata found for ${type}! $this, $typeMappingToUse: $fixture")
+        ClassMetadata classMetadata = Objects.requireNonNull(client.getClassMetadata(type), "No class metadata found for ${type}! $this, $typeMappingToUse: $fixture")
 
         dataSetMapping.applyOverrides(type, fixture, fixture.asImmutable())
         typeMappingToUse.overrides.apply(fixture, fixture.asImmutable())
@@ -226,7 +224,7 @@ class PropertyMapping implements PropertyMappingDefinition {
                     return
                 }
 
-                checkNotNull(persistentProperty.referencedPropertyName,
+                Objects.requireNonNull(persistentProperty.referencedPropertyName,
                     "Cannot determine referenced property name: $fullPath => $propertyName with value $it.value"
                 )
 
@@ -240,7 +238,7 @@ class PropertyMapping implements PropertyMappingDefinition {
                 return
             }
 
-            checkNotNull(persistentProperty.referencedPropertyName,
+            Objects.requireNonNull(persistentProperty.referencedPropertyName,
                 "Cannot determine referenced property name: $fullPath => $propertyName with value $it.value"
             )
 
@@ -361,7 +359,7 @@ class PropertyMapping implements PropertyMappingDefinition {
 
     @CompileStatic
     private static Client findClient(DataSetMapping dataSetMapping, Class type, TypeMapping typeMappingToUse, Object property) {
-        checkNotNull(dataSetMapping.clients.find { it.isSupported(type) }, "No client supports $type! $this, $typeMappingToUse: $property")
+        Objects.requireNonNull(dataSetMapping.clients.find { it.isSupported(type) }, "No client supports $type! $this, $typeMappingToUse: $property")
     }
 
     @CompileStatic

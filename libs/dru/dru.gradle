@@ -28,7 +28,5 @@ dependencies {
 
     compile group: 'space.jasan', name: 'groovy-closure-support', version: '0.6.3'
 
-    compile "com.google.guava:guava:${guavaVersion}"
-
     testCompile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
 }
