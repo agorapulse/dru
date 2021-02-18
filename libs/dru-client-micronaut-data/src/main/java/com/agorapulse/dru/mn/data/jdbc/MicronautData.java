@@ -115,7 +115,7 @@ public class MicronautData extends AbstractCacheableClient implements Client {
     public <T> T newInstance(Parser parser, Class<T> type, Map<String, Object> payload) {
         BeanIntrospection<T> introspection = ops().getEntity(type).getIntrospection();
         T instance = introspection.instantiate(
-            Arrays.stream(introspection.getConstructorArguments()).map(Argument::getName).map(payload::get).toArray()
+            Arrays.stream(introspection.getConstructorArguments()).map(Argument::getName).map(payload::remove).toArray()
         );
         payload.forEach((k, v) -> introspection.getProperty(k).ifPresent(p -> {
             if (!p.isReadOnly()) {
