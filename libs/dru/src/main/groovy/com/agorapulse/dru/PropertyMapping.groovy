@@ -387,7 +387,11 @@ class PropertyMapping implements PropertyMappingDefinition {
             if (it.key in idNames) {
                 return
             }
-            newStuff."$it.key" = it.value
+            try {
+                newStuff."$it.key" = it.value
+            } catch (ReadOnlyPropertyException ignored) {
+                // read only properties can be ignored - they are either derived or set in the constructor
+            }
         }
     }
 }
