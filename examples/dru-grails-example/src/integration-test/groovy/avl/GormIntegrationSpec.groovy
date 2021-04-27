@@ -47,11 +47,9 @@ class GormIntegrationSpec extends Specification {
         }
     }
 
-    void setup() {
-        Agent.withNewSession { dru.load() }                                             // <2>
-    }
-
     void 'entities can be accessed from data set and using GORM methods'() {
+        given:
+            Agent.withNewSession { dru.load() }                                         // <2>
         expect:
             dru.findAllByType(Agent).size() == 2
             dru.findByTypeAndOriginalId(Agent, 12345).manager.name == 'Silas Ramsbottom'
