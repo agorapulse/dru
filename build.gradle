@@ -167,6 +167,10 @@ projects {
             tasks.withType(GroovyCompile) {
                 groovyOptions.forkOptions.jvmArgs.add('-Dgroovy.parameters=true')
             }
+
+            tasks.withType(Test) {
+                useJUnitPlatform()
+            }
         }
 
         dir('libs') {
