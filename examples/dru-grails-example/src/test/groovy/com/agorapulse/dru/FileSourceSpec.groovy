@@ -19,18 +19,17 @@ package com.agorapulse.dru
 
 import avl.Item
 import groovy.json.JsonOutput
-import org.junit.Rule
-import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
+import spock.lang.TempDir
 
 class FileSourceSpec extends Specification {
 
-    @Rule TemporaryFolder tmp
+    @TempDir File tmp
 
 
     void 'load from file'() {
         given:
-            File fixture = tmp.newFile('items.json')
+            File fixture = new File(tmp, 'items.json')
             fixture.text = JsonOutput.toJson(new Item(id: 'Id', name: 'Name', description: 'Description'))
             Dru dru = Dru.create(this)
             dru.load {
@@ -45,7 +44,7 @@ class FileSourceSpec extends Specification {
 
     void 'load from file - no mapping'() {
         when:
-            File fixture = tmp.newFile('items.json')
+            File fixture = new File(tmp, 'items.json')
             fixture.text = JsonOutput.toJson(new Item(id: 'Id', name: 'Name', description: 'Description'))
             Dru dru = Dru.create(this)
             dru.load {
@@ -57,7 +56,7 @@ class FileSourceSpec extends Specification {
 
     void 'load non existing file'() {
         given:
-            File fixture = tmp.newFile('items.json')
+            File fixture = new File(tmp, 'items.json')
             fixture.delete()
 
         when:
