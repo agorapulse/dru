@@ -18,7 +18,7 @@
 buildscript {
     repositories {
         gradlePluginPortal()
-        jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath group: 'org.kordamp.gradle',                  name: 'bintray-gradle-plugin',          version: kordampPluginVersion
