@@ -23,7 +23,7 @@ set to the actual `id` of the loaded `Item` e.g. `1`.
 
 == Installation
 
-Dru is available in JCenter. At the moment, you can use any of POJO, GORM or DynamoDB modules your project.
+Dru is available in Maven Central. At the moment, you can use any of POJO, GORM or DynamoDB modules your project.
 
 .Gradle Installation
 [source,subs='verbatim,attributes']
