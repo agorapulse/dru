@@ -55,46 +55,45 @@ class DynamoDBSampleSpec extends Specification {
     }
     // end::plan[]
 
+    @SuppressWarnings('NoJavaUtilDate')
     // tag::mapper[]
     void 'use dynamodb mapper'() {
-        when: "DynamoDB mapper is created from data set"
+        when: 'DynamoDB mapper is created from data set'
             DynamoDBMapper mapper = DynamoDB.createMapper(dru)
             Date date = new DateTime('2013-07-05T01:23:22Z').toDate()
             Long missionId = 7
 
-        then: "loaded entities can be queried by this mapper"
+        then: 'loaded entities can be queried by this mapper'
             mapper.load(MissionLogEntry, missionId, date)
             mapper.load(new MissionLogEntry(missionId: missionId, date: date))
             mapper.query(MissionLogEntry,
                 new DynamoDBQueryExpression<MissionLogEntry>().withHashKeyValues(new MissionLogEntry(missionId: missionId))
             ).size() == 2
 
-        and: "the can be also deleted using this mapper"
+        and: 'the can be also deleted using this mapper'
             mapper.delete(mapper.load(new MissionLogEntry(missionId: missionId, date: date)))
             mapper.query(MissionLogEntry,
                 new DynamoDBQueryExpression<MissionLogEntry>().withHashKeyValues(new MissionLogEntry(missionId: missionId))
             ).size() == 1
 
-        when: "new entities are saved using this mapper"
+        when: 'new entities are saved using this mapper'
             Date now = new Date()
             mapper.save(new MissionLogEntry(missionId: 7, date: now))
 
-        then: "they are available in the data set"
-            dru.findAllByType(MissionLogEntry).find { it.missionId == 7 && it.date == now}
-
+        then: 'they are available in the data set'
+            dru.findAllByType(MissionLogEntry).find { it.missionId == 7 && it.date == now }
     }
     // end::mapper[]
 
     // tag::advancedMapper[]
     void 'advanced dynamodb mapper'() {
-        when: "DynamoDB mapper is created from data set"
+        when: 'DynamoDB mapper is created from data set'
             DruDynamoDBMapper mapper = DynamoDB.createMapper(dru)
             mapper.onQuery(MissionLogEntry) { MissionLogEntry entry, DynamoDBQueryExpression<MissionLogEntry> query, DynamoDBMapperConfig config ->
                 return entry.agentId == 101
             }
         then:
-            mapper.query(MissionLogEntry, buildCompexQuery()).size() == 2
-
+            mapper.query(MissionLogEntry, buildComplexQuery()).size() == 2
     }
     // end::advancedMapper[]
 
@@ -103,7 +102,7 @@ class DynamoDBSampleSpec extends Specification {
         when:
             DruDynamoDBMapper mapper = DynamoDB.createMapper(dru)
             mapper.onBatchWrite { Iterable<MissionLogEntry> toSave, Iterable<MissionLogEntry> toDelete ->
-                [new DynamoDBMapper.FailedBatch(exception: new AmazonClientException("Failed!"))]
+                [new DynamoDBMapper.FailedBatch(exception: new AmazonClientException('Failed!'))]
             }
             List<DynamoDBMapper.FailedBatch> failed = mapper.batchSave(new MissionLogEntry(missionId: 7, date: new Date()))
         then:
@@ -112,10 +111,6 @@ class DynamoDBSampleSpec extends Specification {
             failed[0].exception instanceof AmazonClientException
     }
     // end::batchWriteFailed[]
-
-    private static DynamoDBQueryExpression<MissionLogEntry> buildCompexQuery() {
-        return new DynamoDBQueryExpression<MissionLogEntry>()
-    }
 
     // tag::grailsService[]
     void 'use grails service'() {
@@ -149,7 +144,7 @@ class DynamoDBSampleSpec extends Specification {
     }
 
     void 'use local range key index'() {
-        given: "make an offensive change but do not save"
+        given: 'make an offensive change but do not save'
             DynamoDBMapper mapper = DynamoDB.createMapper(dru)
             MissionLogEntryDBService service = new MissionLogEntryDBService(mapper: mapper)
             service.query(7).results.each {
@@ -164,7 +159,7 @@ class DynamoDBSampleSpec extends Specification {
                 .withScanIndexForward(false)
                 .withHashKeyValues(new MissionLogEntry(missionId: 7))
                 .withConsistentRead(false)
-                .withRangeKeyCondition("typeAndAgentIdIndex", rangeKeyCondition)
+                .withRangeKeyCondition('typeAndAgentIdIndex', rangeKeyCondition)
 
             PaginatedQueryList<MissionLogEntry> result = mapper.query(MissionLogEntry, queryExpression)
 
@@ -176,6 +171,11 @@ class DynamoDBSampleSpec extends Specification {
 
         then:
             entry.description == 'Mission succeeded by Silas Ramsbottom'
+    }
+
+    @SuppressWarnings('FactoryMethodName')
+    private static DynamoDBQueryExpression<MissionLogEntry> buildComplexQuery() {
+        return new DynamoDBQueryExpression<MissionLogEntry>()
     }
 
 }

@@ -47,4 +47,5 @@ class DataSetSpec extends Specification implements DataTest {
             dataSet.findByTypeAndOriginalId(Agent, 12345).manager.name == 'Silas Ramsbottom'
     }
     // end::plan[]
+
 }

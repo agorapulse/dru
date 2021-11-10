@@ -25,6 +25,7 @@ import spock.lang.Specification
 /**
  * Test loading persons using YAML parser.
  */
+@SuppressWarnings('NestedBlockDepth')
 class YamlSpec extends Specification implements DataTest {
 
     // tag::plan[]
@@ -48,4 +49,5 @@ class YamlSpec extends Specification implements DataTest {
             dru.findByTypeAndOriginalId(Agent, 12345).manager.name == 'Silas Ramsbottom'
     }
     // end::plan[]
+
 }

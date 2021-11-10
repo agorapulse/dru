@@ -39,6 +39,7 @@ import spock.lang.Specification
 
 class AvlDataSetsSpec extends Specification implements DataTest {
 
+    @SuppressWarnings('Println')
     @AutoCleanup Dru dru = Dru.create {
         whenLoaded {
             println it.report
@@ -89,17 +90,17 @@ class AvlDataSetsSpec extends Specification implements DataTest {
         when:
             DruDynamoDBMapper mapper = DynamoDB.createMapper(dru)
         then:
-            mapper.count(Item.class, new DynamoDBQueryExpression<Item>()) == 2
-            mapper.count(MissionLogEntry.class, new DynamoDBScanExpression()) == 7
-            mapper.load(new Item(id: "e30d0de3-2415-42b2-aa31-dceba3dcc3fa", name: "Dupont Diamond"))
-            mapper.load(Item.class, "e30d0de3-2415-42b2-aa31-dceba3dcc3fa", "Dupont Diamond")
+            mapper.count(Item, new DynamoDBQueryExpression<Item>()) == 2
+            mapper.count(MissionLogEntry, new DynamoDBScanExpression()) == 7
+            mapper.load(new Item(id: 'e30d0de3-2415-42b2-aa31-dceba3dcc3fa', name: 'Dupont Diamond'))
+            mapper.load(Item, 'e30d0de3-2415-42b2-aa31-dceba3dcc3fa', 'Dupont Diamond')
         when:
-            Map<String, List<Object>> batchFetch = mapper.batchLoad([new Item(id: "e30d0de3-2415-42b2-aa31-dceba3dcc3fa", name: "Dupont Diamond")])
+            Map<String, List<Object>> batchFetch = mapper.batchLoad([new Item(id: 'e30d0de3-2415-42b2-aa31-dceba3dcc3fa', name: 'Dupont Diamond')])
         then:
             batchFetch.size() == 1
             batchFetch['Item']
             batchFetch['Item'].size() == 1
-            batchFetch['Item'][0].name == "Dupont Diamond"
+            batchFetch['Item'][0].name == 'Dupont Diamond'
     }
 
     void 'DynamoDB mapper can query the loaded entities'() {
@@ -233,7 +234,7 @@ class AvlDataSetsSpec extends Specification implements DataTest {
 
     void 'usage with grails dynamodb plugin'() {
         given:
-            String id = "f9e716df-2d73-42cb-9cf5-9334617f73c1"
+            String id = 'f9e716df-2d73-42cb-9cf5-9334617f73c1'
             String name = 'Something'
             dru.load(AvlDataSets.missions)
         when:
@@ -324,7 +325,6 @@ class AvlDataSetsSpec extends Specification implements DataTest {
             gorm.addTo(lucy, 'staff', gru)
         then:
             lucy.staff.contains(gru)
-
     }
 
 }

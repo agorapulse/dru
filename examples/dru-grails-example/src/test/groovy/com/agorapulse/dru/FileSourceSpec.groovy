@@ -26,7 +26,6 @@ class FileSourceSpec extends Specification {
 
     @TempDir File tmp
 
-
     void 'load from file'() {
         given:
             File fixture = new File(tmp, 'items.json')

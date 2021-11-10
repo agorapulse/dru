@@ -51,7 +51,6 @@ class SanitySpec extends Specification {
             !new BootStrap().destroy()
     }
 
-
     void 'test get table name'() {
         expect:
             DruDynamoDBMapper.getTableNameUsingConfig(Item, DynamoDBMapperConfig.builder().build()) == 'Item'

@@ -150,7 +150,10 @@ projects {
             targetCompatibility = 1.8
 
             dependencies {
-                testCompile "org.spockframework:spock-core:$spockVersion"
+                testCompile platform("org.spockframework:spock-bom:$spockVersion")
+                testCompile platform("org.junit:junit-bom:$junitVersion")
+                testCompile 'org.spockframework:spock-core'
+                testCompile 'org.junit.jupiter:junit-jupiter-engine'
             }
 
             config {

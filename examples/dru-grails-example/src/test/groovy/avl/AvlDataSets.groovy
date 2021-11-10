@@ -20,8 +20,12 @@ package avl
 
 import com.agorapulse.dru.Dru
 import com.agorapulse.dru.PreparedDataSet
+import groovy.transform.CompileDynamic
 
+@CompileDynamic
+@SuppressWarnings(['PropertyName', 'DuplicateStringLiteral'])
 class AvlDataSets {
+
 // end::header[]
 
     // tag::missions[]
@@ -181,5 +185,6 @@ class AvlDataSets {
         }
     }
 // tag::footer[]
+
 }
 // end::footer[]

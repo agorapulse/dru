@@ -41,4 +41,5 @@ class PojoSpec extends Specification {
             dru.findAllByType(Book).size() == 2
     }
     // end::plan[]
+
 }
