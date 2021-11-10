@@ -44,4 +44,5 @@ class IgnoreSpec extends Specification {
             dru.report.empty
     }
     // end::plan[]
+
 }

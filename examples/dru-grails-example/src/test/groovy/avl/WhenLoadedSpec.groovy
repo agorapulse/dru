@@ -25,8 +25,10 @@ import spock.lang.Specification
 /**
  * Test loading persons.
  */
+@SuppressWarnings('NestedBlockDepth')
 class WhenLoadedSpec extends Specification implements DataTest {
 
+    @SuppressWarnings(['unused', 'UnusedPrivateField'])
     private static final List<Map<String, Object>> AGENTS = [
         [
             id           : 12345,
@@ -71,4 +73,5 @@ class WhenLoadedSpec extends Specification implements DataTest {
             count == 2                                                                  // <2>
     }
     // end::plan[]
+
 }

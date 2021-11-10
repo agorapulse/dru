@@ -48,4 +48,5 @@ class ConditionalSpec extends Specification implements DataTest {
             dru.findAllByType(Villain).size() == 1
     }
     // end::plan[]
+
 }

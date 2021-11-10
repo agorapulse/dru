@@ -53,4 +53,5 @@ class GormSpec extends Specification implements DataTest {
             Agent.findByName('Silas Ramsbottom').id != 12345
     }
     // end::plan[]
+
 }

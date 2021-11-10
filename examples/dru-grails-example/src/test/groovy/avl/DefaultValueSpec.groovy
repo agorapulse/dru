@@ -26,6 +26,7 @@ import spock.lang.Specification
  */
 class DefaultValueSpec extends Specification {
 
+    private static final String ID = '050e4fcf-158d-4f44-9b8b-a6ba6809982e:PX-41'
 
     // tag::plan[]
     @AutoCleanup Dru dru = Dru.create {
@@ -50,5 +51,4 @@ class DefaultValueSpec extends Specification {
     }
     // end::plan[]
 
-    private static final String ID = '050e4fcf-158d-4f44-9b8b-a6ba6809982e:PX-41'
 }

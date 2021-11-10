@@ -18,7 +18,9 @@
 package avl
 
 import grails.plugin.awssdk.dynamodb.AbstractDBService
+import groovy.transform.CompileStatic
 
+@CompileStatic
 class MissionLogEntryDBService extends AbstractDBService<MissionLogEntry> {
 
     MissionLogEntryDBService() {

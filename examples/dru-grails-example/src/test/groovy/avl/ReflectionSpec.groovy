@@ -25,8 +25,10 @@ import spock.lang.Specification
 /**
  * Test loading persons.
  */
+@SuppressWarnings('NestedBlockDepth')
 class ReflectionSpec extends Specification implements DataTest {
 
+    @SuppressWarnings(['unused', 'UnusedPrivateField'])
     // tag::plan[]
     private static final List<Map<String, Object>> AGENTS = [
         [
@@ -61,4 +63,5 @@ class ReflectionSpec extends Specification implements DataTest {
             dru.findByTypeAndOriginalId(Agent, 12345).manager.name == 'Silas Ramsbottom'
     }
     // end::plan[]
+
 }

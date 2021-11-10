@@ -38,7 +38,13 @@ apply plugin:"asset-pipeline"
 repositories {
     mavenLocal()
     maven { url "https://repo.grails.org/grails/core" }
-    maven { url 'http://dl.bintray.com/agorapulse/libs' }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.spockframework:spock-bom:$spockVersion"
+        mavenBom "org.junit:junit-bom:$junitVersion"
+    }
 }
 
 dependencies {

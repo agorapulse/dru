@@ -19,11 +19,15 @@ package avl
 
 import com.agorapulse.dru.Dru
 import com.agorapulse.dru.PreparedDataSet
+import groovy.transform.CompileDynamic
 
 /**
  * Agents data set.
  */
+@CompileDynamic
+@SuppressWarnings('FieldName')
 class AgentsDataSet {
+
     public static final PreparedDataSet agentsMapping = Dru.prepare {                   // <1>
         any (Agent) {
             map ('manager') {
@@ -43,4 +47,5 @@ class AgentsDataSet {
             }
         }
     }
+
 }

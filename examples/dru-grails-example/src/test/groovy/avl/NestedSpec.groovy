@@ -25,6 +25,7 @@ import spock.lang.Specification
 /**
  * Test loading persons.
  */
+@SuppressWarnings('NestedBlockDepth')
 class NestedSpec extends Specification implements DataTest {
 
     // tag::plan[]
@@ -49,6 +50,7 @@ class NestedSpec extends Specification implements DataTest {
     }
     // end::plan[]
 
+    @SuppressWarnings('unused')
     // tag::reuse[]
     @AutoCleanup Dru reuse = Dru.create {
         from ('agents.json') {
@@ -66,4 +68,5 @@ class NestedSpec extends Specification implements DataTest {
         }
     }
     // end::reuse[]
+
 }
