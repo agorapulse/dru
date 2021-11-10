@@ -22,11 +22,12 @@ import org.h2.jdbcx.JdbcDataSource
 import spock.lang.Specification
 
 import javax.sql.DataSource
+import java.security.SecureRandom
 
 class BasicSqlParserSpec extends Specification implements DataSourceProvider {          // <1>
 
     DataSource dataSource = new JdbcDataSource(                                         // <2>
-        URL: 'jdbc:h2:mem:default',
+        URL: 'jdbc:h2:mem:default' + new SecureRandom().nextInt(),
         user: 'sa',
         password: 'sa',
     )
